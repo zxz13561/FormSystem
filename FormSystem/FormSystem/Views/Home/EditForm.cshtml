@@ -1,0 +1,123 @@
+﻿
+@{
+    ViewBag.Title = "EditForm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!--Title-->
+<div class="jumbotron">
+    <h1>後台 - 編輯</h1>
+</div>
+<hr />
+<!--Edit Area-->
+<nav>
+    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+        <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-Form" type="button" role="tab" aria-controls="nav-home" aria-selected="true">問卷</button>
+        <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-Questions" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">問題</button>
+        <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-Data" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">填寫資料</button>
+        <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-Analysis" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">統計</button>
+    </div>
+</nav>
+<div class="tab-content" id="nav-tabContent">
+    <!--問卷-->
+    <div class="tab-pane fade show active" id="nav-Form" role="tabpanel" aria-labelledby="nav-home-tab">
+        <p></p>
+        <div class="mb-3 row">
+            <label for="FormName" class="col-sm-1 col-form-label">問卷名稱:</label>
+            <div class="col-sm-6">
+                <input type="text" class="form-control" id="FormName">
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label for="FormDescript" class="col-sm-1 col-form-label">問卷描述:</label>
+            <div class="col-sm-6">
+                <textarea class="form-control" id="FormDescript" rows="3"></textarea>
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label for="StartDate" class="col-sm-1 col-form-label">開始時間:</label>
+            <div class="col-sm-6">
+                <input type="date" class="form-control" id="StartDate">
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label for="EndDate" class="col-sm-1 col-form-label">結束時間:</label>
+            <div class="col-sm-6">
+                <input type="date" class="form-control" id="EndDate">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-5"></div>
+            <div class="col-1"><button>取消</button></div>
+            <div class="col-1"><button>送出</button></div>
+        </div>
+    </div>
+    <!--問題-->
+    <div class="tab-pane fade" id="nav-Questions" role="tabpanel" aria-labelledby="nav-profile-tab">
+        <p></p>
+        <div class="mb-3 row">
+            <label for="selectType" class="col-sm-1 col-form-label" style="text-align:right">種類:</label>
+            <div class="col-sm-3">
+                <select class="form-select" id="selectType">
+                    <option selected>請選擇</option>
+                    <option value="1">自訂問題</option>
+                    @{
+                        for (int i = 0; i <= 5; i++)
+                        {
+                            <option value="@i">預設問題 @i</option>
+                        }
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label for="inputDescribe" class="col-sm-1 col-form-label" style="text-align:right">問題描述:</label>
+            <div class="col-sm-6">
+                <input type="password" class="form-control" id="inputDescribe">
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label for="inputAns" class="col-sm-1 col-form-label" style="text-align:right">回答:</label>
+            <div class="col-sm-6">
+                <input type="password" class="form-control" id="inputAns">
+            </div>
+            <label class="col-sm-3">(多個答案，請使用" ； "隔開)</label>
+        </div>
+        <div class="mb-3 row">
+            <label for="selectType" class="col-sm-1 col-form-label" style="text-align:right">問題種類:</label>
+            <div class="col-sm-3">
+                <select class="form-select" id="selectType">
+                    <option selected>請選擇</option>
+                    <option value="1">文字方塊(一般)</option>
+                    <option value="2">文字方塊(數字)</option>
+                    <option value="3">文字方塊(Email)</option>
+                    <option value="4">文字方塊(日期)</option>
+                    <option value="5">單選方塊</option>
+                    <option value="6">複選方塊</option>
+                </select>
+            </div>
+            <div class="form-check col-sm-2">
+                <input class="form-check-input" type="checkbox" value="" id="checkNullable">
+                <label class="form-check-label" for="checkNullable">
+                    必填
+                </label>
+            </div>
+            <div class="col-sm-1">
+                <input class="btn btn-outline-primary" type="button" value="加入" id="btnSubmit">
+            </div>
+            <div class="col-sm-1">
+                <input class="btn btn-outline-danger" type="button" value="清空" id="btnClean">
+            </div>
+        </div>
+        <hr />
+
+    </div>
+    <!--資料-->
+    <div class="tab-pane fade" id="nav-Data" role="tabpanel" aria-labelledby="nav-contact-tab">
+
+    </div>
+    <!--統計-->
+    <div class="tab-pane fade" id="nav-Analysis" role="tabpanel" aria-labelledby="nav-contact-tab">
+
+    </div>
+</div>

@@ -34,5 +34,23 @@ namespace FormSystem.Controllers
 
             return View();
         }
+
+        public ActionResult FormManager()
+        {
+
+            return View();
+        }
+
+        public ActionResult FrequentlyQuestions()
+        {
+
+            return View();
+        }
+
+        public ActionResult EditForm()
+        {
+
+            return View();
+        }
     }
 }

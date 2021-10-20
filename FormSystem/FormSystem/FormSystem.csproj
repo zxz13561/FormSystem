@@ -208,6 +208,9 @@
     <Content Include="Views\Home\FormInfo.cshtml" />
     <Content Include="Views\Home\Login.cshtml" />
     <Content Include="Views\Home\FillForm.cshtml" />
+    <Content Include="Views\Home\FormManager.cshtml" />
+    <Content Include="Views\Home\FrequentlyQuestions.cshtml" />
+    <Content Include="Views\Home\EditForm.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
