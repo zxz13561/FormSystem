@@ -13,21 +13,16 @@
 <body>
     <nav class="navbar navbar-light navbar-expand-md" style="background-color: #e3f2fd;">
         <div class="container-fluid">
-            <a>@Html.ActionLink("應用程式名稱", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })</a>
+            <a>@Html.ActionLink("動態問卷系統", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbars" aria-controls="navbarsExample04" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbars">
                 <div class="navbar-nav">
                     <a class="nav-link">@Html.ActionLink("首頁", "Index", "Home")</a>
-                    <a class="nav-link">@Html.ActionLink("關於", "About", "Home")</a>
-                    <a class="nav-link">@Html.ActionLink("連絡人", "Contact", "Home")</a>
+                    <a class="nav-link">@Html.ActionLink("管理員登入", "Login", "Home")</a>
                 </div>
             </div>
-            <form class="d-flex">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success" type="submit">Search</button>
-            </form>
         </div>
     </nav>
 

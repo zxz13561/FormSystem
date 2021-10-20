@@ -14,16 +14,23 @@ namespace FormSystem.Controllers
             return View();
         }
 
-        public ActionResult About()
+        public ActionResult Login()
         {
-            ViewBag.Message = "Your application description page.";
+            ViewBag.Message = "請輸入管理員帳號密碼";
 
             return View();
         }
 
-        public ActionResult Contact()
+        public ActionResult FormInfo()
         {
-            ViewBag.Message = "Your contact page.";
+            ViewBag.Message = "Put Form info here.";
+
+            return View();
+        }
+
+        public ActionResult FillForm(string id)
+        {
+            ViewBag.Message = id;
 
             return View();
         }

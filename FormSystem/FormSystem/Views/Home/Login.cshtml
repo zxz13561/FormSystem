@@ -1,0 +1,24 @@
+﻿
+@{
+    ViewBag.Title = "Login";    
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>管理員登入</h2>
+<p>@ViewBag.Message;</p>
+
+<div class="container d-grid gap-2">
+    <div class="col-4">
+        <input class="form-control me-2" type="text" placeholder="輸入帳號" aria-label="text">
+    </div>
+    <div class="col-4">
+        <input class="form-control me-2" type="text" placeholder="輸入密碼" aria-label="text">
+    </div>
+    <div class="col-4"></div>
+    <div class="col-8">
+        <button class="btn btn-outline-success" type="submit">登入</button>
+        <button class="btn btn-outline-success" type="submit">忘記密碼</button>
+    </div>
+</div>
+
+
