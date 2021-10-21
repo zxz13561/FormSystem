@@ -1,4 +1,5 @@
-﻿@{
+﻿@model IEnumerable<FormSystem.DBModel.FormInfo>
+@{
     ViewBag.Title = "Home Page";
 }
 
@@ -44,16 +45,22 @@
         </tr>
     </thead>
     @{
-        for (int i = 0; i <= 10; i++)
+        int i = 1;
+
+        foreach (var item in this.Model)
         {
+            string status = (DateTime.Now > item.StartDate) ? "投票中" : "已完結";
+
             <tr>
                 <th scope="row">@i</th>
-                <td>@Html.ActionLink("表單" + i, "FillForm", "Home", new { id = "TestID" + i }, null)</td>
-                <td>None</td>
-                <td>2021/01/01</td>
-                <td>2021/12/31</td>
-                <td>Click</td>
+                <td>@Html.ActionLink(item.Name, "FillForm", "Home", new { id = item.FormID }, null)</td>
+                <td>@status</td>
+                <td>@item.StartDate</td>
+                <td>@item.EndDate</td>
+                <td>@Html.ActionLink("前往", "DataAnalysis", "Home", new { id = item.FormID }, null)</td>
             </tr>
+
+            i++;
         }
     }
     <tbody>

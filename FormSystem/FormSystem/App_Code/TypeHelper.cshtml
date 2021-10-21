@@ -1,0 +1,75 @@
+﻿@helper TextBoxQsOrg(string textID, string labelText, string addText)
+{
+    <div class="mb-3 row">
+        <label for="@textID" class="col-sm-2 col-form-label">@labelText @addText</label>
+        <div class="col-sm-6">
+            <input type="text" class="form-control" id="@textID">
+        </div>
+    </div>
+}
+
+@helper TextBoxQsNum(string textID, string labelText, string addText)
+{
+    <div class="mb-3 row">
+        <label for="@textID" class="col-sm-2 col-form-label">@labelText @addText</label>
+        <div class="col-sm-6">
+            <input type="number" class="form-control" id="@textID">
+        </div>
+    </div>
+}
+
+@helper TextBoxQsEmail(string textID, string labelText, string addText)
+{
+    <div class="mb-3 row">
+        <label for="@textID" class="col-sm-2 col-form-label">@labelText @addText</label>
+        <div class="col-sm-6">
+            <input type="email" class="form-control" id="@textID">
+        </div>
+    </div>
+}
+
+@helper TextBoxQsDate(string textID, string labelText, string addText)
+{
+    <div class="mb-3 row">
+        <label for="@textID" class="col-sm-2 col-form-label">@labelText @addText</label>
+        <div class="col-sm-6">
+            <input type="date" class="form-control" id="@textID">
+        </div>
+    </div>
+}
+
+@helper RadioBtnQs(string id_input, string labelText, string addText, string answers, string groupName)
+{
+    string[] ansArray = answers.Split(';');
+    int j = 0;
+    <div class="mb-3 row">
+        <label>&nbsp;&nbsp;&nbsp;@labelText @addText</label>
+
+        @foreach (string ans in ansArray)
+        {
+            <div class="col-1"></div>
+            <div class="form-check col-11">
+                <input class="form-check-input" type="radio" name="@groupName" id="@id_input">
+                <label class="form-check-label" for="@id_input">@ans</label>
+            </div>
+        }
+    </div>
+}
+
+@helper CheckBoxQs(string id_input, string labelText, string addText, string answers, string groupName)
+{
+    string[] ansArray = answers.Split(';');
+    int j = 0;
+    <div class="mb-3 row">
+        <label>&nbsp;&nbsp;&nbsp;@labelText @addText</label>
+
+        @foreach (string ans in ansArray)
+        {
+            <div class="col-1"></div>
+            <div class="form-check col-11">
+                <input class="form-check-input" type="checkbox" name="@groupName" id="@id_input">
+                <label class="form-check-label" for="@id_input">@ans</label>
+            </div>
+        }
+    </div>
+}

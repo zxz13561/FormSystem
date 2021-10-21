@@ -1,4 +1,4 @@
-﻿
+﻿@model IEnumerable<FormSystem.DBModel.FormLayout>
 @{
     ViewBag.Title = "FillForm";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -6,4 +6,50 @@
 
 <h2>FillForm</h2>
 <p>@ViewBag.Message</p>
+@{
+    int i = 0;
+    string id_input = "qc";
+    string id_select = "select";
 
+    if (this.Model != null)
+    {
+        foreach (var item in this.Model)
+        {
+            string isNeedInput = (item.NeedAns) ? "(必填)" : "";
+
+            id_input = id_input + i;
+            id_select = id_select + i;
+            switch (item.QuestionType)
+            {
+                case "QT01":
+                    @TypeHelper.TextBoxQsOrg(id_input, item.Body, isNeedInput)
+                    break;
+
+                case "QT02":
+                    @TypeHelper.TextBoxQsNum(id_input, item.Body, isNeedInput)
+                    break;
+
+                case "QT03":
+                    @TypeHelper.TextBoxQsEmail(id_input, item.Body, isNeedInput)
+                    break;
+
+                case "QT04":
+                    @TypeHelper.TextBoxQsDate(id_input, item.Body, isNeedInput)
+                    break;
+
+                case "QT05":
+                    @TypeHelper.RadioBtnQs(id_input, item.Body, isNeedInput, item.Answer, id_select)
+                    break;
+
+                case "QT06":
+                    @TypeHelper.CheckBoxQs(id_input, item.Body, isNeedInput, item.Answer, id_select)
+                    break;
+
+                default:
+                    break;
+            }
+
+            i++;
+        }
+    }
+}

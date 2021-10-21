@@ -11,7 +11,8 @@ namespace FormSystem.Controllers
 
         public ActionResult Index()
         {
-            return View();
+            var InfoList = new DBModel.DBModel().FormInfoes.ToList();
+            return View(InfoList);
         }
 
         public ActionResult Login()
@@ -31,8 +32,17 @@ namespace FormSystem.Controllers
         public ActionResult FillForm(string id)
         {
             ViewBag.Message = id;
+            if(!Guid.TryParse(id, out Guid FID))
+            {
+                return View();
+            }
 
-            return View();
+            var formLayout = 
+                new DBModel.DBModel().FormLayouts
+                            .Where(layout => layout.FormID == FID)
+                            .OrderBy(layout => layout.ID);
+
+            return View(formLayout);
         }
 
         public ActionResult FormManager()
@@ -49,8 +59,7 @@ namespace FormSystem.Controllers
 
         public ActionResult EditForm()
         {
-
             return View();
-        }
+        }       
     }
 }
