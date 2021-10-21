@@ -71,7 +71,7 @@
             </div>
         </div>
         <div class="mb-3 row">
-            <label for="inputDescribe" class="col-sm-1 col-form-label" style="text-align:right">問題描述:</label>
+            <label for="inputDescribe" class="col-sm-1 col-form-label" style="text-align:right">問題:</label>
             <div class="col-sm-6">
                 <input type="password" class="form-control" id="inputDescribe">
             </div>
@@ -110,11 +110,61 @@
             </div>
         </div>
         <hr />
-
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th scope="col" class="col-1"></th>
+                    <th scope="col" class="col-1">#</th>
+                    <th scope="col">問題</th>
+                    <th scope="col" class="col-2">種類</th>
+                    <th scope="col" class="col-1">必填</th>
+                    <th scope="col" class="col-1"></th>
+                </tr>
+            </thead>
+            @{
+                for (int i = 0; i <= 10; i++)
+                {
+                    <tr>
+                        <th scope="row"><input type="checkbox" value="" /></th>
+                        <th scope="row">@i</th>
+                        <td>None</td>
+                        <td>文字方塊</td>
+                        <td><input type="checkbox" value="" /></td>
+                        <td>@Html.ActionLink("編輯", "FillForm", "Home", new { id = "TestID" + i }, null)</td>
+                    </tr>
+                }
+            }
+            <tbody>
+            </tbody>
+        </table>
     </div>
     <!--資料-->
     <div class="tab-pane fade" id="nav-Data" role="tabpanel" aria-labelledby="nav-contact-tab">
-
+        <p></p>
+        <button class="btn btn-primary">匯出</button>
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th scope="col" class="col-1">#</th>
+                    <th scope="col">名稱</th>
+                    <th scope="col" class="col-2">建立時間</th>
+                    <th scope="col" class="col-1">觀看細節</th>
+                </tr>
+            </thead>
+            @{
+                for (int i = 0; i <= 10; i++)
+                {
+                    <tr>
+                        <th scope="row">@i</th>
+                        <td>資料 @i</td>
+                        <td>@DateTime.Now.ToString()</td>
+                        <td>@Html.ActionLink("編輯", "FillForm", "Home", new { id = "TestID" + i }, null)</td>
+                    </tr>
+                }
+            }
+            <tbody>
+            </tbody>
+        </table>
     </div>
     <!--統計-->
     <div class="tab-pane fade" id="nav-Analysis" role="tabpanel" aria-labelledby="nav-contact-tab">
