@@ -1,55 +1,103 @@
-﻿@model IEnumerable<FormSystem.DBModel.FormLayout>
+﻿@model List<FormSystem.DBModel.FormLayout>
 @{
     ViewBag.Title = "FillForm";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>FillForm</h2>
-<p>@ViewBag.Message</p>
-@{
-    int i = 0;
-    string id_input = "qc";
-    string id_select = "select";
-
-    if (this.Model != null)
-    {
-        foreach (var item in this.Model)
+<!--Title-->
+<div class="jumbotron">
+    <div class="row">
+        <div class="col-7">
+            <h1>@ViewBag.FormTitle</h1>
+        </div>
+        <div class="col-5">
+            <h6>開放時間 : @ViewBag.FormStart ~ @ViewBag.FormEnd</h6>
+        </div>
+    </div>
+    <p class="lead">@ViewBag.FormBody</p>
+</div>
+<hr />
+<!--Body-->
+<form style="margin-left:10px;" method="get" action="/Home/CheckAns">
+    @if (this.Model != null)
         {
-            string isNeedInput = (item.NeedAns) ? "(必填)" : "";
-
-            id_input = id_input + i;
-            id_select = id_select + i;
-            switch (item.QuestionType)
+            for (int i = 0; i < this.Model.Count; i++)
             {
-                case "QT01":
-                    @TypeHelper.TextBoxQsOrg(id_input, item.Body, isNeedInput)
-                    break;
+                switch (Model[i].QuestionType)
+                {
+                    case "QT01":
+                        <div class="mb-3 row">
+                            @Html.LabelFor(input => this.Model[i].Answer, this.Model[i].Body, new { @class = "col-sm-2 col-form-label" })
+                            <div class="col-sm-6">
+                                @Html.TextBoxFor(input => this.Model[i].Answer, new { @class = "form-control", @required = this.Model[i].NeedAns })
+                            </div>
+                        </div>
+                        break;
 
-                case "QT02":
-                    @TypeHelper.TextBoxQsNum(id_input, item.Body, isNeedInput)
-                    break;
+                    case "QT02":
+                        <div class="mb-3 row">
+                            @Html.LabelFor(input => this.Model[i].Answer, this.Model[i].Body, new { @class = "col-sm-2 col-form-label" })
+                            <div class="col-sm-6">
+                                @Html.TextBoxFor(input => this.Model[i].Answer, new { @class = "form-control", @required = this.Model[i].NeedAns, @type = "number" })
+                            </div>
+                        </div>
+                        break;
 
-                case "QT03":
-                    @TypeHelper.TextBoxQsEmail(id_input, item.Body, isNeedInput)
-                    break;
+                    case "QT03":
+                        <div class="mb-3 row">
+                            @Html.LabelFor(input => this.Model[i].Answer, this.Model[i].Body, new { @class = "col-sm-2 col-form-label" })
+                            <div class="col-sm-6">
+                                @Html.TextBoxFor(input => this.Model[i].Answer, new { @class = "form-control", @required = this.Model[i].NeedAns, @type = "email" })
+                            </div>
+                        </div>
+                        break;
 
-                case "QT04":
-                    @TypeHelper.TextBoxQsDate(id_input, item.Body, isNeedInput)
-                    break;
+                    case "QT04":
+                        <div class="mb-3 row">
+                            @Html.LabelFor(input => this.Model[i].Answer, this.Model[i].Body, new { @class = "col-sm-2 col-form-label" })
+                            <div class="col-sm-6">
+                                @Html.TextBoxFor(input => this.Model[i].Answer, new { @class = "form-control", @required = this.Model[i].NeedAns, @type = "date" })
+                            </div>
+                        </div>
+                        break;
 
-                case "QT05":
-                    @TypeHelper.RadioBtnQs(id_input, item.Body, isNeedInput, item.Answer, id_select)
-                    break;
+                    case "QT05":
+                        <div class="mb-3 row">
+                            @Html.LabelFor(input => this.Model[i].Answer, this.Model[i].Body, new { @class = "col-sm-2 col-form-label" })
+                            @foreach (string ans in this.Model[i].Answer.Split(';'))
+                            {
+                                <div class="row">
+                                    <div class="col-1"></div>
+                                    <div class="form-check col-11">
+                                        @Html.RadioButtonFor(radio => this.Model[i].Answer, ans, new { @class = "form-check-input col-1" })
+                                        @Html.LabelFor(lable => this.Model[i].Answer, ans, new { @class = "form-check-label col-10" })
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        break;
 
-                case "QT06":
-                    @TypeHelper.CheckBoxQs(id_input, item.Body, isNeedInput, item.Answer, id_select)
-                    break;
+                    /*case "QT06":
+                        <div class="mb-3 row">
+                            @Html.LabelFor(input => this.Model[i].Answer, this.Model[i].Body, new { @class = "col-sm-2 col-form-label" })
+                            @foreach (string ans in this.Model[i].Answer.Split(';'))
+                                {
+                                    <div class="row">
+                                        <div class="col-1"></div>
+                                        <div class="form-check col-11">
+                                            @Html.CheckBox($"[{i}].Answer", new { value = ans })
+                                            @Html.LabelFor(lable => this.Model[i].Answer, ans, new { @class = "form-check-label col-10" })
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                        break;*/
 
-                default:
-                    break;
+                    default:
+                        break;
+                }
             }
-
-            i++;
         }
-    }
-}
+    <button type="submit" class="btn btn-primary">確定</button>
+</form>

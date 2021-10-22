@@ -1,0 +1,15 @@
+﻿@model List<FormSystem.DBModel.FormLayout>
+@{
+    ViewBag.Title = "CheckAns";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>CheckAns</h2>
+@{
+    for (int i = 0; i < this.Model.Count; i++)
+    {
+        <p>@this.Model[i].Answer</p>
+    }
+}
+
+

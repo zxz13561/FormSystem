@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using FormSystem.DBModel;
+using FormSystem.Models;
 
 namespace FormSystem.Controllers
 {
@@ -11,7 +13,7 @@ namespace FormSystem.Controllers
 
         public ActionResult Index()
         {
-            var InfoList = new DBModel.DBModel().FormInfoes.ToList();
+            var InfoList = new FormDBModel().FormInfoes.ToList();
             return View(InfoList);
         }
 
@@ -31,18 +33,45 @@ namespace FormSystem.Controllers
 
         public ActionResult FillForm(string id)
         {
+
+
+            // check id is correct
             ViewBag.Message = id;
             if(!Guid.TryParse(id, out Guid FID))
             {
+                ViewBag.FormTitle = "發生錯誤";
+                ViewBag.FormBody = "請回上一頁重新選取";
+                ViewBag.FormStart = "";
+                ViewBag.FormEnd = "";
+
                 return View();
             }
 
-            var formLayout = 
-                new DBModel.DBModel().FormLayouts
-                            .Where(layout => layout.FormID == FID)
-                            .OrderBy(layout => layout.ID);
+            using (FormDBModel dbModel = new FormDBModel())
+            {
+                // Get Form information
+                var formInfo = dbModel.FormInfoes
+                        .Where(info => info.FormID == FID)
+                        .FirstOrDefault();
 
-            return View(formLayout);
+                ViewBag.FormTitle = formInfo.Name;
+                ViewBag.FormBody = formInfo.Body;
+                ViewBag.FormStart = formInfo.StartDate.ToString("yyyy-mm-dd hh:mm:ss");
+                ViewBag.FormEnd = formInfo.EndDate.ToString("yyyy-mm-dd hh:mm:ss");
+
+                // Get Form layout and sent to view page
+                var formLayout = new FormDBModel().FormLayouts
+                        .Where(layout => layout.FormID == FID)
+                        .OrderBy(layout => layout.ID);
+
+                return View(formLayout.ToList());
+            }
+        }
+
+        [HttpGet]
+        public ActionResult CheckAns(List<FormLayout> ansModel)
+        {
+            return View(ansModel);
         }
 
         public ActionResult FormManager()
@@ -59,7 +88,9 @@ namespace FormSystem.Controllers
 
         public ActionResult EditForm()
         {
-            return View();
+            NewFormModel newForm = new NewFormModel();
+
+            return View(newForm);
         }       
     }
 }

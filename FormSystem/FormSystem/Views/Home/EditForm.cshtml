@@ -1,4 +1,4 @@
-﻿
+﻿@model FormSystem.Models.NewFormModel
 @{
     ViewBag.Title = "EditForm";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -25,7 +25,7 @@
         <div class="mb-3 row">
             <label for="FormName" class="col-sm-1 col-form-label">問卷名稱:</label>
             <div class="col-sm-6">
-                <input type="text" class="form-control" id="FormName">
+                @Html.TextBoxFor(name => this.Model.mInfo.Name, new { @class = "form-control", @id = "FormName" })
             </div>
         </div>
         <div class="mb-3 row">

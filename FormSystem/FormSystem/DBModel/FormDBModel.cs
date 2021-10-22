@@ -5,10 +5,10 @@ using System.Linq;
 
 namespace FormSystem.DBModel
 {
-    public partial class DBModel : DbContext
+    public partial class FormDBModel : DbContext
     {
-        public DBModel()
-            : base("name=DBModel")
+        public FormDBModel()
+            : base("name=FormDBModel")
         {
         }
 
