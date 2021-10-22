@@ -86,11 +86,25 @@ namespace FormSystem.Controllers
             return View();
         }
 
-        public ActionResult EditForm()
+        public ActionResult EditForm(string id)
         {
-            NewFormModel newForm = new NewFormModel();
+            // Create New Form
+            if (id == "NewForm")
+            {
+                CreateFormModel cModel = new CreateFormModel();
+                cModel.mInfo = new FormInfo();
+                cModel.mLayout = new FormLayout();
 
-            return View(newForm);
-        }       
+                return View(cModel);
+            }
+
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult EditForm(CreateFormModel newForm)
+        {
+            return View();
+        }
     }
 }

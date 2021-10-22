@@ -141,7 +141,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\FormAnsModel.cs" />
-    <Compile Include="Models\NewFormModel.cs" />
+    <Compile Include="Models\CreateFormModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

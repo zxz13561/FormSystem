@@ -33,7 +33,7 @@
 <hr />
 <!--Function List-->
 <div class="row">
-    <a class="btn btn-secondary" href="~/Home/EditForm/NewForm">新增表單</a>
+    @Html.ActionLink("新增表單", "EditForm", "Home", new { @id = "NewForm" }, new { @class = "btn btn-secondary" }))
 </div>
 <hr />
 <!--Form List-->
