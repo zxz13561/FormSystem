@@ -1,0 +1,15 @@
+﻿@if (this.Model.mLayout != null)
+    {
+        foreach (var q in this.Model.mLayout)
+        {
+            <tr>
+                <td>@q.QuestionSort</td>
+                <td>@q.Body</td>
+                <td>@q.QuestionType</td>
+                <td>@Html.Action("Index", "Home", new { @id = q.ID })</td>
+            </tr>
+        }
+    }
+
+
+

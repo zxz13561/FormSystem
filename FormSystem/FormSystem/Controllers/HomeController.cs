@@ -33,8 +33,6 @@ namespace FormSystem.Controllers
 
         public ActionResult FillForm(string id)
         {
-
-
             // check id is correct
             ViewBag.Message = id;
             if(!Guid.TryParse(id, out Guid FID))
@@ -88,12 +86,25 @@ namespace FormSystem.Controllers
 
         public ActionResult EditForm(string id)
         {
+            // Import Question Type Datas to DropdownList
+            var QTypeList = new List<SelectListItem>() {};
+            var typeQuery = new FormDBModel().QuestionTypes;
+
+            foreach (var type in typeQuery)
+            {
+                QTypeList.Add(new SelectListItem { Text = type.Name, Value = type.TypeID });
+            }
+            ViewBag.SelectList = QTypeList;
+
             // Create New Form
             if (id == "NewForm")
             {
                 CreateFormModel cModel = new CreateFormModel();
                 cModel.mInfo = new FormInfo();
                 cModel.mLayout = new FormLayout();
+                Guid newID = Guid.NewGuid();
+                cModel.mInfo.FormID = newID;
+                Session["FID"] = newID;
 
                 return View(cModel);
             }
@@ -102,9 +113,74 @@ namespace FormSystem.Controllers
         }
 
         [HttpPost]
-        public ActionResult EditForm(CreateFormModel newForm)
+        public ActionResult EditFormInfo(CreateFormModel newForm)
         {
-            return View();
+            Guid emptyFID = new Guid("00000000-0000-0000-0000-000000000000");
+
+            if (newForm.mInfo.FormID == emptyFID)
+            {
+                return RedirectToAction("FormManager", "Home");
+            }
+
+            return RedirectToAction("FormManager", "Home");
+        }
+
+        [HttpPost]
+        public ActionResult EditFormLayout(CreateFormModel m)
+        {
+            // Check session data exist
+            List<FormLayout> list = (Session["LayoutList"] != null) ? (List<FormLayout>)Session["LayoutList"] : new List<FormLayout>();
+            Guid.TryParse(Session["FID"].ToString(), out Guid fid);
+
+            FormLayout questionInfo = new FormLayout() {
+                FormID = fid,
+                Body = m.mLayout.Body,
+                Answer = m.mLayout.Answer,
+                QuestionType = m.mLayout.QuestionType,
+                NeedAns = m.mLayout.NeedAns,
+                QuestionSort = (Session["LayoutList"] == null) ? 0 : list.Count()
+            };
+
+            list.Add(questionInfo);
+            Session["LayoutList"] = list;
+            //ViewBag.layouts = list;
+
+            string htmlText = string.Empty;
+
+            foreach (var q in list)
+            {
+                htmlText += $@"
+                <tr>
+                    <td><input type=""checkbox"" id=""chkbox{q.ID}"" value=""{q.ID}"" checked=""false""></td>
+                    <td>{q.QuestionSort}</td>
+                    <td>{q.Body}</td>
+                    <td>{q.QuestionType}</td>
+                    <td><a href=""Home/Index/{q.ID}"">編輯</a></td>
+                </tr>";
+            }
+
+            return Json(htmlText);
+        }
+
+        [HttpGet]
+        public ActionResult GetLayoutQuestions()
+        {
+            List<FormLayout> list = (List<FormLayout>)Session["LayoutList"];
+            
+            
+            string htmlText = string.Empty;
+
+            foreach(var q in list)
+            {
+                htmlText += $@"
+                <tr>
+                    <td>{q.QuestionSort}</td>
+                    <td>{q.Body}</td>
+                    <td>{q.QuestionType}</td>
+                    <td>@Html.ActionLink(""Home"", ""Index"", new {{ @id = {q.ID}}})</td>
+                </tr>";
+            }
+            return Json(htmlText);
         }
     }
 }

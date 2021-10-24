@@ -1,0 +1,28 @@
+﻿@{
+    List<FormSystem.DBModel.FormLayout> layouts = (List<FormSystem.DBModel.FormLayout>)Session["layouts"];
+}
+@if (layouts != null)
+{
+    foreach (var q in layouts)
+    {
+        <tr>
+            <td><input type="checkbox" value="@q.ID" checked="" /></td>
+            <td>@q.QuestionSort</td>
+            <td>@q.Body</td>
+            <td>@q.QuestionType</td>
+            <td>@Html.ActionLink("編輯", "Index", new {@id = q.ID})</td>
+        </tr>
+    }
+}
+else
+{
+    <tr>
+        <td>this</td>
+        <td>is</td>
+        <td>PartialView</td>
+        <td>Test</td>
+        <td>@Html.ActionLink("編輯", "Index")</td>
+    </tr>
+}
+
+

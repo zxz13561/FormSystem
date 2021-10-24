@@ -9,6 +9,7 @@ namespace FormSystem.Models
     public class CreateFormModel
     {
         public FormInfo mInfo { get; set; }
+
         public FormLayout mLayout { get; set; }
     }
 }

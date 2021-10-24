@@ -26,6 +26,8 @@ namespace FormSystem.DBModel
 
         public bool NeedAns { get; set; }
 
+        public int QuestionSort { get; set; }
+
         public virtual FormInfo FormInfo { get; set; }
 
         public virtual QuestionType QuestionType1 { get; set; }

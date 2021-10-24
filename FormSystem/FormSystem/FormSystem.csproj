@@ -142,6 +142,7 @@
     </Compile>
     <Compile Include="Models\FormAnsModel.cs" />
     <Compile Include="Models\CreateFormModel.cs" />
+    <Compile Include="Models\LayoutData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -230,6 +231,9 @@
     <Content Include="Views\Home\FrequentlyQuestions.cshtml" />
     <Content Include="Views\Home\EditForm.cshtml" />
     <Content Include="Views\Home\CheckAns.cshtml" />
+    <Content Include="Views\PartialView\TestPartial.cshtml" />
+    <Content Include="Views\PartialView\_layoutList.cshtml" />
+    <Content Include="Views\PartialView\_LayoutTable.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
