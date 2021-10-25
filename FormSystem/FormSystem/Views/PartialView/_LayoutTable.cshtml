@@ -1,9 +1,6 @@
-﻿@{
-    List<FormSystem.DBModel.FormLayout> layouts = (List<FormSystem.DBModel.FormLayout>)Session["layouts"];
-}
-@if (layouts != null)
+﻿@if (ViewBag.layouts != null)
 {
-    foreach (var q in layouts)
+    foreach (var q in (List<FormSystem.DBModel.FormLayout>)ViewBag.layouts)
     {
         <tr>
             <td><input type="checkbox" value="@q.ID" checked="" /></td>

@@ -1,0 +1,44 @@
+﻿@model FormSystem.DBModel.FormLayout
+@using (Html.BeginForm("EditFormLayout", "Home", FormMethod.Post))
+{
+    <div class="mb-3 row">
+        <label for="selectType" class="col-sm-1 col-form-label" style="text-align:right">種類:</label>
+        <div class="col-sm-3">
+            <select class="form-select" id="selectType">
+                <option selected>請選擇</option>
+                <option value="1">自訂問題</option>
+                <!--預設問題放這裡-->
+            </select>
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <label for="inputDescribe" class="col-sm-1 col-form-label" style="text-align:right">問題:</label>
+        <div class="col-sm-6">
+            @Html.TextBoxFor(layout => this.Model.Body, new { @class = "form-control", @id = "inputDescribe" })
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <label for="inputAns" class="col-sm-1 col-form-label" style="text-align:right">回答:</label>
+        <div class="col-sm-6">
+            @Html.TextBoxFor(layout => this.Model.Answer, new { @class = "form-control", @id = "inputAns" })
+        </div>
+        <label class="col-sm-3">(多個答案，請使用" ； "隔開)</label>
+    </div>
+    <div class="mb-3 row">
+        <label for="selectType" class="col-sm-1 col-form-label" style="text-align:right">問題種類:</label>
+        <div class="col-sm-3">
+            @Html.DropDownListFor(layout => this.Model.QuestionType, (IEnumerable<SelectListItem>)ViewBag.SelectList, new { @class = "form-select", @id = "selectType" })
+        </div>
+        <div class="form-check col-sm-2">
+            @Html.CheckBoxFor(layout => this.Model.NeedAns, new { @class = "form-check-input", @type = "checkbox", @id = "checkNullable" })
+            <label class="form-check-label" for="checkNullable">
+                必填
+            </label>
+        </div>
+        <div class="col-sm-3">
+            <input class="btn btn-outline-primary" type="submit" value="加入" id="btnSubmit">
+            <input class="btn btn-outline-danger" type="button" value="清空" id="btnClean">
+        </div>
+        <div class="col-sm-4"></div>
+    </div>
+}

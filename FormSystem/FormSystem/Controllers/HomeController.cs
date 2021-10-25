@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using FormSystem.DBModel;
 using FormSystem.Models;
+using FormSystem.Functions;
 
 namespace FormSystem.Controllers
 {
@@ -84,17 +85,12 @@ namespace FormSystem.Controllers
             return View();
         }
 
+        #region Edit Forms
+
+
         public ActionResult EditForm(string id)
         {
-            // Import Question Type Datas to DropdownList
-            var QTypeList = new List<SelectListItem>() {};
-            var typeQuery = new FormDBModel().QuestionTypes;
-
-            foreach (var type in typeQuery)
-            {
-                QTypeList.Add(new SelectListItem { Text = type.Name, Value = type.TypeID });
-            }
-            ViewBag.SelectList = QTypeList;
+            ViewBag.SelectList = ModelFunctions.QusetionsType();
 
             // Create New Form
             if (id == "NewForm")
@@ -113,20 +109,19 @@ namespace FormSystem.Controllers
         }
 
         [HttpPost]
-        public ActionResult EditFormInfo(CreateFormModel newForm)
+        public ActionResult EditFormInfo(FormInfo fInfo)
         {
-            Guid emptyFID = new Guid("00000000-0000-0000-0000-000000000000");
+            // Save into Session
+            Session["FormInfo"] = fInfo;
 
-            if (newForm.mInfo.FormID == emptyFID)
-            {
-                return RedirectToAction("FormManager", "Home");
-            }
-
-            return RedirectToAction("FormManager", "Home");
+            // collect data and return
+            ViewBag.SelectList = ModelFunctions.QusetionsType();
+            CreateFormModel cModel = new CreateFormModel() { mInfo = fInfo, mLayout = new FormLayout() };
+            return View("EditForm", cModel);
         }
 
         [HttpPost]
-        public ActionResult EditFormLayout(CreateFormModel m)
+        public ActionResult EditFormLayout(FormLayout fLay)
         {
             // Check session data exist
             List<FormLayout> list = (Session["LayoutList"] != null) ? (List<FormLayout>)Session["LayoutList"] : new List<FormLayout>();
@@ -134,17 +129,18 @@ namespace FormSystem.Controllers
 
             FormLayout questionInfo = new FormLayout() {
                 FormID = fid,
-                Body = m.mLayout.Body,
-                Answer = m.mLayout.Answer,
-                QuestionType = m.mLayout.QuestionType,
-                NeedAns = m.mLayout.NeedAns,
+                Body = fLay.Body,
+                Answer = fLay.Answer,
+                QuestionType = fLay.QuestionType,
+                NeedAns = fLay.NeedAns,
                 QuestionSort = (Session["LayoutList"] == null) ? 0 : list.Count()
             };
 
             list.Add(questionInfo);
             Session["LayoutList"] = list;
-            //ViewBag.layouts = list;
+            ViewBag.layouts = list;
 
+            /*
             string htmlText = string.Empty;
 
             foreach (var q in list)
@@ -158,8 +154,13 @@ namespace FormSystem.Controllers
                     <td><a href=""Home/Index/{q.ID}"">編輯</a></td>
                 </tr>";
             }
+            */
 
-            return Json(htmlText);
+            // collect data and return
+            ViewBag.SelectList = ModelFunctions.QusetionsType();
+            FormInfo fInfo = (Session["FormInfo"] != null) ? (FormInfo)Session["FormInfo"] : new FormInfo();
+            CreateFormModel cModel = new CreateFormModel() { mInfo = fInfo, mLayout = new FormLayout() };
+            return View("EditForm", cModel);
         }
 
         [HttpGet]
@@ -182,5 +183,17 @@ namespace FormSystem.Controllers
             }
             return Json(htmlText);
         }
+
+        public ActionResult _LayoutPartial()
+        {
+            return PartialView(new FormLayout());
+        }
+
+        [HttpPost]
+        public ActionResult LayoutData()
+        {
+            return PartialView(new FormLayout());
+        }
+        #endregion
     }
 }

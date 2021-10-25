@@ -1,0 +1,34 @@
+﻿@model FormSystem.DBModel.FormInfo
+@using (Html.BeginForm("EditFormInfo", "Home", FormMethod.Post))
+{
+    <p>@Html.HiddenFor(info => this.Model.FormID, new { @value = this.Model.FormID})</p>
+    <div class="mb-3 row">
+        <label for="FormName" class="col-sm-1 col-form-label">問卷名稱:</label>
+        <div class="col-sm-6">
+            @Html.TextBoxFor(info => this.Model.Name, new { @class = "form-control", @id = "FormName" })
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <label for="FormDescript" class="col-sm-1 col-form-label">問卷描述:</label>
+        <div class="col-sm-6">
+            @Html.TextAreaFor(info => this.Model.Body, new { @class = "form-control", @id = "FormDescript", @rows = "3" })
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <label for="StartDate" class="col-sm-1 col-form-label">開始時間:</label>
+        <div class="col-sm-6">
+            @Html.TextBoxFor(info => this.Model.StartDate, new { @class = "form-control", @id = "StartDate", @type = "date" })
+        </div>
+    </div>
+    <div class="mb-3 row">
+        <label for="EndDate" class="col-sm-1 col-form-label">結束時間:</label>
+        <div class="col-sm-6">
+            @Html.TextBoxFor(info => this.Model.EndDate, new { @class = "form-control", @id = "EndDate", @type = "date" })
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-5"></div>
+        <div class="col-1"><button class="btn btn-outline-danger" type="reset">取消</button></div>
+        <div class="col-1"><button class="btn btn-outline-success" type="submit">送出</button></div>
+    </div>
+}

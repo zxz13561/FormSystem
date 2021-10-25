@@ -231,9 +231,10 @@
     <Content Include="Views\Home\FrequentlyQuestions.cshtml" />
     <Content Include="Views\Home\EditForm.cshtml" />
     <Content Include="Views\Home\CheckAns.cshtml" />
-    <Content Include="Views\PartialView\TestPartial.cshtml" />
-    <Content Include="Views\PartialView\_layoutList.cshtml" />
     <Content Include="Views\PartialView\_LayoutTable.cshtml" />
+    <Content Include="Views\Home\EditForm Backup.cshtml" />
+    <Content Include="Views\PartialView\_InfoPartial.cshtml" />
+    <Content Include="Views\PartialView\_LayoutPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
