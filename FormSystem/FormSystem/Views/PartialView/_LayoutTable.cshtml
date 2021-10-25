@@ -1,25 +1,40 @@
-﻿@if (ViewBag.layouts != null)
-{
-    foreach (var q in (List<FormSystem.DBModel.FormLayout>)ViewBag.layouts)
-    {
+﻿<hr />
+<table class="table table-striped table-hover">
+    <thead>
         <tr>
-            <td><input type="checkbox" value="@q.ID" checked="" /></td>
-            <td>@q.QuestionSort</td>
-            <td>@q.Body</td>
-            <td>@q.QuestionType</td>
-            <td>@Html.ActionLink("編輯", "Index", new {@id = q.ID})</td>
+            <th scope="col" class="col-1"></th>
+            <th scope="col" class="col-1">#</th>
+            <th scope="col">問題</th>
+            <th scope="col" class="col-2">種類</th>
+            <th scope="col" class="col-1">必填</th>
+            <th scope="col" class="col-1"></th>
         </tr>
-    }
-}
-else
-{
-    <tr>
-        <td>this</td>
-        <td>is</td>
-        <td>PartialView</td>
-        <td>Test</td>
-        <td>@Html.ActionLink("編輯", "Index")</td>
-    </tr>
-}
-
+    </thead>
+    <tbody id="qTable">
+        <!--問題列表-->
+        @if (ViewBag.layouts != null)
+        {
+            foreach (var q in (List<FormSystem.DBModel.FormLayout>)ViewBag.layouts)
+            {
+                <tr>
+                    <td>@Html.CheckBox($"{q.ID}", new { @value = q.ID })</td>
+                    <td>@q.QuestionSort</td>
+                    <td>@q.Body</td>
+                    <td>@q.QuestionType</td>
+                    <td>@Html.ActionLink("編輯", "Index", new { @id = q.ID })</td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td>this</td>
+                <td>is</td>
+                <td>PartialView</td>
+                <td>Test</td>
+                <td>@Html.ActionLink("編輯", "Index")</td>
+            </tr>
+        }
+    </tbody>
+</table>
 

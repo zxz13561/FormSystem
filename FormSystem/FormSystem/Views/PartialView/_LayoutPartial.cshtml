@@ -1,16 +1,6 @@
 ﻿@model FormSystem.DBModel.FormLayout
-@using (Html.BeginForm("EditFormLayout", "Home", FormMethod.Post))
+@using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "qTable", Url = Url.Action("EditFormLayout") }))
 {
-    <div class="mb-3 row">
-        <label for="selectType" class="col-sm-1 col-form-label" style="text-align:right">種類:</label>
-        <div class="col-sm-3">
-            <select class="form-select" id="selectType">
-                <option selected>請選擇</option>
-                <option value="1">自訂問題</option>
-                <!--預設問題放這裡-->
-            </select>
-        </div>
-    </div>
     <div class="mb-3 row">
         <label for="inputDescribe" class="col-sm-1 col-form-label" style="text-align:right">問題:</label>
         <div class="col-sm-6">
@@ -42,3 +32,17 @@
         <div class="col-sm-4"></div>
     </div>
 }
+<hr />
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th scope="col" class="col-1"></th>
+            <th scope="col" class="col-1">#</th>
+            <th scope="col">問題</th>
+            <th scope="col" class="col-2">種類</th>
+            <th scope="col" class="col-1">必填</th>
+            <th scope="col" class="col-1"></th>
+        </tr>
+    </thead>
+    <tbody id="qTable"><!--問題列表--></tbody>
+</table>

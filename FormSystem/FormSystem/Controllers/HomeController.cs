@@ -86,8 +86,6 @@ namespace FormSystem.Controllers
         }
 
         #region Edit Forms
-
-
         public ActionResult EditForm(string id)
         {
             ViewBag.SelectList = ModelFunctions.QusetionsType();
@@ -140,48 +138,27 @@ namespace FormSystem.Controllers
             Session["LayoutList"] = list;
             ViewBag.layouts = list;
 
-            /*
-            string htmlText = string.Empty;
-
-            foreach (var q in list)
+            int i = 1; //Question table index number
+            string tableString = string.Empty;
+            
+            foreach (var data in list)
             {
-                htmlText += $@"
-                <tr>
-                    <td><input type=""checkbox"" id=""chkbox{q.ID}"" value=""{q.ID}"" checked=""false""></td>
-                    <td>{q.QuestionSort}</td>
-                    <td>{q.Body}</td>
-                    <td>{q.QuestionType}</td>
-                    <td><a href=""Home/Index/{q.ID}"">編輯</a></td>
-                </tr>";
+                tableString += $@"
+                    <tr>
+                        <td><input type=""checkbox"" id=""{data.Body}"" name=""{data.Body}"" value=""{data.ID}""></td>
+                        <td>{i}</td>
+                        <td>{data.Body}</td>
+                        <td>{data.QuestionType}</td>
+                        <td><a href=""Home/Index"">編輯</a></td>
+                    </tr>";
+                i++;
             }
-            */
 
             // collect data and return
-            ViewBag.SelectList = ModelFunctions.QusetionsType();
-            FormInfo fInfo = (Session["FormInfo"] != null) ? (FormInfo)Session["FormInfo"] : new FormInfo();
-            CreateFormModel cModel = new CreateFormModel() { mInfo = fInfo, mLayout = new FormLayout() };
-            return View("EditForm", cModel);
-        }
-
-        [HttpGet]
-        public ActionResult GetLayoutQuestions()
-        {
-            List<FormLayout> list = (List<FormLayout>)Session["LayoutList"];
-            
-            
-            string htmlText = string.Empty;
-
-            foreach(var q in list)
-            {
-                htmlText += $@"
-                <tr>
-                    <td>{q.QuestionSort}</td>
-                    <td>{q.Body}</td>
-                    <td>{q.QuestionType}</td>
-                    <td>@Html.ActionLink(""Home"", ""Index"", new {{ @id = {q.ID}}})</td>
-                </tr>";
-            }
-            return Json(htmlText);
+            //ViewBag.SelectList = ModelFunctions.QusetionsType();
+            //FormInfo fInfo = (Session["FormInfo"] != null) ? (FormInfo)Session["FormInfo"] : new FormInfo();
+            //CreateFormModel cModel = new CreateFormModel() { mInfo = fInfo, mLayout = new FormLayout() };
+            return Content(tableString);
         }
 
         public ActionResult _LayoutPartial()
