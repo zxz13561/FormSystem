@@ -1,5 +1,5 @@
 ﻿@model FormSystem.DBModel.FormInfo
-@using (Html.BeginForm("EditFormInfo", "Home", FormMethod.Post))
+@using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "returnMsg", Url = Url.Action("NewInfo") }))
 {
     <p>@Html.HiddenFor(info => this.Model.FormID, new { @value = this.Model.FormID})</p>
     <div class="mb-3 row">
@@ -29,6 +29,7 @@
     <div class="row">
         <div class="col-5"></div>
         <div class="col-1"><button class="btn btn-outline-danger" type="reset">取消</button></div>
-        <div class="col-1"><button class="btn btn-outline-success" type="submit">送出</button></div>
+        <div class="col-1"><button class="btn btn-outline-success" type="submit">儲存</button></div>
+        <div class="col-1"><label id="returnMsg"></label></div>
     </div>
 }

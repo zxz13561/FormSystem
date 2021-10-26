@@ -55,8 +55,8 @@ namespace FormSystem.Controllers
 
                 ViewBag.FormTitle = formInfo.Name;
                 ViewBag.FormBody = formInfo.Body;
-                ViewBag.FormStart = formInfo.StartDate.ToString("yyyy-mm-dd hh:mm:ss");
-                ViewBag.FormEnd = formInfo.EndDate.ToString("yyyy-mm-dd hh:mm:ss");
+                ViewBag.FormStart = formInfo.StartDate.ToString("yyyy-MM-dd hh:mm:ss");
+                ViewBag.FormEnd = formInfo.EndDate.ToString("yyyy-MM-dd hh:mm:ss");
 
                 // Get Form layout and sent to view page
                 var formLayout = new FormDBModel().FormLayouts
@@ -85,7 +85,6 @@ namespace FormSystem.Controllers
             return View();
         }
 
-        #region Edit Forms
         public ActionResult EditForm(string id)
         {
             ViewBag.SelectList = ModelFunctions.QusetionsType();
@@ -99,27 +98,27 @@ namespace FormSystem.Controllers
                 Guid newID = Guid.NewGuid();
                 cModel.mInfo.FormID = newID;
                 Session["FID"] = newID;
+                Session["LayoutList"] = null;
+                Session["FormInfo"] = null;
 
-                return View(cModel);
+                return View("CreateNewForm", cModel);
             }
 
             return View();
         }
 
+        #region Create New Form
         [HttpPost]
-        public ActionResult EditFormInfo(FormInfo fInfo)
+        public ActionResult NewInfo(FormInfo fInfo)
         {
             // Save into Session
             Session["FormInfo"] = fInfo;
 
-            // collect data and return
-            ViewBag.SelectList = ModelFunctions.QusetionsType();
-            CreateFormModel cModel = new CreateFormModel() { mInfo = fInfo, mLayout = new FormLayout() };
-            return View("EditForm", cModel);
+            return Content("資料儲存成功");
         }
 
         [HttpPost]
-        public ActionResult EditFormLayout(FormLayout fLay)
+        public ActionResult NewLayout(FormLayout fLay)
         {
             // Check session data exist
             List<FormLayout> list = (Session["LayoutList"] != null) ? (List<FormLayout>)Session["LayoutList"] : new List<FormLayout>();
@@ -154,23 +153,73 @@ namespace FormSystem.Controllers
                 i++;
             }
 
-            // collect data and return
-            //ViewBag.SelectList = ModelFunctions.QusetionsType();
-            //FormInfo fInfo = (Session["FormInfo"] != null) ? (FormInfo)Session["FormInfo"] : new FormInfo();
-            //CreateFormModel cModel = new CreateFormModel() { mInfo = fInfo, mLayout = new FormLayout() };
             return Content(tableString);
         }
 
-        public ActionResult _LayoutPartial()
+        public ActionResult ShowForm()
         {
-            return PartialView(new FormLayout());
-        }
+            string FormHtml = string.Empty;
+            FormInfo fInfo = (Session["FormInfo"] != null ) ? (FormInfo)Session["FormInfo"] : new FormInfo();
+            List<FormLayout> fLayout = (Session["LayoutList"] != null) ? (List<FormLayout>)Session["LayoutList"] : new List<FormLayout>();
 
-        [HttpPost]
-        public ActionResult LayoutData()
-        {
-            return PartialView(new FormLayout());
+            FormHtml += $@"
+                <div class=""jumbotron"">
+                    <div class=""row"">
+                        <div class=""col-7"">
+                            <h1>{fInfo.Name}</h1>
+                        </div>
+                        <div class=""col-5"">
+                            <h6>開放時間 : {fInfo.StartDate} ~ {fInfo.EndDate}</h6>
+                        </div>
+                    </div>
+                    <p class=""lead"">{fInfo.Body}</p>
+               </div>
+               <hr />";
+
+            foreach(var layout in fLayout)
+            {
+                FormHtml += ModelFunctions.QuestionHTML(layout);
+            }
+
+            return Content(FormHtml);
         }
         #endregion
+
+        /// <summary>轉換Session資料，存入SQL</summary>
+        /// <returns></returns>
+        public ActionResult InsertIntoDB()
+        {
+            FormInfo fInfo = (Session["FormInfo"] != null) ? (FormInfo)Session["FormInfo"] : null;
+            List<FormLayout> fLayout = (Session["LayoutList"] != null) ? (List<FormLayout>)Session["LayoutList"] : null;
+
+            try
+            {
+                if (fInfo != null && fLayout != null)
+                {
+                    using (FormDBModel db = new FormDBModel())
+                    {
+                        fInfo.CreateDate = DateTime.Now;
+                        db.FormInfoes.Add(fInfo);
+
+                        foreach (FormLayout data in fLayout)
+                        {
+                            db.FormLayouts.Add(data);
+                        }
+
+                        db.SaveChanges();
+                    }
+                }
+                else
+                {
+                    return new HttpStatusCodeResult(500, "DB Err");
+                }
+
+                return RedirectToAction("FormManager", "Home");
+            }
+            catch (Exception ex)
+            {
+                return new HttpStatusCodeResult(500, "DB Err");
+            }
+        }
     }
 }

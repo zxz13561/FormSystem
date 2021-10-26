@@ -20,21 +20,21 @@
 <!--Body-->
 <form style="margin-left:10px;" method="get" action="/Home/CheckAns">
     @if (this.Model != null)
-        {
-            for (int i = 0; i < this.Model.Count; i++)
             {
-                switch (Model[i].QuestionType)
+                for (int i = 0; i < this.Model.Count; i++)
                 {
-                    case "QT01":
+                    switch (Model[i].QuestionType)
+                    {
+                        case "QT01": case "QT01 ":
                         <div class="mb-3 row">
                             @Html.LabelFor(input => this.Model[i].Answer, this.Model[i].Body, new { @class = "col-sm-2 col-form-label" })
                             <div class="col-sm-6">
                                 @Html.TextBoxFor(input => this.Model[i].Answer, new { @class = "form-control", @required = this.Model[i].NeedAns })
                             </div>
                         </div>
-                        break;
+                            break;
 
-                    case "QT02":
+                        case "QT02": case "QT02 ":
                         <div class="mb-3 row">
                             @Html.LabelFor(input => this.Model[i].Answer, this.Model[i].Body, new { @class = "col-sm-2 col-form-label" })
                             <div class="col-sm-6">
@@ -43,7 +43,7 @@
                         </div>
                         break;
 
-                    case "QT03":
+                    case "QT03": case "QT03 ":
                         <div class="mb-3 row">
                             @Html.LabelFor(input => this.Model[i].Answer, this.Model[i].Body, new { @class = "col-sm-2 col-form-label" })
                             <div class="col-sm-6">
@@ -52,7 +52,7 @@
                         </div>
                         break;
 
-                    case "QT04":
+                    case "QT04": case "QT04 ":
                         <div class="mb-3 row">
                             @Html.LabelFor(input => this.Model[i].Answer, this.Model[i].Body, new { @class = "col-sm-2 col-form-label" })
                             <div class="col-sm-6">
@@ -61,7 +61,7 @@
                         </div>
                         break;
 
-                    case "QT05":
+                    case "QT05": case "QT05 ":
                         <div class="mb-3 row">
                             @Html.LabelFor(input => this.Model[i].Answer, this.Model[i].Body, new { @class = "col-sm-2 col-form-label" })
                             @foreach (string ans in this.Model[i].Answer.Split(';'))
@@ -77,7 +77,7 @@
                         </div>
                         break;
 
-                    /*case "QT06":
+                    /*case "QT06": case "QT06 ":
                         <div class="mb-3 row">
                             @Html.LabelFor(input => this.Model[i].Answer, this.Model[i].Body, new { @class = "col-sm-2 col-form-label" })
                             @foreach (string ans in this.Model[i].Answer.Split(';'))

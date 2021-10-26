@@ -229,12 +229,12 @@
     <Content Include="Views\Home\FillForm.cshtml" />
     <Content Include="Views\Home\FormManager.cshtml" />
     <Content Include="Views\Home\FrequentlyQuestions.cshtml" />
-    <Content Include="Views\Home\EditForm.cshtml" />
+    <Content Include="Views\Home\CreateNewForm.cshtml" />
     <Content Include="Views\Home\CheckAns.cshtml" />
     <Content Include="Views\PartialView\_LayoutTable.cshtml" />
     <Content Include="Views\Home\EditForm Backup.cshtml" />
-    <Content Include="Views\PartialView\_InfoPartial.cshtml" />
-    <Content Include="Views\PartialView\_LayoutPartial.cshtml" />
+    <Content Include="Views\PartialView\_NewInfo.cshtml" />
+    <Content Include="Views\PartialView\_NewLayout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
