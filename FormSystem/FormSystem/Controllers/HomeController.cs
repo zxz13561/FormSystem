@@ -36,6 +36,7 @@ namespace FormSystem.Controllers
         {
             // check id is correct
             ViewBag.Message = id;
+            Session["FillFormFID"] = id;
             if(!Guid.TryParse(id, out Guid FID))
             {
                 ViewBag.FormTitle = "發生錯誤";
@@ -67,10 +68,29 @@ namespace FormSystem.Controllers
             }
         }
 
-        [HttpGet]
-        public ActionResult CheckAns(List<FormLayout> ansModel)
+        public ActionResult CheckAns(List<FormAnsModel> ansList)
         {
-            return View(ansModel);
+            try
+            {
+                if(!Guid.TryParse(Session["FillFormFID"].ToString(), out Guid fillFid))
+                {
+                    return new HttpStatusCodeResult(500, "ERROR");
+                }
+
+                List<string> reviewAns = new List<string>();
+
+                foreach(FormAnsModel ansArr in ansList)
+                {                    
+                    string ans = (ansArr.Answer.Count() > 1) ? string.Join(",", ansArr.Answer.Where((source, value) => source != "false").ToArray()) : ansArr.Answer[0];                    
+                    reviewAns.Add(ans);
+                }
+
+                return View(reviewAns);
+            }
+            catch (Exception ex)
+            {
+                return new HttpStatusCodeResult(500, ex.ToString());
+            }
         }
 
         public ActionResult FormManager()
