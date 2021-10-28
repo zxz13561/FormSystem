@@ -142,7 +142,7 @@
     </Compile>
     <Compile Include="Models\FormAnsModel.cs" />
     <Compile Include="Models\CreateFormModel.cs" />
-    <Compile Include="Models\LayoutData.cs" />
+    <Compile Include="Models\ShowAnsModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -224,7 +224,6 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Home\FormInfo.cshtml" />
     <Content Include="Views\Home\Login.cshtml" />
     <Content Include="Views\Home\FillForm.cshtml" />
     <Content Include="Views\Home\FormManager.cshtml" />
@@ -234,6 +233,8 @@
     <Content Include="Views\Home\EditForm Backup.cshtml" />
     <Content Include="Views\PartialView\_NewInfo.cshtml" />
     <Content Include="Views\PartialView\_NewLayout.cshtml" />
+    <Content Include="Views\Home\ErrorPage.cshtml" />
+    <Content Include="Views\Home\SuccessPage.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

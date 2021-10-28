@@ -5,8 +5,10 @@ using System.Web;
 
 namespace FormSystem.Models
 {
-    public class LayoutData
+    public class ShowAnsModel
     {
+        public string QBody { get; set; }
 
+        public string QAns { get; set; }
     }
 }

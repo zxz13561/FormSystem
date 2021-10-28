@@ -1,15 +1,32 @@
-﻿@model List<string>
+﻿@model List<FormSystem.Models.ShowAnsModel>
 @{
     ViewBag.Title = "CheckAns";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>CheckAns</h2>
-@{
-    for (int i = 0; i < this.Model.Count; i++)
+<!--Title-->
+<div class="jumbotron">
+    <div class="row">
+        <div class="col-7">
+            <h1>確認資料</h1>
+        </div>
+    </div>
+    <p class="lead">確認輸入無誤後，按下送出</p>
+</div>
+<hr />
+@using (Html.BeginForm("WriteAnsToDB", "Home"))
+{
+    foreach (FormSystem.Models.ShowAnsModel _ans in this.Model)
     {
-        <p>@this.Model[i]</p>
+        <div class="mb-3 row">
+            <label class="col-sm-2 col-form-label">@_ans.QBody</label>
+            <div class="col-sm-6">
+                <label class = "form-control">@_ans.QAns</label>
+            </div>
+        </div>
     }
+
+    <input type="submit" name="confirm" value="送出" />
 }
 
 

@@ -19,6 +19,8 @@ namespace FormSystem.DBModel
 
         public string AnswerData { get; set; }
 
+        public string QuestionSort { get; set; }
+
         public virtual FormInfo FormInfo { get; set; }
     }
 }

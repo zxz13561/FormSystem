@@ -11,7 +11,7 @@ namespace FormSystem.Controllers
 {
     public class HomeController : Controller
     {
-
+        #region Only Show Page Controllers
         public ActionResult Index()
         {
             var InfoList = new FormDBModel().FormInfoes.ToList();
@@ -25,86 +25,145 @@ namespace FormSystem.Controllers
             return View();
         }
 
-        public ActionResult FormInfo()
-        {
-            ViewBag.Message = "Put Form info here.";
-
-            return View();
-        }
-
-        public ActionResult FillForm(string id)
-        {
-            // check id is correct
-            ViewBag.Message = id;
-            Session["FillFormFID"] = id;
-            if(!Guid.TryParse(id, out Guid FID))
-            {
-                ViewBag.FormTitle = "發生錯誤";
-                ViewBag.FormBody = "請回上一頁重新選取";
-                ViewBag.FormStart = "";
-                ViewBag.FormEnd = "";
-
-                return View();
-            }
-
-            using (FormDBModel dbModel = new FormDBModel())
-            {
-                // Get Form information
-                var formInfo = dbModel.FormInfoes
-                        .Where(info => info.FormID == FID)
-                        .FirstOrDefault();
-
-                ViewBag.FormTitle = formInfo.Name;
-                ViewBag.FormBody = formInfo.Body;
-                ViewBag.FormStart = formInfo.StartDate.ToString("yyyy-MM-dd hh:mm:ss");
-                ViewBag.FormEnd = formInfo.EndDate.ToString("yyyy-MM-dd hh:mm:ss");
-
-                // Get Form layout and sent to view page
-                var formLayout = new FormDBModel().FormLayouts
-                        .Where(layout => layout.FormID == FID)
-                        .OrderBy(layout => layout.ID);
-
-                return View(formLayout.ToList());
-            }
-        }
-
-        public ActionResult CheckAns(List<FormAnsModel> ansList)
-        {
-            try
-            {
-                if(!Guid.TryParse(Session["FillFormFID"].ToString(), out Guid fillFid))
-                {
-                    return new HttpStatusCodeResult(500, "ERROR");
-                }
-
-                List<string> reviewAns = new List<string>();
-
-                foreach(FormAnsModel ansArr in ansList)
-                {                    
-                    string ans = (ansArr.Answer.Count() > 1) ? string.Join(",", ansArr.Answer.Where((source, value) => source != "false").ToArray()) : ansArr.Answer[0];                    
-                    reviewAns.Add(ans);
-                }
-
-                return View(reviewAns);
-            }
-            catch (Exception ex)
-            {
-                return new HttpStatusCodeResult(500, ex.ToString());
-            }
-        }
-
         public ActionResult FormManager()
         {
-
-            return View();
+            var InfoList = new FormDBModel().FormInfoes.ToList();
+            return View(InfoList);
         }
 
         public ActionResult FrequentlyQuestions()
         {
-
             return View();
         }
 
+        public ActionResult ErrorPage(string errMsg)
+        {
+            ViewBag.ErrMsg = errMsg;
+            return View();
+        }
+        #endregion
+
+        #region Show Form Layout and Receive Answer
+        /// <summary>從DB抓取資料顯示表單</summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ActionResult FillForm(string id)
+        {
+            try
+            {
+                // check id is correct
+                ViewBag.Message = id;
+                Session["FillFormFID"] = id;
+                if (!Guid.TryParse(id, out Guid FID))
+                {
+                    ViewBag.FormTitle = "發生錯誤";
+                    ViewBag.FormBody = "請回上一頁重新選取";
+                    ViewBag.FormStart = "";
+                    ViewBag.FormEnd = "";
+
+                    return View();
+                }
+
+                // Show Form Layout
+                using (FormDBModel dbModel = new FormDBModel())
+                {
+                    // Get Form information
+                    var formInfo = dbModel.FormInfoes
+                            .Where(info => info.FormID == FID)
+                            .FirstOrDefault();
+
+                    ViewBag.FormTitle = formInfo.Name;
+                    ViewBag.FormBody = formInfo.Body;
+                    ViewBag.FormStart = formInfo.StartDate.ToString("yyyy-MM-dd hh:mm:ss");
+                    ViewBag.FormEnd = formInfo.EndDate.ToString("yyyy-MM-dd hh:mm:ss");
+
+                    // Get Form layout and sent to view page
+                    var formLayout = new FormDBModel().FormLayouts
+                            .Where(layout => layout.FormID == FID)
+                            .OrderBy(layout => layout.ID);
+
+                    // Save into Session
+                    Session["FillFormInfo"] = formLayout.ToList();
+                    return View(formLayout.ToList());
+                }
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("ErrorPage", "Home", new { errMsg = ex.ToString() });
+            }
+        }
+
+        /// <summary>接收表單資料，顯示確認頁面</summary>
+        /// <param name="ansList"></param>
+        /// <returns></returns>
+        public ActionResult CheckAns(List<FormAnsModel> ansList)
+        {
+            try
+            {
+                // Get FID and Info from Session
+                if (!Guid.TryParse(Session["FillFormFID"].ToString(), out Guid fillFid) || Session["FillFormInfo"] == null)
+                {
+                    throw new Exception("FillFormInfo Null");
+                }
+
+                // Show Answers
+                List<FormLayout> fLayout = (List<FormLayout>)Session["FillFormInfo"];
+                List<ShowAnsModel> showAns = new List<ShowAnsModel>();
+                FormData sessionAns = new FormData() { FormID = fillFid};
+
+                for (int i = 0; i < fLayout.Count; i++)
+                {
+                    sessionAns.QuestionSort += fLayout[i].QuestionType + ";";
+                    sessionAns.AnswerData += (ansList[i].Answer.Count() > 1) ? string.Join(",", ansList[i].Answer) : ansList[i].Answer[0];
+                    sessionAns.AnswerData += ";";
+                    string ansStr = (ansList[i].Answer.Count() > 1) ? string.Join(",", ansList[i].Answer.Where((source, value) => source != "false").ToArray()) : ansList[i].Answer[0];
+                    showAns.Add(new ShowAnsModel() { QBody = fLayout[i].Body, QAns = ansStr });
+                }
+
+                // Save to session and output
+                Session["FormData"] = sessionAns;
+                return View(showAns);
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("ErrorPage", "Home", new { errMsg = ex.ToString() });
+            }
+        }
+
+        /// <summary>從Session將表單答案寫入DB</summary>
+        /// <returns></returns>
+        public ActionResult WriteAnsToDB()
+        {
+            try
+            {
+                // Get data from Session
+                if (Session["FormData"] == null)
+                {
+                    throw new Exception("Session Data is null");
+                }
+
+                FormData fData =  (FormData)Session["FormData"];
+                fData.CreateDate = DateTime.Now;
+
+                using (FormDBModel db = new FormDBModel())
+                {
+                    db.FormDatas.Add(fData);
+                    db.SaveChanges();
+                }
+
+                return View("SuccessPage");
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("ErrorPage", "Home", new { errMsg = ex.ToString() });
+            }
+        }
+        #endregion
+
+        #region Form Manager Function Controller
+        /// <summary>依照參數選擇是新增表單或者編輯表單</summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public ActionResult EditForm(string id)
         {
             ViewBag.SelectList = ModelFunctions.QusetionsType();
@@ -127,7 +186,87 @@ namespace FormSystem.Controllers
             return View();
         }
 
+        /// <summary>轉換Session資料，存入SQL</summary>
+        /// <returns></returns>
+        public ActionResult InsertIntoDB()
+        {
+            FormInfo fInfo = (Session["FormInfo"] != null) ? (FormInfo)Session["FormInfo"] : null;
+            List<FormLayout> fLayout = (Session["LayoutList"] != null) ? (List<FormLayout>)Session["LayoutList"] : null;
+
+            try
+            {
+                if (fInfo != null && fLayout != null)
+                {
+                    using (FormDBModel db = new FormDBModel())
+                    {
+                        fInfo.CreateDate = DateTime.Now;
+                        db.FormInfoes.Add(fInfo);
+
+                        foreach (FormLayout data in fLayout)
+                        {
+                            db.FormLayouts.Add(data);
+                        }
+
+                        db.SaveChanges();
+                    }
+                }
+                else
+                {
+                    throw new Exception("DB Error");
+                }
+
+                return RedirectToAction("FormManager", "Home");
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("ErrorPage", "Home", new { errMsg = ex.ToString() });
+            }
+        }
+
+        public ActionResult DeleteForm(string[] chkForm)
+        {
+            try
+            {
+                using (FormDBModel db = new FormDBModel())
+                {
+                    foreach (string _fid in chkForm)
+                    {
+                        if(_fid != "false"){
+                            if (!Guid.TryParse(_fid, out Guid FormID))
+                                throw new Exception("FID Error");
+
+                            var infoDB =
+                                from info in db.FormInfoes
+                                where info.FormID == FormID
+                                select info;
+
+                            var layoutDB =
+                                from layout in db.FormLayouts
+                                where layout.FormID == FormID
+                                select layout;
+
+                            var dataDB =
+                                from data in db.FormDatas
+                                where data.FormID == FormID
+                                select data;
+                        }
+                    }
+                    db.SaveChanges();
+                }
+
+                return RedirectToAction("FormManager");
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("ErrorPage", "Home", new { errMsg = ex.ToString() });
+            }
+        }
+        #endregion
+
         #region Create New Form
+        /// <summary>新表單資訊</summary>
+        /// <param name="fInfo"></param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult NewInfo(FormInfo fInfo)
         {
@@ -137,6 +276,9 @@ namespace FormSystem.Controllers
             return Content("資料儲存成功");
         }
 
+        /// <summary>新表單問題列表</summary>
+        /// <param name="fLay"></param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult NewLayout(FormLayout fLay)
         {
@@ -176,6 +318,8 @@ namespace FormSystem.Controllers
             return Content(tableString);
         }
 
+        /// <summary>顯示新表單</summary>
+        /// <returns></returns>
         public ActionResult ShowForm()
         {
             string FormHtml = string.Empty;
@@ -205,41 +349,5 @@ namespace FormSystem.Controllers
         }
         #endregion
 
-        /// <summary>轉換Session資料，存入SQL</summary>
-        /// <returns></returns>
-        public ActionResult InsertIntoDB()
-        {
-            FormInfo fInfo = (Session["FormInfo"] != null) ? (FormInfo)Session["FormInfo"] : null;
-            List<FormLayout> fLayout = (Session["LayoutList"] != null) ? (List<FormLayout>)Session["LayoutList"] : null;
-
-            try
-            {
-                if (fInfo != null && fLayout != null)
-                {
-                    using (FormDBModel db = new FormDBModel())
-                    {
-                        fInfo.CreateDate = DateTime.Now;
-                        db.FormInfoes.Add(fInfo);
-
-                        foreach (FormLayout data in fLayout)
-                        {
-                            db.FormLayouts.Add(data);
-                        }
-
-                        db.SaveChanges();
-                    }
-                }
-                else
-                {
-                    return new HttpStatusCodeResult(500, "DB Err");
-                }
-
-                return RedirectToAction("FormManager", "Home");
-            }
-            catch (Exception ex)
-            {
-                return new HttpStatusCodeResult(500, "DB Err");
-            }
-        }
     }
 }

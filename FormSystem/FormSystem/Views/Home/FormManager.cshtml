@@ -1,7 +1,8 @@
-﻿
+﻿@model List<FormSystem.DBModel.FormInfo>
 @{
     ViewBag.Title = "FormManager";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    string[] chkForm = new string[this.Model.Count];
 }
 
 <!--Title-->
@@ -33,36 +34,45 @@
 <hr />
 <!--Function List-->
 <div class="row">
-    @Html.ActionLink("新增表單", "EditForm", "Home", new { @id = "NewForm" }, new { @class = "btn btn-secondary" }))
+    @Html.ActionLink("新增表單", "EditForm", "Home", new { @id = "NewForm" }, new { @class = "btn btn-secondary" })
 </div>
 <hr />
 <!--Form List-->
-<table class="table table-striped table-hover">
-    <thead>
-        <tr>
-            <th scope="col"></th>
-            <th scope="col">#</th>
-            <th scope="col">問卷名稱</th>
-            <th scope="col">狀態</th>
-            <th scope="col">開始時間</th>
-            <th scope="col">結束時間</th>
-            <th scope="col">統計</th>
-        </tr>
-    </thead>
-    @{
-        for (int i = 0; i <= 10; i++)
-        {
+@using (Html.BeginForm("DeleteForm", "Home", FormMethod.Post, new { @id = "FormList" }))
+{
+    <button type="submit">刪除所選</button>
+    <table class="table table-striped table-hover">
+        <thead>
             <tr>
-                <th scope="row"><input type="checkbox" value="" /></th>
-                <th scope="row">@i</th>
-                <td>@Html.ActionLink("表單" + i, "FillForm", "Home", new { id = "TestID" + i }, null)</td>
-                <td>None</td>
-                <td>2021/01/01</td>
-                <td>2021/12/31</td>
-                <td>Click</td>
+                <th scope="col"></th>
+                <th scope="col">#</th>
+                <th scope="col">問卷名稱</th>
+                <th scope="col">狀態</th>
+                <th scope="col">開始時間</th>
+                <th scope="col">結束時間</th>
+                <th scope="col">統計</th>
             </tr>
-        }
-    }
-    <tbody>
-    </tbody>
-</table>
+        </thead>
+        <tbody id="FormTable">
+            @for (int i = 0; i < this.Model.Count; i++)
+            {
+                string num = (i + 1).ToString();
+                <tr>
+                    <td>@Html.CheckBox($"chkForm[{i}]", new { @value = this.Model[i].FormID })</td>
+                    <th>@num</th>
+                    <td>@Html.ActionLink(this.Model[i].Name, "EditForm", "Home", new { @id = this.Model[i].FormID })</td>
+                    <td>@this.Model[i].StartDate.ToString("yyyy-MM-dd")</td>
+                    <td>@this.Model[i].EndDate.ToString("yyyy-MM-dd")</td>
+                    <td>@Html.ActionLink("前往", "DataAnalysis", "Home", new { id = this.Model[i].FormID }, null)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+<script type="text/javascript">
+    $("#FormList").on("submit", function () {
+        return confirm("確認刪除選擇的表單嗎?");
+    });
+</script>
+
+
