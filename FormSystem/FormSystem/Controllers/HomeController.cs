@@ -199,14 +199,16 @@ namespace FormSystem.Controllers
                 {
                     using (FormDBModel db = new FormDBModel())
                     {
+                        // Save Info to DB
                         fInfo.CreateDate = DateTime.Now;
                         db.FormInfoes.Add(fInfo);
+                        db.SaveChanges();
 
+                        // Save Layout to DB
                         foreach (FormLayout data in fLayout)
                         {
                             db.FormLayouts.Add(data);
                         }
-
                         db.SaveChanges();
                     }
                 }
@@ -223,6 +225,9 @@ namespace FormSystem.Controllers
             }
         }
 
+        /// <summary>刪除所選的表單與相關的資料</summary>
+        /// <param name="chkForm"></param>
+        /// <returns></returns>
         public ActionResult DeleteForm(string[] chkForm)
         {
             try
@@ -232,28 +237,35 @@ namespace FormSystem.Controllers
                     foreach (string _fid in chkForm)
                     {
                         if(_fid != "false"){
-                            if (!Guid.TryParse(_fid, out Guid FormID))
+                            // Check FID is correct
+                            if (!Guid.TryParse(_fid, out Guid _FormID))
                                 throw new Exception("FID Error");
 
-                            var infoDB =
-                                from info in db.FormInfoes
-                                where info.FormID == FormID
-                                select info;
+                            // Delete Children Data First
+                            var deleteData =
+                            $@"
+                                DELETE FROM [dbo].[FormData]
+                                WHERE [FormID] = '{_FormID}'
+                            ";
+                            db.Database.ExecuteSqlCommand(deleteData);
 
-                            var layoutDB =
-                                from layout in db.FormLayouts
-                                where layout.FormID == FormID
-                                select layout;
+                            var deleteLayout =
+                            $@"
+                                DELETE FROM [dbo].[FormLayout]
+                                WHERE [FormID] = '{_FormID}'
+                            ";
+                            db.Database.ExecuteSqlCommand(deleteLayout);
 
-                            var dataDB =
-                                from data in db.FormDatas
-                                where data.FormID == FormID
-                                select data;
+                            // Delete Parent Data in the end
+                            var deleteInfo =
+                            $@"
+                                DELETE FROM [dbo].[FormInfo]
+                                WHERE [FormID] = '{_FormID}'
+                            ";
+                            db.Database.ExecuteSqlCommand(deleteInfo);
                         }
                     }
-                    db.SaveChanges();
                 }
-
                 return RedirectToAction("FormManager");
             }
             catch (Exception ex)

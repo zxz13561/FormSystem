@@ -14,7 +14,7 @@
     <div class="nav nav-tabs" id="nav-tab" role="tablist">
         <button class="nav-link active" id="nav-info-tab" data-bs-toggle="tab" data-bs-target="#nav-Info" type="button" role="tab" aria-controls="nav-home" aria-selected="true">問卷</button>
         <button class="nav-link" id="nav-layout-tab" data-bs-toggle="tab" data-bs-target="#nav-Layout" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">問題</button>
-        <button class="nav-link" id="nav-view-tab" data-bs-toggle="tab" data-bs-target="#nav-View" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">@Ajax.ActionLink("檢視表單", "ShowForm", new AjaxOptions { UpdateTargetId="reviewForm", Url = Url.Action("ShowForm")})  </button>        
+        <a class="nav-link" id="nav-view-tab" data-bs-toggle="tab" data-bs-target="#nav-View" type="button" role="tab" aria-controls="nav-contact" aria-selected="false" data-ajax="true" data-ajax-mode="replace" data-ajax-update="#reviewForm" href="@Url.Action("ShowForm")">檢視表單</a>        
     </div>
 </nav>
 <!--Page Start Here-->
@@ -46,9 +46,7 @@
         <!--確認送出-->
         <hr />
         <div>
-            <button class="btn btn-outline-warning">
-                @Ajax.ActionLink("送出", "InsertIntoDB", new AjaxOptions { Url = Url.Action("InsertIntoDB") })
-            </button>
+            <a class="btn btn-outline-warning" id="saveFrom" href="/Home/InsertIntoDB" onclick="return confirm('確認送出?');">送出</a>
         </div>
     </div>
 </div>
