@@ -1,7 +1,8 @@
-﻿
+﻿@model FormSystem.DBModel.FrenquenQuestion
 @{
     ViewBag.Title = "FrequentlyQuestions";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    List<FormSystem.Models.FrequenModel> frequenList = ViewBag.FrequenList;
 }
 
 <!--Title-->
@@ -10,86 +11,81 @@
 </div>
 <hr />
 <!--Edit Area-->
-<!--Row 1-->
-<div class="mb-3 row">
-    <label for="inputTitle" class="col-sm-2 col-form-label">問題名稱</label>
-    <div class="col-sm-6">
-        <input type="password" class="form-control" id="inputTitle">
+@using (Html.BeginForm("AddFrequentQuestion", "Home"))
+{
+    <div class="mb-3 row">
+        <label for="inputDescribe" class="col-sm-1 col-form-label" style="text-align:right">名稱:</label>
+        <div class="col-sm-6">
+            @Html.TextBoxFor(q => this.Model.Name, new { @class = "form-control", @id = "inputDescribe", @Required = true })
+        </div>
     </div>
-</div>
-<!--Row 2-->
-<div class="mb-3 row">
-    <label for="inputDescribe" class="col-sm-2 col-form-label">問題描述</label>
-    <div class="col-sm-6">
-        <input type="password" class="form-control" id="inputDescribe">
+    <div class="mb-3 row">
+        <label for="inputDescribe" class="col-sm-1 col-form-label" style="text-align:right">問題:</label>
+        <div class="col-sm-6">
+            @Html.TextBoxFor(q => this.Model.Body, new { @class = "form-control", @id = "inputDescribe", @Required = true })
+        </div>
     </div>
-</div>
-<!--Row 3-->
-<div class="mb-3 row">
-    <label for="inputAns" class="col-sm-2 col-form-label">回答</label>
-    <div class="col-sm-6">
-        <input type="password" class="form-control" id="inputAns">
+    <div class="mb-3 row">
+        <label for="inputAns" class="col-sm-1 col-form-label" style="text-align:right">回答:</label>
+        <div class="col-sm-6">
+            @Html.TextBoxFor(q => this.Model.Answer, new { @class = "form-control", @id = "inputAns" })
+        </div>
+        <label class="col-sm-3">(多個答案，請使用" ； "隔開)</label>
     </div>
-    <label class="col-sm-3">(多個答案，請使用" ； "隔開)</label>
-</div>
-<!--Row 4-->
-<div class="mb-3 row">
-    <label for="selectType" class="col-sm-2 col-form-label">問題種類</label>
-    <div class="col-sm-3">
-        <select class="form-select" id="selectType">
-            <option selected>請選擇</option>
-            <option value="1">文字方塊(一般)</option>
-            <option value="2">文字方塊(數字)</option>
-            <option value="3">文字方塊(Email)</option>
-            <option value="4">文字方塊(日期)</option>
-            <option value="5">單選方塊</option>
-            <option value="6">複選方塊</option>
-        </select>
+    <div class="mb-3 row">
+        <label for="selectType" class="col-sm-1 col-form-label" style="text-align:right">問題種類:</label>
+        <div class="col-sm-3">
+            @Html.DropDownListFor(q => this.Model.QuestionType, (IEnumerable<SelectListItem>)ViewBag.SelectList, new { @class = "form-select", @id = "selectType", @Required = true })
+        </div>
+        <div class="form-check col-sm-2">
+            @Html.CheckBoxFor(q => this.Model.NeedAns, new { @class = "form-check-input", @type = "checkbox", @id = "checkNullable"})
+            <label class="form-check-label" for="checkNullable">
+                必填
+            </label>
+        </div>
+        <div class="col-sm-3">
+            <input class="btn btn-outline-primary" type="submit" value="加入" id="btnSubmit">
+            <a class="btn btn-outline-danger" href="FrequentlyQuestions">清空</a>
+        </div>
+        <div class="col-sm-4"></div>
     </div>
-    <div class="form-check col-sm-2">
-        <input class="form-check-input" type="checkbox" value="" id="checkNullable">
-        <label class="form-check-label" for="checkNullable">
-            必填
-        </label>
-    </div>
-    <div class="col-sm-1">
-        <input class="btn btn-outline-primary" type="button" value="建立問題" id="btnSubmit">
-    </div>
-    <div class="col-sm-1">
-        <input class="btn btn-outline-danger" type="button" value="清空欄位" id="btnClean">
-    </div>
-</div>
+}
 <hr />
 <!--Table-->
+@using (Html.BeginForm("DeleteFrequentQuestions", "Home"))
+{
 <div>
-    <input class="btn btn-outline-danger" type="button" value="刪除所選" id="btnDelete">
+    <input class="btn btn-outline-danger" type="submit" value="刪除所選" onclick="return confirm('確認刪除?');">
 </div>
 <table class="table table-striped table-hover">
     <thead>
         <tr>
             <th scope="col"></th>
             <th scope="col">#</th>
-            <th scope="col">問題名稱</th>
-            <th scope="col">問題描述</th>
+            <th scope="col">名稱</th>
+            <th scope="col">問題</th>
             <th scope="col">種類</th>
             <th scope="col">是否必填</th>
             <th scope="col">編輯</th>
         </tr>
     </thead>
-    @{
-        for (int i = 0; i <= 10; i++)
+    <tbody id="frquenTable">
+        @for (int i = 0; i < frequenList.Count(); i++)
         {
+            int num = i + 1;
             <tr>
-                <th scope="row"><input type="checkbox" name="name" value="" /></th>
-                <th scope="row">@i</th>
-                <td>常用問題 @i</td>
-                <td>None</td>
-                <td>文字</td>
-                <td><input type="checkbox" name="name" /></td>
-                <td>Click</td>
+                <td>
+                    <input type="checkbox" id="@frequenList[i].ID" name="chkfreq[@i]" value="@frequenList[i].ID">
+                    <input name="chkfreq[@i]" type="hidden" value="false">
+                </td>
+                <th>@num</th>
+                <td>@frequenList[i].Name</td>
+                <td>@frequenList[i].Body</td>
+                <td>@frequenList[i].QuestionType</td>
+                <td>@frequenList[i].NeedAns</td>
+                <td>@Html.ActionLink("Index", "Home", new { @id = frequenList[i].ID })</td>
             </tr>
         }
-    }
-    <tbody>
     </tbody>
 </table>
+}

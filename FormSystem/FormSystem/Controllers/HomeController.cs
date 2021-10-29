@@ -31,9 +31,16 @@ namespace FormSystem.Controllers
             return View(InfoList);
         }
 
+        /// <summary>顯示常用問題頁面</summary>
+        /// <returns></returns>
         public ActionResult FrequentlyQuestions()
         {
-            return View();
+            // Set Drop Down List
+            ViewBag.SelectList = ModelFunctions.QusetionsType();
+            // Save data into viewbag
+            ViewBag.FrequenList = DALFunctions.FrequentlyQuestionsList();
+
+            return View(new FrenquenQuestion()); ;
         }
 
         public ActionResult ErrorPage(string errMsg)
@@ -166,6 +173,7 @@ namespace FormSystem.Controllers
         /// <returns></returns>
         public ActionResult EditForm(string id)
         {
+            // Set Drop Down List
             ViewBag.SelectList = ModelFunctions.QusetionsType();
 
             // Create New Form
@@ -361,7 +369,6 @@ namespace FormSystem.Controllers
 
             list.Add(questionInfo);
             Session["LayoutList"] = list;
-            ViewBag.layouts = list;
 
             int i = 0;
             string tableString = string.Empty;
@@ -417,5 +424,66 @@ namespace FormSystem.Controllers
         }
         #endregion
 
+        #region Frequenly Question Controller
+        /// <summary>新常用問題資料寫入DB</summary>
+        /// <param name="q"></param>
+        /// <returns></returns>
+        public ActionResult AddFrequentQuestion(FrenquenQuestion q)
+        {
+            try
+            {
+                // Add into DB
+                using (FormDBModel db = new FormDBModel())
+                {
+                    db.FrenquenQuestions.Add(q);
+                    db.SaveChanges();
+                }
+
+                // Set Page need data
+                ViewBag.SelectList = ModelFunctions.QusetionsType();
+                ViewBag.FrequenList = DALFunctions.FrequentlyQuestionsList();
+
+                return View("FrequentlyQuestions", new FrenquenQuestion());
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("ErrorPage", "Home", new { errMsg = ex.ToString() });
+            }
+        }
+
+        /// <summary>刪除常用問題</summary>
+        /// <param name="chkfreq"></param>
+        /// <returns></returns>
+        public ActionResult DeleteFrequentQuestions(string[] chkfreq)
+        {
+            try
+            {
+                using (FormDBModel db = new FormDBModel())
+                {
+                    foreach(string chk in chkfreq)
+                    {
+                        if(chk != "false")
+                        {
+                            var deleteData =
+                            $@"
+                                DELETE FROM [dbo].[FrenquenQuestion]
+                                WHERE [ID] = '{chk}'
+                             ";
+                            db.Database.ExecuteSqlCommand(deleteData);
+                        }
+                    }
+                }
+                // Set Page need data
+                ViewBag.SelectList = ModelFunctions.QusetionsType();
+                ViewBag.FrequenList = DALFunctions.FrequentlyQuestionsList();
+
+                return View("FrequentlyQuestions", new FrenquenQuestion());
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("ErrorPage", "Home", new { errMsg = ex.ToString() });
+            }
+        }
+        #endregion
     }
 }
