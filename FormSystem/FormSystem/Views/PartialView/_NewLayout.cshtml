@@ -33,16 +33,22 @@
     </div>
 }
 <hr />
-<table class="table table-striped table-hover">
-    <thead>
-        <tr>
-            <th scope="col" class="col-1"></th>
-            <th scope="col" class="col-1">#</th>
-            <th scope="col">問題</th>
-            <th scope="col" class="col-2">種類</th>
-            <th scope="col" class="col-1">必填</th>
-            <th scope="col" class="col-1"></th>
-        </tr>
-    </thead>
-    <tbody id="qTable"><!--問題列表--></tbody>
-</table>
+@using (Ajax.BeginForm(new AjaxOptions { UpdateTargetId = "qTable", Url = Url.Action("DeleteLayout") }))
+{
+    <button class="btn btn-outline-danger" type="submit" >刪除</button>
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th scope="col" class="col-1"></th>
+                <th scope="col" class="col-1">#</th>
+                <th scope="col">問題</th>
+                <th scope="col" class="col-2">種類</th>
+                <th scope="col" class="col-1">必填</th>
+                <th scope="col" class="col-1"></th>
+            </tr>
+        </thead>
+        <tbody id="qTable">
+            <!--問題列表-->
+        </tbody>
+    </table>
+}

@@ -225,7 +225,7 @@ namespace FormSystem.Controllers
             }
         }
 
-        /// <summary>刪除所選的表單與相關的資料</summary>
+        /// <summary>從DB刪除所選的表單與相關的資料</summary>
         /// <param name="chkForm"></param>
         /// <returns></returns>
         public ActionResult DeleteForm(string[] chkForm)
@@ -273,6 +273,58 @@ namespace FormSystem.Controllers
                 return RedirectToAction("ErrorPage", "Home", new { errMsg = ex.ToString() });
             }
         }
+
+        /// <summary>移除所選問題，並將新表單存入Session</summary>
+        /// <param name="chkLayout"></param>
+        /// <returns></returns>
+        public ActionResult DeleteLayout(string[] chkLayout)
+        {
+            try
+            {
+                // Get Data from session
+                List<FormLayout> oldList = (Session["LayoutList"] != null) ? (List<FormLayout>)Session["LayoutList"] : new List<FormLayout>();
+                List<FormLayout> newList = new List<FormLayout>();
+                int newSort = 0;
+
+                // create new layout list which layout is not checked
+                for(int index = 0; index < chkLayout.Count(); index++)
+                {
+                    if(chkLayout[index] == "false")
+                    {
+                        newList.Add(oldList[index]);
+                        newList[newSort].QuestionSort = newSort + 1;
+                        newSort++;
+                    }
+                }
+
+                // Create Table HTML
+                int i = 0;
+                string tableString = string.Empty;
+
+                foreach (var data in newList)
+                {
+                    tableString += $@"
+                    <tr>
+                        <td>
+                            <input type=""checkbox"" id=""{data.Body}"" name=""chkLayout[{i}]"" value=""{data.Body}"">
+                            <input name=""chkLayout[{i}]"" type=""hidden"" value=""false"">
+                        </td>
+                        <td>{data.QuestionSort}</td>
+                        <td>{data.Body}</td>
+                        <td>{data.QuestionType}</td>
+                        <td><a href=""Home/Index"">編輯</a></td>
+                    </tr>";
+                    i++;
+                }
+
+                Session["LayoutList"] = newList;
+                return Content(tableString);
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("ErrorPage", "Home", new { errMsg = ex.ToString() });
+            }
+        }
         #endregion
 
         #region Create New Form
@@ -304,22 +356,26 @@ namespace FormSystem.Controllers
                 Answer = fLay.Answer,
                 QuestionType = fLay.QuestionType,
                 NeedAns = fLay.NeedAns,
-                QuestionSort = (Session["LayoutList"] == null) ? 0 : list.Count()
+                QuestionSort = (Session["LayoutList"] == null) ? 1 : list.Count() + 1
             };
 
             list.Add(questionInfo);
             Session["LayoutList"] = list;
             ViewBag.layouts = list;
 
-            int i = 1; //Question table index number
+            int i = 0;
             string tableString = string.Empty;
             
+            // Create Table HTML
             foreach (var data in list)
             {
                 tableString += $@"
                     <tr>
-                        <td><input type=""checkbox"" id=""{data.Body}"" name=""{data.Body}"" value=""{data.ID}""></td>
-                        <td>{i}</td>
+                        <td>
+                            <input type=""checkbox"" id=""{data.Body}"" name=""chkLayout[{i}]"" value=""{data.Body}"">
+                            <input name=""chkLayout[{i}]"" type=""hidden"" value=""false"">
+                        </td>
+                        <td>{data.QuestionSort}</td>
                         <td>{data.Body}</td>
                         <td>{data.QuestionType}</td>
                         <td><a href=""Home/Index"">編輯</a></td>
