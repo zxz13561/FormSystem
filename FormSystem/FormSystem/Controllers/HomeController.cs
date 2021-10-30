@@ -183,16 +183,19 @@ namespace FormSystem.Controllers
             // Create New Form
             if (id == "NewForm")
             {
-                CreateFormModel cModel = new CreateFormModel();
-                cModel.mInfo = new FormInfo();
-                cModel.mLayout = new FormLayout();
+                // New FID
                 Guid newID = Guid.NewGuid();
-                cModel.mInfo.FormID = newID;
+
+                // Reset Session
                 Session["FID"] = newID;
                 Session["LayoutList"] = null;
                 Session["FormInfo"] = null;
 
-                return View("CreateNewForm", cModel);
+                // Set View Data
+                ViewData["InfoData"] = new FormInfo() { FormID = newID};
+                ViewData["LayoutData"] = new FormLayout() { FormID = newID};
+
+                return View("CreateNewForm");
             }
 
             return View();
@@ -542,5 +545,12 @@ namespace FormSystem.Controllers
             }
         }
         #endregion
+
+
+        public ActionResult SelectChanged()
+        {
+            ViewBag.SelectList = ModelFunctions.QusetionsType();
+            return PartialView("../PartialView/_NewLayout", new FormLayout() { Body = "comfire updated"});
+        }
     }
 }

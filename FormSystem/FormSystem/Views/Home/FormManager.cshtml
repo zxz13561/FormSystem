@@ -57,10 +57,12 @@
             @for (int i = 0; i < this.Model.Count; i++)
             {
                 string num = (i + 1).ToString();
+                string status = (DateTime.Now > this.Model[i].StartDate && DateTime.Now < this.Model[i].EndDate) ? "投票中" : "關閉中";
                 <tr>
                     <td>@Html.CheckBox($"chkForm[{i}]", new { @value = this.Model[i].FormID })</td>
                     <th>@num</th>
                     <td>@Html.ActionLink(this.Model[i].Name, "EditForm", "Home", new { @id = this.Model[i].FormID })</td>
+                    <td>@status</td>
                     <td>@this.Model[i].StartDate.ToString("yyyy-MM-dd")</td>
                     <td>@this.Model[i].EndDate.ToString("yyyy-MM-dd")</td>
                     <td>@Html.ActionLink("前往", "DataAnalysis", "Home", new { id = this.Model[i].FormID }, null)</td>

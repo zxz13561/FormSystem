@@ -1,5 +1,4 @@
-﻿@model FormSystem.Models.CreateFormModel
-@{
+﻿@{
     ViewBag.Title = "EditForm";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -22,7 +21,7 @@
     <!--問卷-->
     <div class="tab-pane fade show active" id="nav-Info" role="tabpanel" aria-labelledby="nav-home-tab">
         <p><!--排版用--></p>
-        @{Html.RenderPartial("../PartialView/_NewInfo", this.Model.mInfo);}
+        @{Html.RenderPartial("../PartialView/_NewInfo", ViewData["InfoData"]);}
     </div>
     <!--問題-->
     <div class="tab-pane fade" id="nav-Layout" role="tabpanel" aria-labelledby="nav-profile-tab">
@@ -30,14 +29,17 @@
         <div class="mb-3 row">
             <label for="selectType" class="col-sm-1 col-form-label" style="text-align:right">種類:</label>
             <div class="col-sm-3">
-                <select class="form-select" id="selectType">
-                    <option selected>請選擇</option>
-                    <option value="0">自訂問題</option>
-                    <!--預設問題放這裡-->
-                </select>
+                @using (Html.BeginForm("SelectChanged", "Home"))
+                {
+                    <select class="form-select" id="selectType" onchange="$(this.form).submit();">
+                        <option value="0" selected>自訂問題</option>
+                        <option value="1" >Test</option>
+                        <!--預設問題放這裡-->
+                    </select>
+                }
             </div>
         </div>
-        @{Html.RenderPartial("../PartialView/_NewLayout", this.Model.mLayout);}
+        @{Html.RenderPartial("../PartialView/_NewLayout", ViewData["LayoutData"]);}
     </div>
     <!--檢視表單-->
     <div class="tab-pane fade" id="nav-View" role="tabpanel" aria-labelledby="nav-contact-tab">

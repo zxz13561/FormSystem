@@ -39,7 +39,7 @@
             @Html.DropDownListFor(q => q.QuestionType, dropDownOptions, new { @class = "form-select", @id = "selectType", @Required = true })
         </div>
         <div class="form-check col-sm-2">
-            @Html.CheckBoxFor(q => q.NeedAns, new { @class = "form-check-input", @type = "checkbox" })
+            @Html.CheckBoxFor(q => q.NeedAns, new { @class = "form-check-input", @type = "checkbox"  })
             <label class="form-check-label" for="checkNullable">
                 必填
             </label>

@@ -4,23 +4,23 @@
     <div class="mb-3 row">
         <label for="inputDescribe" class="col-sm-1 col-form-label" style="text-align:right">問題:</label>
         <div class="col-sm-6">
-            @Html.TextBoxFor(layout => this.Model.Body, new { @class = "form-control", @id = "inputDescribe" })
+            @Html.TextBoxFor(layout => layout.Body, new { @class = "form-control", @id = "inputDescribe", @value = this.Model.Body })
         </div>
     </div>
     <div class="mb-3 row">
         <label for="inputAns" class="col-sm-1 col-form-label" style="text-align:right">回答:</label>
         <div class="col-sm-6">
-            @Html.TextBoxFor(layout => this.Model.Answer, new { @class = "form-control", @id = "inputAns" })
+            @Html.TextBoxFor(layout => layout.Answer, new { @class = "form-control", @id = "inputAns" })
         </div>
         <label class="col-sm-3">(多個答案，請使用" ； "隔開)</label>
     </div>
     <div class="mb-3 row">
         <label for="selectType" class="col-sm-1 col-form-label" style="text-align:right">問題種類:</label>
         <div class="col-sm-3">
-            @Html.DropDownListFor(layout => this.Model.QuestionType, (IEnumerable<SelectListItem>)ViewBag.SelectList, new { @class = "form-select", @id = "selectType" })
+            @Html.DropDownListFor(layout => layout.QuestionType, (IEnumerable<SelectListItem>)ViewBag.SelectList, new { @class = "form-select", @id = "selectType" })
         </div>
         <div class="form-check col-sm-2">
-            @Html.CheckBoxFor(layout => this.Model.NeedAns, new { @class = "form-check-input", @type = "checkbox", @id = "checkNullable" })
+            @Html.CheckBoxFor(layout => layout.NeedAns, new { @class = "form-check-input", @type = "checkbox", @id = "checkNullable" })
             <label class="form-check-label" for="checkNullable">
                 必填
             </label>
