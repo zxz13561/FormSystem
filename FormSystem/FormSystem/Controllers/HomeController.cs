@@ -35,8 +35,12 @@ namespace FormSystem.Controllers
         /// <returns></returns>
         public ActionResult FrequentlyQuestions()
         {
+            // Reset Session
+            Session["FrequentIndex"] = null;
+
             // Set Drop Down List
             ViewBag.SelectList = ModelFunctions.QusetionsType();
+
             // Save data into viewbag
             ViewBag.FrequenList = DALFunctions.FrequentlyQuestionsList();
 
@@ -345,7 +349,7 @@ namespace FormSystem.Controllers
             // Save into Session
             Session["FormInfo"] = fInfo;
 
-            return Content("資料儲存成功");
+            return Content("儲存成功");
         }
 
         /// <summary>新表單問題列表</summary>
@@ -425,21 +429,51 @@ namespace FormSystem.Controllers
         #endregion
 
         #region Frequenly Question Controller
-        /// <summary>新常用問題資料寫入DB</summary>
+        /// <summary>新常用問題資料寫入DB或更新資料</summary>
         /// <param name="q"></param>
         /// <returns></returns>
-        public ActionResult AddFrequentQuestion(FrenquenQuestion q)
+        public ActionResult EditFrequentQuestion(FrenquenQuestion q)
         {
             try
             {
-                // Add into DB
-                using (FormDBModel db = new FormDBModel())
+                // check is edit or create new
+                if(Session["FrequentIndex"] == null)
                 {
-                    db.FrenquenQuestions.Add(q);
-                    db.SaveChanges();
+                    // Add new line into DB
+                    using (FormDBModel db = new FormDBModel())
+                    {
+                        db.FrenquenQuestions.Add(q);
+                        db.SaveChanges();
+                    }
+                }
+                else
+                {
+                    int editID = Convert.ToInt32(Session["FrequentIndex"]);
+                    string ansString = (q.Answer == null) ? "null" : $"'{q.Answer}'";
+
+                    // update Question
+                    using (FormDBModel db = new FormDBModel())
+                    {
+
+
+                        var updateQuestion = 
+                            $@" 
+                                UPDATE [dbo].[FrenquenQuestion]
+                                SET
+                                    [Name] = '{q.Name}',
+                                    [Body] = '{q.Body}',
+                                    [Answer] = {ansString},
+                                    [QuestionType] = '{q.QuestionType}',
+                                    [NeedAns] = '{q.NeedAns}'
+                                WHERE [ID] = {editID}
+                            ";
+
+                        db.Database.ExecuteSqlCommand(updateQuestion);
+                    }
                 }
 
                 // Set Page need data
+                Session["FrequentIndex"] = null;
                 ViewBag.SelectList = ModelFunctions.QusetionsType();
                 ViewBag.FrequenList = DALFunctions.FrequentlyQuestionsList();
 
@@ -478,6 +512,29 @@ namespace FormSystem.Controllers
                 ViewBag.FrequenList = DALFunctions.FrequentlyQuestionsList();
 
                 return View("FrequentlyQuestions", new FrenquenQuestion());
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("ErrorPage", "Home", new { errMsg = ex.ToString() });
+            }
+        }
+
+        /// <summary>顯示需要編輯的問題資料</summary>
+        /// <param name="QID"></param>
+        /// <returns></returns>
+        public ActionResult ShowFrequentQuestions(int QID)
+        {
+            try
+            {
+                // Save ID into Seesion
+                Session["FrequentIndex"] = QID;
+
+                // Get data from db
+                FrenquenQuestion dbData = new FormDBModel().FrenquenQuestions.Where(q => q.ID == QID).FirstOrDefault();
+
+                ViewBag.SelectList = ModelFunctions.QusetionsType(dbData.QuestionType);
+                ViewBag.FrequenList = DALFunctions.FrequentlyQuestionsList();
+                return View("FrequentlyQuestions", dbData);
             }
             catch (Exception ex)
             {

@@ -3,6 +3,7 @@
     ViewBag.Title = "FrequentlyQuestions";
     Layout = "~/Views/Shared/_Layout.cshtml";
     List<FormSystem.Models.FrequenModel> frequenList = ViewBag.FrequenList;
+    List<SelectListItem> dropDownOptions = ViewBag.SelectList;
 }
 
 <!--Title-->
@@ -11,34 +12,34 @@
 </div>
 <hr />
 <!--Edit Area-->
-@using (Html.BeginForm("AddFrequentQuestion", "Home"))
+@using (Html.BeginForm("EditFrequentQuestion", "Home"))
 {
     <div class="mb-3 row">
         <label for="inputDescribe" class="col-sm-1 col-form-label" style="text-align:right">名稱:</label>
         <div class="col-sm-6">
-            @Html.TextBoxFor(q => this.Model.Name, new { @class = "form-control", @id = "inputDescribe", @Required = true })
+            @Html.TextBoxFor(q => q.Name, new { @class = "form-control", @Required = true, @value = this.Model.Name })
         </div>
     </div>
     <div class="mb-3 row">
         <label for="inputDescribe" class="col-sm-1 col-form-label" style="text-align:right">問題:</label>
         <div class="col-sm-6">
-            @Html.TextBoxFor(q => this.Model.Body, new { @class = "form-control", @id = "inputDescribe", @Required = true })
+            @Html.TextBoxFor(q => q.Body, new { @class = "form-control", @Required = true, @value = this.Model.Body })
         </div>
     </div>
     <div class="mb-3 row">
         <label for="inputAns" class="col-sm-1 col-form-label" style="text-align:right">回答:</label>
         <div class="col-sm-6">
-            @Html.TextBoxFor(q => this.Model.Answer, new { @class = "form-control", @id = "inputAns" })
+            @Html.TextBoxFor(q => q.Answer, new { @class = "form-control", @value = this.Model.Answer })
         </div>
         <label class="col-sm-3">(多個答案，請使用" ； "隔開)</label>
     </div>
     <div class="mb-3 row">
         <label for="selectType" class="col-sm-1 col-form-label" style="text-align:right">問題種類:</label>
         <div class="col-sm-3">
-            @Html.DropDownListFor(q => this.Model.QuestionType, (IEnumerable<SelectListItem>)ViewBag.SelectList, new { @class = "form-select", @id = "selectType", @Required = true })
+            @Html.DropDownListFor(q => q.QuestionType, dropDownOptions, new { @class = "form-select", @id = "selectType", @Required = true })
         </div>
         <div class="form-check col-sm-2">
-            @Html.CheckBoxFor(q => this.Model.NeedAns, new { @class = "form-check-input", @type = "checkbox", @id = "checkNullable"})
+            @Html.CheckBoxFor(q => q.NeedAns, new { @class = "form-check-input", @type = "checkbox" })
             <label class="form-check-label" for="checkNullable">
                 必填
             </label>
@@ -83,7 +84,7 @@
                 <td>@frequenList[i].Body</td>
                 <td>@frequenList[i].QuestionType</td>
                 <td>@frequenList[i].NeedAns</td>
-                <td>@Html.ActionLink("Index", "Home", new { @id = frequenList[i].ID })</td>
+                <td>@Html.ActionLink("編輯", "ShowFrequentQuestions", new { @QID = frequenList[i].ID })</td>
             </tr>
         }
     </tbody>

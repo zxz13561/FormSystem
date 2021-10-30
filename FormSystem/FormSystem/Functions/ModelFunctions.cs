@@ -11,7 +11,7 @@ namespace FormSystem.Functions
     {
         /// <summary>回傳問題種類下拉選單</summary>
         /// <returns></returns>
-        public static List<SelectListItem> QusetionsType()
+        public static List<SelectListItem> QusetionsType(string beenSelected = null)
         {
             // Import Question Type Datas to DropdownList
             List<SelectListItem> QTypeList = new List<SelectListItem>() { };
@@ -19,7 +19,15 @@ namespace FormSystem.Functions
 
             foreach (var type in typeQuery)
             {
-                QTypeList.Add(new SelectListItem { Text = type.Name, Value = type.TypeID });
+                // bypass space charater
+                string[] dbType = type.TypeID.Split(' ');
+                string[] dataType = (beenSelected != null) ? beenSelected.Split(' ') : null;
+
+                // set which is selected
+                if (dataType != null && dataType[0] == dbType[0])
+                    QTypeList.Add(new SelectListItem { Text = type.Name, Value = type.TypeID, Selected = true });
+                else
+                    QTypeList.Add(new SelectListItem { Text = type.Name, Value = type.TypeID });
             }
 
             return QTypeList;
