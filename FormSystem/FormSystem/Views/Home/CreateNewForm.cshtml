@@ -3,6 +3,13 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<script>
+    $(document).ready(function () {
+        $("#nav-layout-tab").click(function () {
+            $('#InfoForm').submit(alert(123));
+        });
+    });
+</script>
 <!--Title-->
 <div class="headTitle">
     <h1>後台 - 建立新表單</h1>

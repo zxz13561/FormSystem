@@ -352,7 +352,7 @@ namespace FormSystem.Controllers
             // Save into Session
             Session["FormInfo"] = fInfo;
 
-            return Content("儲存成功");
+            return Json("Saved");
         }
 
         /// <summary>新表單問題列表</summary>
@@ -549,8 +549,14 @@ namespace FormSystem.Controllers
 
         public ActionResult SelectChanged()
         {
+            // Set select List
             ViewBag.SelectList = ModelFunctions.QusetionsType();
-            return PartialView("../PartialView/_NewLayout", new FormLayout() { Body = "comfire updated"});
+
+            // Set View Data
+            ViewData["InfoData"] = (Session["FormInfo"] != null) ? Session["FormInfo"] : new FormInfo();
+            ViewData["LayoutData"] = new FormLayout() { Body = "comfire updated" };
+
+            return View("CreateNewForm");
         }
     }
 }
