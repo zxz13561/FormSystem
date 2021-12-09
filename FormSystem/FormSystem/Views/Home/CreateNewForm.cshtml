@@ -6,7 +6,14 @@
 <script>
     $(document).ready(function () {
         $("#nav-layout-tab").click(function () {
-            $('#InfoForm').submit(alert(123));
+            $('#InfoForm').submit(
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("SaveInfoData")',
+                    data: $('#InfoForm').serialize(),
+                    success: function (result) { console.log(result); }
+                })
+            );
         });
     });
 </script>

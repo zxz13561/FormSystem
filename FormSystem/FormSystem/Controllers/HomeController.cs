@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using FormSystem.DBModel;
 using FormSystem.Models;
 using FormSystem.Functions;
+using Newtonsoft.Json;
 
 namespace FormSystem.Controllers
 {
@@ -343,16 +344,26 @@ namespace FormSystem.Controllers
         #endregion
 
         #region Create New Form
-        /// <summary>新表單資訊</summary>
-        /// <param name="fInfo"></param>
+        /// <summary>換頁時儲存表單資訊</summary>
+        /// <param name="ajaxData"></param>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult NewInfo(FormInfo fInfo)
+        public ActionResult SaveInfoData(FormInfo ajaxData)
         {
             // Save into Session
-            Session["FormInfo"] = fInfo;
+            Session["FormInfo"] = ajaxData;
 
-            return Json("Saved");
+            // Set select List
+            ViewBag.SelectList = ModelFunctions.QusetionsType();
+
+            FormLayout testLayout = new FormLayout();
+            testLayout.Body = "test updated";
+
+            // Set View Data
+            ViewData["InfoData"] = (Session["FormInfo"] != null) ? Session["FormInfo"] : new FormInfo();
+            ViewData["LayoutData"] = testLayout;
+
+            return Content("InfoSaved");
         }
 
         /// <summary>新表單問題列表</summary>
@@ -545,18 +556,5 @@ namespace FormSystem.Controllers
             }
         }
         #endregion
-
-
-        public ActionResult SelectChanged()
-        {
-            // Set select List
-            ViewBag.SelectList = ModelFunctions.QusetionsType();
-
-            // Set View Data
-            ViewData["InfoData"] = (Session["FormInfo"] != null) ? Session["FormInfo"] : new FormInfo();
-            ViewData["LayoutData"] = new FormLayout() { Body = "comfire updated" };
-
-            return View("CreateNewForm");
-        }
     }
 }
