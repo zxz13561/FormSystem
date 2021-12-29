@@ -180,6 +180,7 @@ namespace FormSystem.Controllers
         {
             // Set Drop Down List
             ViewBag.SelectList = ModelFunctions.QusetionsType();
+            ViewBag.FrequenQList = ModelFunctions.frequenQList();
 
             // Create New Form
             if (id == "NewForm")
@@ -556,5 +557,13 @@ namespace FormSystem.Controllers
             }
         }
         #endregion
+
+        public ActionResult ShowSelectQBody(FormCollection select)
+        {
+
+            string selectedID = select["frequenQ"];
+
+            return View();          
+        }
     }
 }

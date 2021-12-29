@@ -43,13 +43,10 @@
         <div class="mb-3 row">
             <label for="selectType" class="col-sm-1 col-form-label" style="text-align:right">種類:</label>
             <div class="col-sm-3">
-                @using (Html.BeginForm("SelectChanged", "Home"))
+                <!--預設問題放這裡-->
+                @using (Html.BeginForm("ShowSelectQBody", "Home"))
                 {
-                    <select class="form-select" id="selectType" onchange="$(this.form).submit();">
-                        <option value="0" selected>自訂問題</option>
-                        <option value="1" >Test</option>
-                        <!--預設問題放這裡-->
-                    </select>
+                    @Html.DropDownList("frequenQ", (IEnumerable<SelectListItem>)ViewBag.FrequenQList, new { @class = "form-select", @onchange = "$(this.form).submit();" })
                 }
             </div>
         </div>

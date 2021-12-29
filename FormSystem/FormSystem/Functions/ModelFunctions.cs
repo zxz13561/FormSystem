@@ -33,6 +33,25 @@ namespace FormSystem.Functions
             return QTypeList;
         }
 
+        /// <summary>回傳常用問題下拉選單</summary>
+        /// <param name="beenSelected"></param>
+        /// <returns></returns>
+        public static List<SelectListItem> frequenQList(string beenSelected = null)
+        {
+            List<SelectListItem> qList = new List<SelectListItem>() { };
+            var frequentQs = new FormDBModel().FrenquenQuestions;
+
+            // Set first select item is self modify
+            qList.Add(new SelectListItem { Text = "自訂問題", Value = "0", Selected = true });
+
+            foreach (var q in frequentQs)
+            {
+                qList.Add(new SelectListItem { Text = q.Name.ToString(), Value = q.ID.ToString()});
+            }
+
+            return qList;
+        }
+
         /// <summary>依照問題種類回傳HTML code</summary>
         /// <param name="fLayout"></param>
         /// <returns></returns>
