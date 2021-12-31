@@ -9,49 +9,6 @@ namespace FormSystem.Functions
 {
     public class ModelFunctions
     {
-        /// <summary>回傳問題種類下拉選單</summary>
-        /// <returns></returns>
-        public static List<SelectListItem> QusetionsType(string beenSelected = null)
-        {
-            // Import Question Type Datas to DropdownList
-            List<SelectListItem> QTypeList = new List<SelectListItem>() { };
-            var typeQuery = new FormDBModel().QuestionTypes;
-
-            foreach (var type in typeQuery)
-            {
-                // bypass space charater
-                string[] dbType = type.TypeID.Split(' ');
-                string[] dataType = (beenSelected != null) ? beenSelected.Split(' ') : null;
-
-                // set which is selected
-                if (dataType != null && dataType[0] == dbType[0])
-                    QTypeList.Add(new SelectListItem { Text = type.Name, Value = type.TypeID, Selected = true });
-                else
-                    QTypeList.Add(new SelectListItem { Text = type.Name, Value = type.TypeID });
-            }
-
-            return QTypeList;
-        }
-
-        /// <summary>回傳常用問題下拉選單</summary>
-        /// <param name="beenSelected"></param>
-        /// <returns></returns>
-        public static List<SelectListItem> frequenQList(string beenSelected = null)
-        {
-            List<SelectListItem> qList = new List<SelectListItem>() { };
-            var frequentQs = new FormDBModel().FrenquenQuestions;
-
-            // Set first select item is self modify
-            qList.Add(new SelectListItem { Text = "自訂問題", Value = "0", Selected = true });
-
-            foreach (var q in frequentQs)
-            {
-                qList.Add(new SelectListItem { Text = q.Name.ToString(), Value = q.ID.ToString()});
-            }
-
-            return qList;
-        }
-
         /// <summary>依照問題種類回傳HTML code</summary>
         /// <param name="fLayout"></param>
         /// <returns></returns>
@@ -152,6 +109,34 @@ namespace FormSystem.Functions
             }
 
             return htmlString;
+        }
+
+        /// <summary>回傳問題列表的HTML code</summary>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        public static string LayoutListHTML(List<FormLayout> list)
+        {
+            int i = 0;
+            string tableString = string.Empty;
+
+            // Create Table HTML
+            foreach (var data in list)
+            {
+                tableString += $@"
+                    <tr>
+                        <td>
+                            <input type=""checkbox"" id=""{data.Body}"" name=""chkLayout[{i}]"" value=""{data.Body}"">
+                            <input name=""chkLayout[{i}]"" type=""hidden"" value=""false"">
+                        </td>
+                        <td>{data.QuestionSort}</td>
+                        <td>{data.Body}</td>
+                        <td>{data.QuestionType}</td>
+                        <td><a href=""Home/Index"">編輯</a></td>
+                    </tr>";
+                i++;
+            }
+
+            return tableString;
         }
     }
 }

@@ -4,9 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace FormSystem.Functions
 {
+    // Data Access Level
     public class DALFunctions
     {
         /// <summary>從DB獲取FrequentlyQuestions資料，整理成List回傳</summary>
@@ -49,6 +51,75 @@ namespace FormSystem.Functions
                 }
 
                 return frquenM;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        /// <summary>從DB獲取問題種類下拉選單</summary>
+        /// <returns></returns>
+        public static List<SelectListItem> QusetionsType(string beenSelected = null)
+        {
+            // Import Question Type Datas to DropdownList
+            List<SelectListItem> QTypeList = new List<SelectListItem>() { };
+            var typeQuery = new FormDBModel().QuestionTypes;
+
+            foreach (var type in typeQuery)
+            {
+                // bypass space charater
+                string[] dbType = type.TypeID.Split(' ');
+                string[] dataType = (beenSelected != null) ? beenSelected.Split(' ') : null;
+
+                // set which is selected
+                if (dataType != null && dataType[0] == dbType[0])
+                    QTypeList.Add(new SelectListItem { Text = type.Name, Value = type.TypeID, Selected = true });
+                else
+                    QTypeList.Add(new SelectListItem { Text = type.Name, Value = type.TypeID });
+            }
+
+            return QTypeList;
+        }
+
+        /// <summary>從DB獲取常用問題下拉選單</summary>
+        /// <param name="beenSelected"></param>
+        /// <returns></returns>
+        public static List<SelectListItem> frequenQList(string beenSelected = null)
+        {
+            List<SelectListItem> qList = new List<SelectListItem>() { };
+            var frequentQs = new FormDBModel().FrenquenQuestions;
+
+            // Set first select item is self modify
+            qList.Add(new SelectListItem { Text = "自訂問題", Value = "0", Selected = true });
+
+            foreach (var q in frequentQs)
+            {
+                qList.Add(new SelectListItem { Text = q.Name.ToString(), Value = q.ID.ToString() });
+            }
+
+            return qList;
+        }
+
+        /// <summary>依照ID從DB篩選FrequentlyQuestions資料並回傳</summary>
+        /// <returns></returns>
+        public static FrenquenQuestion GetFreQInfo(int FreQID)
+        {
+            try
+            {
+                FrenquenQuestion getQ = new FrenquenQuestion();
+
+                using (FormDBModel db = new FormDBModel())
+                {
+                    // get data from db
+                    var result =
+                        from f in db.FrenquenQuestions
+                        where f.ID == FreQID
+                        select f;
+
+                    getQ = result.FirstOrDefault();
+                }
+                return getQ;
             }
             catch (Exception ex)
             {

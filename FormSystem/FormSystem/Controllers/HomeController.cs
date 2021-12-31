@@ -40,7 +40,7 @@ namespace FormSystem.Controllers
             Session["FrequentIndex"] = null;
 
             // Set Drop Down List
-            ViewBag.SelectList = ModelFunctions.QusetionsType();
+            ViewBag.SelectList = DALFunctions.QusetionsType();
 
             // Save data into viewbag
             ViewBag.FrequenList = DALFunctions.FrequentlyQuestionsList();
@@ -179,8 +179,8 @@ namespace FormSystem.Controllers
         public ActionResult EditForm(string id)
         {
             // Set Drop Down List
-            ViewBag.SelectList = ModelFunctions.QusetionsType();
-            ViewBag.FrequenQList = ModelFunctions.frequenQList();
+            ViewBag.SelectList = DALFunctions.QusetionsType();
+            ViewBag.FrequenQList = DALFunctions.frequenQList();
 
             // Create New Form
             if (id == "NewForm")
@@ -355,7 +355,7 @@ namespace FormSystem.Controllers
             Session["FormInfo"] = ajaxData;
 
             // Set select List
-            ViewBag.SelectList = ModelFunctions.QusetionsType();
+            ViewBag.SelectList = DALFunctions.QusetionsType();
 
             FormLayout testLayout = new FormLayout();
             testLayout.Body = "test updated";
@@ -377,39 +377,16 @@ namespace FormSystem.Controllers
             List<FormLayout> list = (Session["LayoutList"] != null) ? (List<FormLayout>)Session["LayoutList"] : new List<FormLayout>();
             Guid.TryParse(Session["FID"].ToString(), out Guid fid);
 
-            FormLayout questionInfo = new FormLayout() {
-                FormID = fid,
-                Body = fLay.Body,
-                Answer = fLay.Answer,
-                QuestionType = fLay.QuestionType,
-                NeedAns = fLay.NeedAns,
-                QuestionSort = (Session["LayoutList"] == null) ? 1 : list.Count() + 1
-            };
+            // Set relate date into layout model
+            fLay.FormID = fid;
+            fLay.QuestionSort = (Session["LayoutList"] == null) ? 1 : list.Count() + 1;
 
-            list.Add(questionInfo);
+            // Add to list and save into session
+            list.Add(fLay);
             Session["LayoutList"] = list;
 
-            int i = 0;
-            string tableString = string.Empty;
-            
-            // Create Table HTML
-            foreach (var data in list)
-            {
-                tableString += $@"
-                    <tr>
-                        <td>
-                            <input type=""checkbox"" id=""{data.Body}"" name=""chkLayout[{i}]"" value=""{data.Body}"">
-                            <input name=""chkLayout[{i}]"" type=""hidden"" value=""false"">
-                        </td>
-                        <td>{data.QuestionSort}</td>
-                        <td>{data.Body}</td>
-                        <td>{data.QuestionType}</td>
-                        <td><a href=""Home/Index"">編輯</a></td>
-                    </tr>";
-                i++;
-            }
-
-            return Content(tableString);
+            // generate html code and return to page
+            return Content(ModelFunctions.LayoutListHTML(list));
         }
 
         /// <summary>顯示新表單</summary>
@@ -489,7 +466,7 @@ namespace FormSystem.Controllers
 
                 // Set Page need data
                 Session["FrequentIndex"] = null;
-                ViewBag.SelectList = ModelFunctions.QusetionsType();
+                ViewBag.SelectList = DALFunctions.QusetionsType();
                 ViewBag.FrequenList = DALFunctions.FrequentlyQuestionsList();
 
                 return View("FrequentlyQuestions", new FrenquenQuestion());
@@ -523,7 +500,7 @@ namespace FormSystem.Controllers
                     }
                 }
                 // Set Page need data
-                ViewBag.SelectList = ModelFunctions.QusetionsType();
+                ViewBag.SelectList = DALFunctions.QusetionsType();
                 ViewBag.FrequenList = DALFunctions.FrequentlyQuestionsList();
 
                 return View("FrequentlyQuestions", new FrenquenQuestion());
@@ -547,8 +524,9 @@ namespace FormSystem.Controllers
                 // Get data from db
                 FrenquenQuestion dbData = new FormDBModel().FrenquenQuestions.Where(q => q.ID == QID).FirstOrDefault();
 
-                ViewBag.SelectList = ModelFunctions.QusetionsType(dbData.QuestionType);
+                ViewBag.SelectList = DALFunctions.QusetionsType(dbData.QuestionType);
                 ViewBag.FrequenList = DALFunctions.FrequentlyQuestionsList();
+
                 return View("FrequentlyQuestions", dbData);
             }
             catch (Exception ex)
@@ -560,10 +538,32 @@ namespace FormSystem.Controllers
 
         public ActionResult ShowSelectQBody(FormCollection select)
         {
+            // Set Drop Down List
+            ViewBag.SelectList = DALFunctions.QusetionsType();
+            ViewBag.FrequenQList = DALFunctions.frequenQList();
 
-            string selectedID = select["frequenQ"];
+            // parse question ID
+            int selectedID = int.Parse(select["frequenQ"]);
 
-            return View();          
+            // Get from guid from session
+            Guid fid = Guid.Parse(Session["FID"].ToString());
+
+            // set DB into page ViewData
+            FrenquenQuestion DBfreqQ = DALFunctions.GetFreQInfo(selectedID);
+            FormLayout freqQInfo = new FormLayout()
+            {
+                FormID = fid,
+                QuestionType = DBfreqQ.QuestionType,
+                Body = DBfreqQ.Body,
+                Answer = DBfreqQ.Answer,
+                NeedAns = DBfreqQ.NeedAns,
+            };
+
+            // Set View Data
+            ViewData["InfoData"] = Session["FormInfo"] == null? new FormInfo() { FormID = fid } : Session["FormInfo"];
+            ViewData["LayoutData"] = freqQInfo;
+
+            return View("CreateNewForm");
         }
     }
 }
