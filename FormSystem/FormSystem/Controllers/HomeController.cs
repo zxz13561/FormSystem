@@ -536,34 +536,24 @@ namespace FormSystem.Controllers
         }
         #endregion
 
-        public ActionResult ShowSelectQBody(FormCollection select)
+        [HttpPost]
+        public ActionResult SelectFreqQAndReturnDBData(FormCollection selectQ)
         {
-            // Set Drop Down List
-            ViewBag.SelectList = DALFunctions.QusetionsType();
-            ViewBag.FrequenQList = DALFunctions.frequenQList();
+            // parse question ID to int
+            int selectedID = int.Parse(selectQ[0]);
 
-            // parse question ID
-            int selectedID = int.Parse(select["frequenQ"]);
-
-            // Get from guid from session
-            Guid fid = Guid.Parse(Session["FID"].ToString());
-
-            // set DB into page ViewData
+            // set DB data into frequent question model
             FrenquenQuestion DBfreqQ = DALFunctions.GetFreQInfo(selectedID);
             FormLayout freqQInfo = new FormLayout()
             {
-                FormID = fid,
+                FormID = new Guid(),// this is not important data; therefor use new guid
                 QuestionType = DBfreqQ.QuestionType,
                 Body = DBfreqQ.Body,
                 Answer = DBfreqQ.Answer,
                 NeedAns = DBfreqQ.NeedAns,
             };
 
-            // Set View Data
-            ViewData["InfoData"] = Session["FormInfo"] == null? new FormInfo() { FormID = fid } : Session["FormInfo"];
-            ViewData["LayoutData"] = freqQInfo;
-
-            return View("CreateNewForm");
+            return Content(JsonConvert.SerializeObject(freqQInfo), "application/json");
         }
     }
 }

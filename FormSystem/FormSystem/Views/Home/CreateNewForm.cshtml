@@ -16,6 +16,25 @@
                 })
             );
         });
+
+        // Chose frequent question and show question data
+        $('#freqQselect').change(function () {
+            var formatData = 'frequenQ = ' + $('#freqQselect').val();
+            $('#freqQListForm').submit(
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("SelectFreqQAndReturnDBData")',
+                    data: formatData,
+                    success: function (result) {
+                        console.log(result);
+                        $('#inputDescribe').val(result['Body']);
+                        $('#inputAns').val(result['Answer']);
+                        $('#selectType').val(result['QuestionType']);
+                        $('#checkNullable').attr('checked', result['NeedAns']);
+                    }
+                })
+            );
+        });
     });
 </script>
 <!--Title-->
@@ -45,9 +64,9 @@
         <div class="mb-3 row">
             <label for="selectType" class="col-sm-1 col-form-label" style="text-align:right">種類:</label>
             <div class="col-sm-3">
-                @using (Html.BeginForm("ShowSelectQBody", "Home"))
+                @using (Html.BeginForm("freqQList", "Home", new { @id = "freqQListForm" }))
                 {
-                    @Html.DropDownList("frequenQ", (IEnumerable<SelectListItem>)ViewBag.FrequenQList, new { @class = "form-select", @onchange = "$(this.form).submit();" })
+                    @Html.DropDownList("frequenQ", (IEnumerable<SelectListItem>)ViewBag.FrequenQList, new { @class = "form-select", @id = "freqQselect" })
                 }
             </div>
         </div>
