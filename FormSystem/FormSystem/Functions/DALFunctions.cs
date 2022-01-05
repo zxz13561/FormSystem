@@ -130,7 +130,7 @@ namespace FormSystem.Functions
         /// <summary>取得問題類型名稱</summary>
         /// <param name="ID"></param>
         /// <returns></returns>
-        public static string GetQuestionTypeNme(string ID)
+        public static string GetQuestionTypeName(string ID)
         {
             try
             {

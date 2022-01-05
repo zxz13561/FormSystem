@@ -463,14 +463,14 @@ namespace FormSystem.Controllers
                 }
                 else
                 {
+                    // Get ID order from session
                     int editID = Convert.ToInt32(Session["FrequentIndex"]);
+                    // If Answer is no input, create null string for write into DB
                     string ansString = (q.Answer == null) ? "null" : $"'{q.Answer}'";
 
                     // update Question
                     using (FormDBModel db = new FormDBModel())
                     {
-
-
                         var updateQuestion = 
                             $@" 
                                 UPDATE [dbo].[FrenquenQuestion]
@@ -482,17 +482,11 @@ namespace FormSystem.Controllers
                                     [NeedAns] = '{q.NeedAns}'
                                 WHERE [ID] = {editID}
                             ";
-
                         db.Database.ExecuteSqlCommand(updateQuestion);
                     }
                 }
 
-                // Set Page need data
-                Session["FrequentIndex"] = null;
-                ViewBag.SelectList = DALFunctions.QusetionsType();
-                ViewBag.FrequenList = DALFunctions.FrequentlyQuestionsList();
-
-                return View("FrequentlyQuestions", new FrenquenQuestion());
+                return RedirectToAction("FrequentlyQuestions");
             }
             catch (Exception ex)
             {
@@ -522,11 +516,8 @@ namespace FormSystem.Controllers
                         }
                     }
                 }
-                // Set Page need data
-                ViewBag.SelectList = DALFunctions.QusetionsType();
-                ViewBag.FrequenList = DALFunctions.FrequentlyQuestionsList();
 
-                return View("FrequentlyQuestions", new FrenquenQuestion());
+                return RedirectToAction("FrequentlyQuestions");
             }
             catch (Exception ex)
             {
