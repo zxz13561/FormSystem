@@ -342,6 +342,29 @@ namespace FormSystem.Controllers
                 return RedirectToAction("ErrorPage", "Home", new { errMsg = ex.ToString() });
             }
         }
+
+        /// <summary>選擇常用問題選項，將資料顯示在輸入格內</summary>
+        /// <param name="selectQ"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult SelectFreqQAndReturnDBData(FormCollection selectQ)
+        {
+            // parse question ID to int
+            int selectedID = int.Parse(selectQ[0]);
+
+            // set DB data into frequent question model
+            FrenquenQuestion DBfreqQ = DALFunctions.GetFreQInfo(selectedID);
+            FormLayout freqQInfo = new FormLayout()
+            {
+                FormID = new Guid(),// this is not important data; therefor use new guid
+                QuestionType = DBfreqQ.QuestionType,
+                Body = DBfreqQ.Body,
+                Answer = DBfreqQ.Answer,
+                NeedAns = DBfreqQ.NeedAns,
+            };
+
+            return Content(JsonConvert.SerializeObject(freqQInfo), "application/json");
+        }
         #endregion
 
         #region Create New Form
@@ -535,25 +558,5 @@ namespace FormSystem.Controllers
             }
         }
         #endregion
-
-        [HttpPost]
-        public ActionResult SelectFreqQAndReturnDBData(FormCollection selectQ)
-        {
-            // parse question ID to int
-            int selectedID = int.Parse(selectQ[0]);
-
-            // set DB data into frequent question model
-            FrenquenQuestion DBfreqQ = DALFunctions.GetFreQInfo(selectedID);
-            FormLayout freqQInfo = new FormLayout()
-            {
-                FormID = new Guid(),// this is not important data; therefor use new guid
-                QuestionType = DBfreqQ.QuestionType,
-                Body = DBfreqQ.Body,
-                Answer = DBfreqQ.Answer,
-                NeedAns = DBfreqQ.NeedAns,
-            };
-
-            return Content(JsonConvert.SerializeObject(freqQInfo), "application/json");
-        }
     }
 }

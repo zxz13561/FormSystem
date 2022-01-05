@@ -130,7 +130,7 @@ namespace FormSystem.Functions
                         </td>
                         <td>{data.QuestionSort}</td>
                         <td>{data.Body}</td>
-                        <td>{data.QuestionType}</td>
+                        <td>{DALFunctions.GetQuestionTypeNme(data.QuestionType)}</td>
                         <td><a href=""Home/Index"">編輯</a></td>
                     </tr>";
                 i++;

@@ -121,9 +121,36 @@ namespace FormSystem.Functions
                 }
                 return getQ;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
+            }
+        }
+
+        /// <summary>取得問題類型名稱</summary>
+        /// <param name="ID"></param>
+        /// <returns></returns>
+        public static string GetQuestionTypeNme(string ID)
+        {
+            try
+            {
+                QuestionType getType = new QuestionType();
+
+                using (FormDBModel db = new FormDBModel())
+                {
+                    // get data from db
+                    var result =
+                        from type in db.QuestionTypes
+                        where type.TypeID == ID
+                        select type;
+
+                    getType = result.FirstOrDefault();
+                }
+                return getType.Name;
+            }
+            catch (Exception)
+            {
+                return "Error";
             }
         }
     }
