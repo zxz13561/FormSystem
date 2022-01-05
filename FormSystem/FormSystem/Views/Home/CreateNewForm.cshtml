@@ -5,8 +5,8 @@
 
 <script>
     $(document).ready(function () {
-        // click nav-tab and save infomation into session
-        $("#nav-layout-tab").click(function () {
+        // create info data save function
+        function SaveInfoPage() {
             $('#InfoForm').submit(
                 $.ajax({
                     type: 'POST',
@@ -15,7 +15,11 @@
                     success: function (result) { console.log(result); }
                 })
             );
-        });
+        };
+
+        // click nav-tab and save infomation into session
+        $("#nav-layout-tab").click(SaveInfoPage);
+        $("#nav-view-tab").click(SaveInfoPage);
 
         // Chose frequent question and show question data
         $('#freqQselect').change(function () {
