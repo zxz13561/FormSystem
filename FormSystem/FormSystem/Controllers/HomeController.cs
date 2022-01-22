@@ -12,11 +12,10 @@ namespace FormSystem.Controllers
 {
     public class HomeController : Controller
     {
-        #region Only Show Page Controllers
+        #region Show Page Controllers
         public ActionResult Index()
         {
-            var InfoList = new FormDBModel().FormInfoes.ToList();
-            return View(InfoList);
+            return View();
         }
 
         public ActionResult Login()
@@ -52,6 +51,18 @@ namespace FormSystem.Controllers
         {
             ViewBag.ErrMsg = errMsg;
             return View();
+        }
+        #endregion
+
+        #region Index Ajax Controllers
+        /// <summary>首頁問題列表</summary>
+        /// <param name="fLay"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public ActionResult ShowQuestionsTable()
+        {
+            // send html code
+            return Content(ModelFunctions.IndexListHTML());
         }
         #endregion
 

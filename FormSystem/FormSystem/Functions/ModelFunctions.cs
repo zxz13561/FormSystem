@@ -9,6 +9,34 @@ namespace FormSystem.Functions
 {
     public class ModelFunctions
     {
+        /// <summary>回傳首頁問題列表的HTML code</summary>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        public static string IndexListHTML(int _Qindex = 1, int _howManyInPage = 2)
+        {
+            string tableString = string.Empty;
+            var _allQList = new FormDBModel().FormInfoes.ToList();
+
+            // Create Table HTML
+            for (int i = _Qindex - 1; i < _Qindex + _howManyInPage - 1; i++)
+            {
+                var data = _allQList[i];
+
+                string status = data.StartDate > DateTime.Now && data.EndDate < DateTime.Now ? "投票中" : "關閉中";
+                tableString += $@"
+                    <tr>
+                        <th scope=""row"">{i + 1}</th>
+                        <td><a href=""/Home/FillForm/{data.FormID}"">{data.Name}</a></td>
+                        <td>{status}</td>
+                        <td>{data.StartDate}</td>
+                        <td>{data.EndDate}</td>
+                        <td><a href=""Home/Analysis?FormID={data.FormID}"">統計</a></td>
+                    </tr>";
+            }
+
+            return tableString;
+        }
+
         /// <summary>依照問題種類回傳HTML code</summary>
         /// <param name="fLayout"></param>
         /// <returns></returns>

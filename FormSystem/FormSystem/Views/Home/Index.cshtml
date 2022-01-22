@@ -1,8 +1,18 @@
-﻿@model IEnumerable<FormSystem.DBModel.FormInfo>
-@{
+﻿@{
     ViewBag.Title = "Home Page";
 }
 
+<!--Script-->
+<script>
+    $(document).ready(function () {
+        // Get All Questions List HTML
+        $.ajax({
+            type: 'Get',
+            url: '@Url.Action("ShowQuestionsTable")',
+            success: function (result) { $('#ListTBody').append(result); }
+        });
+    });
+</script>
 <!--Title-->
 <div class="jumbotron">
     <h1>問卷系統 - 首頁</h1>
@@ -44,26 +54,8 @@
             <th scope="col">統計</th>
         </tr>
     </thead>
-    <tbody>
-        @{
-            int i = 1;
-
-            foreach (var item in this.Model)
-            {
-                string status = (DateTime.Now > item.StartDate) ? "投票中" : "已完結";
-
-                <tr>
-                    <th scope="row">@i</th>
-                    <td>@Html.ActionLink(item.Name, "FillForm", "Home", new { id = item.FormID }, null)</td>
-                    <td>@status</td>
-                    <td>@item.StartDate</td>
-                    <td>@item.EndDate</td>
-                    <td>@Html.ActionLink("前往", "DataAnalysis", "Home", new { id = item.FormID }, null)</td>
-                </tr>
-
-                i++;
-            }
-        }
+    <tbody id="ListTBody">
+        <!--Put List Here-->
     </tbody>
 </table>
 <!--Pagination-->
