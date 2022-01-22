@@ -40,7 +40,9 @@
 <!--Form List-->
 @using (Html.BeginForm("DeleteForm", "Home", FormMethod.Post, new { @id = "FormList" }))
 {
-    <button type="submit">刪除所選</button>
+    <div>
+        <input class="btn btn-outline-danger" type="submit" value="刪除所選" onclick="return confirm('確認刪除?');">
+    </div>
     <table class="table table-striped table-hover">
         <thead>
             <tr>
