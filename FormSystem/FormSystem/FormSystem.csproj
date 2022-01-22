@@ -134,6 +134,7 @@
     <Compile Include="DBModel\FormInfo.cs" />
     <Compile Include="DBModel\FormLayout.cs" />
     <Compile Include="DBModel\FrenquenQuestion.cs" />
+    <Compile Include="DBModel\IndexPageInfo.cs" />
     <Compile Include="DBModel\QuestionType.cs" />
     <Compile Include="DBModel\sysdiagram.cs" />
     <Compile Include="Functions\DALFunctions.cs" />

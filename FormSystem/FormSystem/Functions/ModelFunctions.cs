@@ -37,6 +37,23 @@ namespace FormSystem.Functions
             return tableString;
         }
 
+        /// <summary>回傳首頁問題列表的分頁HTML code</summary>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        public static string PaginationHTML(int _howManyInPage = 2)
+        {
+            string pagehtml = string.Empty;
+            int _allQListNum = new FormDBModel().FormInfoes.ToList().Count();
+            int _pageTail = _allQListNum % _howManyInPage == 0 ? _allQListNum / _howManyInPage : _allQListNum / _howManyInPage + 1;
+
+            for (int i = 0; i < _pageTail; i++)
+            {
+                pagehtml += $"<li class=\"page-item\"><a class=\"page-link\" href=\"Home\\Index?pagination={i + 1}\">{i + 1}</a></li>";
+            }
+
+            return pagehtml;
+        }
+
         /// <summary>依照問題種類回傳HTML code</summary>
         /// <param name="fLayout"></param>
         /// <returns></returns>

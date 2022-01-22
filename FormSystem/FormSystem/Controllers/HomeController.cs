@@ -13,8 +13,12 @@ namespace FormSystem.Controllers
     public class HomeController : Controller
     {
         #region Show Page Controllers
-        public ActionResult Index()
+        public ActionResult Index(int pagination = 0)
         {
+            if(pagination != 0)
+            {
+                return View();
+            }
             return View();
         }
 
@@ -62,7 +66,13 @@ namespace FormSystem.Controllers
         public ActionResult ShowQuestionsTable()
         {
             // send html code
-            return Content(ModelFunctions.IndexListHTML());
+            IndexPageInfo indexHTML = new IndexPageInfo()
+            {
+                ShowFormsHTML =  ModelFunctions.IndexListHTML(),  // questions list
+                PagniationHTML = ModelFunctions.PaginationHTML() // pagination list
+            };
+
+            return Json(indexHTML, JsonRequestBehavior.AllowGet);
         }
         #endregion
 

@@ -9,7 +9,24 @@
         $.ajax({
             type: 'Get',
             url: '@Url.Action("ShowQuestionsTable")',
-            success: function (result) { $('#ListTBody').append(result); }
+            success: function (result) {
+                console.log(result);
+                $('#ListTBody').append(result['ShowFormsHTML']);
+                var pageHtml =
+                    `<li class="page-item">
+                        <a class="page-link" href="#" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    ${result['PagniationHTML']}
+                    <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>`;
+
+                $("#paginationArea").append(pageHtml);
+            }
         });
     });
 </script>
@@ -60,22 +77,8 @@
 </table>
 <!--Pagination-->
 <nav aria-label="Page navigation example">
-    <ul class="pagination">
-        <li class="page-item">
-            <a class="page-link" href="#" aria-label="Previous">
-                <span aria-hidden="true">&laquo;</span>
-            </a>
-        </li>
-        <li class="page-item"><a class="page-link" href="#">1</a></li>
-        <li class="page-item"><a class="page-link" href="#">2</a></li>
-        <li class="page-item"><a class="page-link" href="#">3</a></li>
-        <li class="page-item"><a class="page-link" href="#">4</a></li>
-        <li class="page-item"><a class="page-link" href="#">5</a></li>
-        <li class="page-item">
-            <a class="page-link" href="#" aria-label="Next">
-                <span aria-hidden="true">&raquo;</span>
-            </a>
-        </li>
+    <ul class="pagination" id="paginationArea">
+        <!--Put pagination here-->
     </ul>
 </nav>
 
