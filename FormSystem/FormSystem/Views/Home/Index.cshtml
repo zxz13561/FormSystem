@@ -4,28 +4,44 @@
 
 <!--Script-->
 <script>
+    var currentPage = 1;
+
+    var hideByPager = function (pager) {
+        // Reset page
+        $('.table tbody tr').hide(); 
+        // hide rows
+        for (var i = pager * 2 - 1; i <= pager * 2; i++) {
+            $(`.table tbody tr:nth-child(${i})`).show(); 
+        }
+        // set current Page
+        currentPage = pager;
+        // set previous enable
+        $('ul li').toggleClass(function () {
+            return 'page-item';
+        });
+    };
+
     $(document).ready(function () {
         // Get All Questions List HTML
         $.ajax({
             type: 'Get',
             url: '@Url.Action("ShowQuestionsTable")',
             success: function (result) {
-                console.log(result);
+                // form table
                 $('#ListTBody').append(result['ShowFormsHTML']);
+                // pagination
                 var pageHtml =
                     `<li class="page-item">
-                        <a class="page-link" href="#" aria-label="Previous">
-                            <span aria-hidden="true">&laquo;</span>
-                        </a>
+                        <a class="page-link" href="#">上一頁</a>
                     </li>
                     ${result['PagniationHTML']}
                     <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Next">
-                            <span aria-hidden="true">&raquo;</span>
-                        </a>
+                        <a class="page-link" href="#">下一頁</a>
                     </li>`;
-
                 $("#paginationArea").append(pageHtml);
+                // set Page
+                hideByPager(1);
+                currentPage = 1;
             }
         });
     });
@@ -76,7 +92,7 @@
     </tbody>
 </table>
 <!--Pagination-->
-<nav aria-label="Page navigation example">
+<nav aria-label="Index Page navigation">
     <ul class="pagination" id="paginationArea">
         <!--Put pagination here-->
     </ul>

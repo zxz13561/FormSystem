@@ -12,13 +12,13 @@ namespace FormSystem.Functions
         /// <summary>回傳首頁問題列表的HTML code</summary>
         /// <param name="list"></param>
         /// <returns></returns>
-        public static string IndexListHTML(int _Qindex = 1, int _howManyInPage = 2)
+        public static string IndexListHTML(int _Qindex = 1, int _howManyInPage = 20)
         {
             string tableString = string.Empty;
             var _allQList = new FormDBModel().FormInfoes.ToList();
 
             // Create Table HTML
-            for (int i = _Qindex - 1; i < _Qindex + _howManyInPage - 1; i++)
+            for (int i = _Qindex - 1; (i < _Qindex + _howManyInPage - 1) && (i < _allQList.Count); i++)
             {
                 var data = _allQList[i];
 
@@ -48,7 +48,7 @@ namespace FormSystem.Functions
 
             for (int i = 0; i < _pageTail; i++)
             {
-                pagehtml += $"<li class=\"page-item\"><a class=\"page-link\" href=\"Home\\Index?pagination={i + 1}\">{i + 1}</a></li>";
+                pagehtml += $"<li class=\"page-item\"><a class=\"page-link\" href=\"#\" onclick=\"hideByPager({i + 1})\">{i + 1}</a></li>";
             }
 
             return pagehtml;
