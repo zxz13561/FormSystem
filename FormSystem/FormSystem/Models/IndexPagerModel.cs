@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace FormSystem.DBModel
+namespace FormSystem.Models
 {
-    public class IndexPageInfo
+    public class IndexPagerModel
     {
         public string ShowFormsHTML { get; set; }
-
         public string PagniationHTML { get; set; }
+        public int MaxPage { get; set; }
     }
 }

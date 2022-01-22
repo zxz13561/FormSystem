@@ -5,20 +5,38 @@
 <!--Script-->
 <script>
     var currentPage = 1;
-
+    var maxPageNum = 0;
     var hideByPager = function (pager) {
         // Reset page
-        $('.table tbody tr').hide(); 
+        $('.table tbody tr').hide();
+
         // hide rows
         for (var i = pager * 2 - 1; i <= pager * 2; i++) {
             $(`.table tbody tr:nth-child(${i})`).show(); 
         }
+
         // set current Page
         currentPage = pager;
-        // set previous enable
-        $('ul li').toggleClass(function () {
-            return 'page-item';
-        });
+
+        // set pager active
+        $("li").toggleClass('active', false);
+        $(`li:nth-child(${pager + 1})`).toggleClass('active', true);
+
+        // set prvious button enable or disable
+        if (currentPage == 1) {
+            $('li:first').toggleClass('disabled', true);
+        }
+        else {
+            $('li:first').toggleClass('disabled', false);
+        }
+
+        // set next button enable or disable
+        if (currentPage == maxPageNum) {
+            $('li:last').toggleClass('disabled', true);
+        }
+        else {
+            $('li:last').toggleClass('disabled', false);
+        }
     };
 
     $(document).ready(function () {
@@ -42,6 +60,7 @@
                 // set Page
                 hideByPager(1);
                 currentPage = 1;
+                maxPageNum = result['MaxPage'];
             }
         });
     });
@@ -97,6 +116,3 @@
         <!--Put pagination here-->
     </ul>
 </nav>
-
-
-

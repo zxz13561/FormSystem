@@ -54,6 +54,15 @@ namespace FormSystem.Functions
             return pagehtml;
         }
 
+        /// <summary>回傳最大頁數</summary>
+        /// <param name="_howManyInPage"></param>
+        /// <returns></returns>
+        public static int MaxPageNum(int _howManyInPage = 2)
+        {
+            int _allQListNum = new FormDBModel().FormInfoes.ToList().Count();
+            return _allQListNum % _howManyInPage == 0 ? _allQListNum / _howManyInPage : _allQListNum / _howManyInPage + 1;
+        }
+
         /// <summary>依照問題種類回傳HTML code</summary>
         /// <param name="fLayout"></param>
         /// <returns></returns>

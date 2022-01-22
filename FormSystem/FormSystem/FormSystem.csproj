@@ -134,7 +134,6 @@
     <Compile Include="DBModel\FormInfo.cs" />
     <Compile Include="DBModel\FormLayout.cs" />
     <Compile Include="DBModel\FrenquenQuestion.cs" />
-    <Compile Include="DBModel\IndexPageInfo.cs" />
     <Compile Include="DBModel\QuestionType.cs" />
     <Compile Include="DBModel\sysdiagram.cs" />
     <Compile Include="Functions\DALFunctions.cs" />
@@ -145,6 +144,7 @@
     <Compile Include="Models\FormAnsModel.cs" />
     <Compile Include="Models\CreateFormModel.cs" />
     <Compile Include="Models\FrequenModel.cs" />
+    <Compile Include="Models\IndexPagerModel.cs" />
     <Compile Include="Models\ShowAnsModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
