@@ -38,7 +38,10 @@
             $('li:last').toggleClass('disabled', false);
         }
     };
-
+    var nextOrPrivous = function (type) {
+        if (type === 'pre') {hideByPager(currentPage - 1); }
+        if (type === 'next') {hideByPager(currentPage + 1); }
+    };
     $(document).ready(function () {
         // Get All Questions List HTML
         $.ajax({
@@ -50,11 +53,11 @@
                 // pagination
                 var pageHtml =
                     `<li class="page-item">
-                        <a class="page-link" href="#">上一頁</a>
+                        <a class="page-link" href="#" onclick="nextOrPrivous('pre')">上一頁</a>
                     </li>
                     ${result['PagniationHTML']}
                     <li class="page-item">
-                        <a class="page-link" href="#">下一頁</a>
+                        <a class="page-link" href="#" onclick="nextOrPrivous('next')">下一頁</a>
                     </li>`;
                 $("#paginationArea").append(pageHtml);
                 // set Page
