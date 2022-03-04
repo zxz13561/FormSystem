@@ -332,58 +332,6 @@ namespace FormSystem.Controllers
             }
         }
 
-        /// <summary>移除所選問題，並將新表單存入Session</summary>
-        /// <param name="chkLayout"></param>
-        /// <returns></returns>
-        public ActionResult DeleteLayout(string[] chkLayout)
-        {
-            try
-            {
-                // Get Data from session
-                List<FormLayout> oldList = (Session["LayoutList"] != null) ? (List<FormLayout>)Session["LayoutList"] : new List<FormLayout>();
-                List<FormLayout> newList = new List<FormLayout>();
-                int newSort = 0;
-
-                // create new layout list which layout is not checked
-                for(int index = 0; index < chkLayout.Count(); index++)
-                {
-                    if(chkLayout[index] == "false")
-                    {
-                        newList.Add(oldList[index]);
-                        newList[newSort].QuestionSort = newSort + 1;
-                        newSort++;
-                    }
-                }
-
-                // Create Table HTML
-                int i = 0;
-                string tableString = string.Empty;
-
-                foreach (var data in newList)
-                {
-                    tableString += $@"
-                    <tr>
-                        <td>
-                            <input type=""checkbox"" id=""{data.Body}"" name=""chkLayout[{i}]"" value=""{data.Body}"">
-                            <input name=""chkLayout[{i}]"" type=""hidden"" value=""false"">
-                        </td>
-                        <td>{data.QuestionSort}</td>
-                        <td>{data.Body}</td>
-                        <td>{data.QuestionType}</td>
-                        <td><a href=""Home/Index"">編輯</a></td>
-                    </tr>";
-                    i++;
-                }
-
-                Session["LayoutList"] = newList;
-                return Content(tableString);
-            }
-            catch (Exception ex)
-            {
-                return RedirectToAction("ErrorPage", "Home", new { errMsg = ex.ToString() });
-            }
-        }
-
         /// <summary>選擇常用問題選項，將資料顯示在輸入格內</summary>
         /// <param name="selectQ"></param>
         /// <returns></returns>
@@ -434,20 +382,61 @@ namespace FormSystem.Controllers
         [HttpPost]
         public ActionResult NewLayout(FormLayout fLay)
         {
-            // Check session data exist
-            List<FormLayout> list = (Session["LayoutList"] != null) ? (List<FormLayout>)Session["LayoutList"] : new List<FormLayout>();
-            Guid.TryParse(Session["FID"].ToString(), out Guid fid);
+            try
+            {
+                // Check session data exist
+                List<FormLayout> list = (Session["LayoutList"] != null) ? (List<FormLayout>)Session["LayoutList"] : new List<FormLayout>();
+                Guid.TryParse(Session["FID"].ToString(), out Guid fid);
 
-            // Set relate date into layout model
-            fLay.FormID = fid;
-            fLay.QuestionSort = (Session["LayoutList"] == null) ? 1 : list.Count() + 1;
+                // Set relate date into layout model
+                fLay.FormID = fid;
+                fLay.QuestionSort = (Session["LayoutList"] == null) ? 1 : list.Count() + 1;
 
-            // Add to list and save into session
-            list.Add(fLay);
-            Session["LayoutList"] = list;
+                // Add to list and save into session
+                list.Add(fLay);
+                Session["LayoutList"] = list;
 
-            // generate html code and return to page
-            return Content(ModelFunctions.LayoutListHTML(list));
+                // generate html code and return to page
+                return Content(ModelFunctions.LayoutListHTML(list));
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("ErrorPage", "Home", new { errMsg = ex.ToString() });
+            }
+        }
+
+        /// <summary>移除所選問題，並將新表單存入Session</summary>
+        /// <param name="chkLayout"></param>
+        /// <returns></returns>
+        public ActionResult DeleteLayout(string[] chkLayout)
+        {
+            try
+            {
+                // Get Data from session
+                List<FormLayout> oldList = (Session["LayoutList"] != null) ? (List<FormLayout>)Session["LayoutList"] : new List<FormLayout>();
+                List<FormLayout> newList = new List<FormLayout>();
+                int newSort = 0;
+
+                // create new layout list which layout is not checked
+                for (int index = 0; index < chkLayout.Count(); index++)
+                {
+                    // Remove selected index
+                    if (chkLayout[index] == "false")
+                    {
+                        newList.Add(oldList[index]);
+                        newList[newSort].QuestionSort = newSort + 1;
+                        newSort++;
+                    }
+                }
+
+                // Save into session and return html string
+                Session["LayoutList"] = newList;
+                return Content(ModelFunctions.LayoutListHTML(newList));
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("ErrorPage", "Home", new { errMsg = ex.ToString() });
+            }
         }
 
         /// <summary>顯示新表單</summary>

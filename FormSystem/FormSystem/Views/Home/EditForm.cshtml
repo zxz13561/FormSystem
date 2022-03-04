@@ -9,6 +9,13 @@
     $(document).ready(function () {
         $("#StartDate").val("@startDate")
         $("#EndDate").val("@endDate")
+
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("NewLayout")',
+            success: function (result) { $('#qTable').append(result) }
+        });
+
         // create info data save function
         function SaveInfoPage() {
             $('#InfoForm').submit(
@@ -47,7 +54,7 @@
 </script>
 <!--Title-->
 <div class="headTitle">
-    <h1>後台 - 建立新表單</h1>
+    <h1>後台 - 編輯表單</h1>
 </div>
 <hr />
 <!--Edit Area-->
