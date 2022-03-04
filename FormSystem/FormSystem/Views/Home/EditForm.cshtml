@@ -12,7 +12,7 @@
 
         $.ajax({
             type: 'POST',
-            url: '@Url.Action("NewLayout")',
+            url: '@Url.Action("ShowLayout")',
             success: function (result) { $('#qTable').append(result) }
         });
 

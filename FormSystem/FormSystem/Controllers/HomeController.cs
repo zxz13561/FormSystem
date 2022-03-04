@@ -356,7 +356,7 @@ namespace FormSystem.Controllers
         }
         #endregion
 
-        #region Create New Form
+        #region New Form and Edit Form
         /// <summary>換頁時儲存表單資訊</summary>
         /// <param name="ajaxData"></param>
         /// <returns></returns>
@@ -377,6 +377,27 @@ namespace FormSystem.Controllers
         }
 
         /// <summary>新表單問題列表</summary>
+        /// <param name="fLay"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult ShowLayout()
+        {
+            try
+            {
+                // Check session data exist
+                List<FormLayout> list = (Session["LayoutList"] != null) ? (List<FormLayout>)Session["LayoutList"] : new List<FormLayout>();
+                Session["LayoutList"] = list;
+
+                // generate html code and return to page
+                return Content(ModelFunctions.LayoutListHTML(list));
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("ErrorPage", "Home", new { errMsg = ex.ToString() });
+            }
+        }
+
+        /// <summary>新增表單問題列表</summary>
         /// <param name="fLay"></param>
         /// <returns></returns>
         [HttpPost]
