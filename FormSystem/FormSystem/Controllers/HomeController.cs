@@ -222,7 +222,7 @@ namespace FormSystem.Controllers
                 else
                 {
                     // Reset Session
-                    Session["FID"] = Guid.TryParse(id, out Guid fid);
+                    Guid.TryParse(id, out Guid fid);
 
                     // Get Data from DB
                     FormInfo selectFIDInfo = DALFunctions.GetFormInfoByFID(fid);
@@ -232,50 +232,12 @@ namespace FormSystem.Controllers
                     ViewData["InfoData"] = selectFIDInfo;
                     ViewData["LayoutData"] = new FormLayout() { FormID = fid };
 
+                    Session["FID"] = fid;
                     Session["FormInfo"] = selectFIDInfo;
                     Session["LayoutList"] = selectFIDLayout;
 
                     return View("EditForm");
                 }
-            }
-            catch (Exception ex)
-            {
-                return RedirectToAction("ErrorPage", "Home", new { errMsg = ex.ToString() });
-            }
-        }
-
-        /// <summary>轉換Session資料，存入SQL</summary>
-        /// <returns></returns>
-        public ActionResult InsertIntoDB()
-        {
-            FormInfo fInfo = (Session["FormInfo"] != null) ? (FormInfo)Session["FormInfo"] : null;
-            List<FormLayout> fLayout = (Session["LayoutList"] != null) ? (List<FormLayout>)Session["LayoutList"] : null;
-
-            try
-            {
-                if (fInfo != null && fLayout != null)
-                {
-                    using (FormDBModel db = new FormDBModel())
-                    {
-                        // Save Info to DB
-                        fInfo.CreateDate = DateTime.Now;
-                        db.FormInfoes.Add(fInfo);
-                        db.SaveChanges();
-
-                        // Save Layout to DB
-                        foreach (FormLayout data in fLayout)
-                        {
-                            db.FormLayouts.Add(data);
-                        }
-                        db.SaveChanges();
-                    }
-                }
-                else
-                {
-                    throw new Exception("DB Error");
-                }
-
-                return RedirectToAction("FormManager", "Home");
             }
             catch (Exception ex)
             {
@@ -386,6 +348,7 @@ namespace FormSystem.Controllers
             {
                 // Check session data exist
                 List<FormLayout> list = (Session["LayoutList"] != null) ? (List<FormLayout>)Session["LayoutList"] : new List<FormLayout>();
+                Guid.TryParse(Session["FID"].ToString(), out Guid fid);
                 Session["LayoutList"] = list;
 
                 // generate html code and return to page
@@ -488,6 +451,42 @@ namespace FormSystem.Controllers
             }
 
             return Content(FormHtml);
+        }
+
+        /// <summary>儲存表單資料</summary>
+        /// <returns></returns>
+        public ActionResult InsertFormToDB()
+        {
+            FormInfo fInfo = (Session["FormInfo"] != null) ? (FormInfo)Session["FormInfo"] : null;
+            List<FormLayout> fLayout = (Session["LayoutList"] != null) ? (List<FormLayout>)Session["LayoutList"] : null;
+
+            try
+            {
+                DALFunctions.FormInsertDB(fInfo, fLayout);
+                return RedirectToAction("FormManager", "Home");
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("ErrorPage", "Home", new { errMsg = ex.ToString() });
+            }
+        }
+
+        /// <summary>更新表單資料</summary>
+        /// <returns></returns>
+        public ActionResult UpdateFormToDB()
+        {
+            FormInfo fInfo = (Session["FormInfo"] != null) ? (FormInfo)Session["FormInfo"] : null;
+            List<FormLayout> fLayout = (Session["LayoutList"] != null) ? (List<FormLayout>)Session["LayoutList"] : null;
+
+            try
+            {
+                DALFunctions.FormUpdateDB(fInfo, fLayout);
+                return RedirectToAction("FormManager", "Home");
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("ErrorPage", "Home", new { errMsg = "Update Error" });
+            }
         }
         #endregion
 

@@ -212,5 +212,90 @@ namespace FormSystem.Functions
                 return "Error";
             }
         }
+
+        /// <summary>將表單資訊寫入DB</summary>
+        /// <param name="fInfo"></param>
+        /// <param name="fLayout"></param>
+        public static void FormInsertDB(FormInfo fInfo, List<FormLayout> fLayout)
+        {
+            try
+            {
+                if (fInfo != null && fLayout != null)
+                {
+                    using (FormDBModel db = new FormDBModel())
+                    {
+                        // Save Info to DB
+                        fInfo.CreateDate = DateTime.Now;
+                        db.FormInfoes.Add(fInfo);
+                        db.SaveChanges();
+
+                        // Save Layout to DB
+                        foreach (FormLayout data in fLayout)
+                        {
+                            db.FormLayouts.Add(data);
+                        }
+                        db.SaveChanges();
+                    }
+                }
+                else
+                {
+                    throw new Exception("Data Error");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        /// <summary>更新DB表單資訊</summary>
+        /// <param name="fInfo"></param>
+        /// <param name="fLayout"></param>
+        public static void FormUpdateDB(FormInfo fInfo, List<FormLayout> fLayout)
+        {
+            try
+            {
+                if (fInfo != null && fLayout != null)
+                {
+                    using (FormDBModel db = new FormDBModel())
+                    {
+                        // Save Update Info to DB
+                        var dbInfo = db.FormInfoes
+                            .Where(i => i.FormID == fInfo.FormID)
+                            .FirstOrDefault();
+
+                        dbInfo.Body = fInfo.Body;
+                        dbInfo.Name = fInfo.Name;
+                        dbInfo.StartDate = fInfo.StartDate;
+                        dbInfo.EndDate = fInfo.EndDate;
+                        db.SaveChanges();
+
+                        // Remove old Layout in DB
+                        var dbLayout = db.FormLayouts
+                            .Where(l => l.FormID == fInfo.FormID)
+                            .ToList();
+
+                        foreach (FormLayout l in dbLayout)
+                            db.FormLayouts.Remove(l);
+                        
+                        db.SaveChanges();
+
+                        // Save Update Layout to DB
+                        foreach (FormLayout data in fLayout)
+                            db.FormLayouts.Add(data);
+                        
+                        db.SaveChanges();
+                    }
+                }
+                else
+                {
+                    throw new Exception("Data Error");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }
