@@ -127,6 +127,65 @@ namespace FormSystem.Functions
             }
         }
 
+        /// <summary>依照FormID從DB篩選FormInfo資料並回傳</summary>
+        /// <param name="_fid"></param>
+        /// <returns></returns>
+        public static FormInfo GetFormInfoByFID(Guid _fid)
+        {
+            try
+            {
+                FormInfo _fInfo = new FormInfo() { };
+
+                using (FormDBModel db = new FormDBModel())
+                {
+                    // get data from db
+                    var result =
+                        from f in db.FormInfoes
+                        where f.FormID == _fid
+                        select f;
+
+                    _fInfo = result.FirstOrDefault();
+                }
+
+                return _fInfo;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        /// <summary>依照FormID從DB篩選FormLayout資料並回傳</summary>
+        /// <param name="_fid"></param>
+        /// <returns></returns>
+        public static List<FormLayout> GetFormLayoutByFID(Guid _fid)
+        {
+            try
+            {
+                List<FormLayout> _flayout = new List<FormLayout>() { };
+
+                using (FormDBModel db = new FormDBModel())
+                {
+                    // get data from db
+                    var result =
+                        from f in db.FormLayouts
+                        where f.FormID == _fid
+                        select f;
+
+                    foreach(var item in result.ToList())
+                    {
+                        _flayout.Add(item);
+                    }
+                }
+
+                return _flayout;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
         /// <summary>取得問題類型名稱</summary>
         /// <param name="ID"></param>
         /// <returns></returns>

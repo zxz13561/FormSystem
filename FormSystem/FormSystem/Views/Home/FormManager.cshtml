@@ -53,6 +53,7 @@
                 <th scope="col">開始時間</th>
                 <th scope="col">結束時間</th>
                 <th scope="col">統計</th>
+                <th scope="col"></th>
             </tr>
         </thead>
         <tbody id="FormTable">
@@ -68,6 +69,7 @@
                     <td>@this.Model[i].StartDate.ToString("yyyy-MM-dd")</td>
                     <td>@this.Model[i].EndDate.ToString("yyyy-MM-dd")</td>
                     <td>@Html.ActionLink("前往", "DataAnalysis", "Home", new { id = this.Model[i].FormID }, null)</td>
+                    <td>@Html.ActionLink("編輯表單", "EditForm", "Home", new { id = this.Model[i].FormID }, null)</td>
                 </tr>
             }
         </tbody>

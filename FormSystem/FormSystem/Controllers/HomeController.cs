@@ -200,25 +200,45 @@ namespace FormSystem.Controllers
             ViewBag.SelectList = DALFunctions.QusetionsType();
             ViewBag.FrequenQList = DALFunctions.frequenQList();
 
-            // Create New Form
-            if (id == "NewForm")
+            try
             {
-                // New FID
-                Guid newID = Guid.NewGuid();
+                // Create New Form
+                if (id == "NewForm")
+                {
+                    // New FID
+                    Guid newID = Guid.NewGuid();
 
-                // Reset Session
-                Session["FID"] = newID;
-                Session["LayoutList"] = null;
-                Session["FormInfo"] = null;
+                    // Reset Session
+                    Session["FID"] = newID;
+                    Session["FormInfo"] = null;
+                    Session["LayoutList"] = null;
 
-                // Set View Data
-                ViewData["InfoData"] = new FormInfo() { FormID = newID};
-                ViewData["LayoutData"] = new FormLayout() { FormID = newID};
+                    // Set View Data
+                    ViewData["InfoData"] = new FormInfo() { FormID = newID };
+                    ViewData["LayoutData"] = new FormLayout() { FormID = newID };
+                }
+                else
+                {
+                    // Reset Session
+                    Session["FID"] = Guid.TryParse(id, out Guid fid);
 
+                    // Get Data from DB
+                    FormInfo selectFIDInfo = DALFunctions.GetFormInfoByFID(fid);
+                    List<FormLayout> selectFIDLayout = DALFunctions.GetFormLayoutByFID(fid);
+
+                    // Set View Data
+                    ViewData["InfoData"] = selectFIDInfo;
+                    ViewData["LayoutData"] = new FormLayout() { FormID = fid };
+
+                    Session["FormInfo"] = selectFIDInfo;
+                    Session["LayoutList"] = selectFIDLayout;
+                }
                 return View("CreateNewForm");
             }
-
-            return View();
+            catch (Exception ex)
+            {
+                return RedirectToAction("ErrorPage", "Home", new { errMsg = ex.ToString() });
+            }
         }
 
         /// <summary>轉換Session資料，存入SQL</summary>
