@@ -216,6 +216,8 @@ namespace FormSystem.Controllers
                     // Set View Data
                     ViewData["InfoData"] = new FormInfo() { FormID = newID };
                     ViewData["LayoutData"] = new FormLayout() { FormID = newID };
+
+                    return View("CreateNewForm");
                 }
                 else
                 {
@@ -232,8 +234,9 @@ namespace FormSystem.Controllers
 
                     Session["FormInfo"] = selectFIDInfo;
                     Session["LayoutList"] = selectFIDLayout;
+
+                    return View("EditForm");
                 }
-                return View("CreateNewForm");
             }
             catch (Exception ex)
             {
@@ -418,12 +421,9 @@ namespace FormSystem.Controllers
             // Set select List
             ViewBag.SelectList = DALFunctions.QusetionsType();
 
-            FormLayout testLayout = new FormLayout();
-            testLayout.Body = "test updated";
-
             // Set View Data
             ViewData["InfoData"] = (Session["FormInfo"] != null) ? Session["FormInfo"] : new FormInfo();
-            ViewData["LayoutData"] = testLayout;
+            ViewData["LayoutData"] = (Session["FormLayout"] != null) ? Session["FormLayout"] : new FormLayout();
 
             return Content("InfoSaved");
         }

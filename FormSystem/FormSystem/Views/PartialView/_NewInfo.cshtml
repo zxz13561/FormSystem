@@ -1,7 +1,7 @@
 ﻿@model FormSystem.DBModel.FormInfo
-@using (Ajax.BeginForm("NewInfo", "Home", null, new AjaxOptions { UpdateTargetId = "returnMsg" }, new { @id = "InfoForm"}))
+@using (Ajax.BeginForm("NewInfo", "Home", null, new AjaxOptions { UpdateTargetId = "returnMsg" }, new { @id = "InfoForm" }))
 {
-    <p>@Html.HiddenFor(info => this.Model.FormID, new { @value = this.Model.FormID})</p>
+    <p>@Html.HiddenFor(info => this.Model.FormID, new { @value = this.Model.FormID })</p>
     <div class="mb-3 row">
         <label for="FormName" class="col-sm-1 col-form-label">問卷名稱:</label>
         <div class="col-sm-6">
