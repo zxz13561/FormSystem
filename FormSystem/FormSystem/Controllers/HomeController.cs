@@ -208,14 +208,15 @@ namespace FormSystem.Controllers
                     // New FID
                     Guid newID = Guid.NewGuid();
 
+                    // Set View Data
+                    ViewData["InfoData"] = new FormInfo() { FormID = newID };
+                    ViewData["LayoutData"] = new FormLayout() { FormID = newID };
+
                     // Reset Session
                     Session["FID"] = newID;
                     Session["FormInfo"] = null;
                     Session["LayoutList"] = null;
-
-                    // Set View Data
-                    ViewData["InfoData"] = new FormInfo() { FormID = newID };
-                    ViewData["LayoutData"] = new FormLayout() { FormID = newID };
+                    Session["LIndex"] = null;
 
                     return View("CreateNewForm");
                 }
@@ -232,9 +233,11 @@ namespace FormSystem.Controllers
                     ViewData["InfoData"] = selectFIDInfo;
                     ViewData["LayoutData"] = new FormLayout() { FormID = fid };
 
+                    // Set Session
                     Session["FID"] = fid;
                     Session["FormInfo"] = selectFIDInfo;
                     Session["LayoutList"] = selectFIDLayout;
+                    Session["LIndex"] = null;
 
                     return View("EditForm");
                 }
@@ -293,29 +296,6 @@ namespace FormSystem.Controllers
                 return RedirectToAction("ErrorPage", "Home", new { errMsg = ex.ToString() });
             }
         }
-
-        /// <summary>選擇常用問題選項，將資料顯示在輸入格內</summary>
-        /// <param name="selectQ"></param>
-        /// <returns></returns>
-        [HttpPost]
-        public ActionResult SelectFreqQAndReturnDBData(FormCollection selectQ)
-        {
-            // parse question ID to int
-            int selectedID = int.Parse(selectQ[0]);
-
-            // set DB data into frequent question model
-            FrenquenQuestion DBfreqQ = DALFunctions.GetFreQInfo(selectedID);
-            FormLayout freqQInfo = new FormLayout()
-            {
-                FormID = new Guid(),// this is not important data; therefor use new guid
-                QuestionType = DBfreqQ.QuestionType,
-                Body = DBfreqQ.Body,
-                Answer = DBfreqQ.Answer,
-                NeedAns = DBfreqQ.NeedAns,
-            };
-
-            return Content(JsonConvert.SerializeObject(freqQInfo), "application/json");
-        }
         #endregion
 
         #region New Form and Edit Form
@@ -371,13 +351,21 @@ namespace FormSystem.Controllers
                 // Check session data exist
                 List<FormLayout> list = (Session["LayoutList"] != null) ? (List<FormLayout>)Session["LayoutList"] : new List<FormLayout>();
                 Guid.TryParse(Session["FID"].ToString(), out Guid fid);
-
-                // Set relate date into layout model
                 fLay.FormID = fid;
-                fLay.QuestionSort = (Session["LayoutList"] == null) ? 1 : list.Count() + 1;
 
-                // Add to list and save into session
-                list.Add(fLay);
+                // Check is edit or new layout
+                if (Session["LIndex"] != null && int.TryParse(Session["LIndex"].ToString(), out int layoutIndex))
+                {
+                    list[layoutIndex] = fLay;
+                }
+                else
+                {
+                    fLay.QuestionSort = (Session["LayoutList"] == null) ? 1 : list.Count() + 1;
+                    // Add to list
+                    list.Add(fLay);
+                }
+
+                // Save new list into session
                 Session["LayoutList"] = list;
 
                 // generate html code and return to page
@@ -421,6 +409,66 @@ namespace FormSystem.Controllers
             {
                 return RedirectToAction("ErrorPage", "Home", new { errMsg = ex.ToString() });
             }
+        }
+
+        /// <summary>選擇編輯問題，將資料顯示在輸入格內</summary>
+        /// <param name="LayoutIndex"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult EditLayout(FormCollection LayoutIndex)
+        {
+            try
+            {
+                // Check session data exist
+                List<FormLayout> list = (Session["LayoutList"] != null) ? (List<FormLayout>)Session["LayoutList"] : new List<FormLayout>();
+                int.TryParse(LayoutIndex[0].ToString(), out int LID);
+
+                // set session data into frequent question model
+                FormLayout LayoutInfo = new FormLayout()
+                {
+                    FormID = new Guid(),// this is not important data; therefor use new guid
+                    QuestionType = list[LID].QuestionType,
+                    Body = list[LID].Body,
+                    Answer = list[LID].Answer,
+                    NeedAns = list[LID].NeedAns,
+                };
+
+                // Set Edit layout index into session
+                Session["LIndex"] = LayoutIndex;
+
+                return Content(JsonConvert.SerializeObject(LayoutInfo), "application/json");
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("ErrorPage", "Home", new { errMsg = ex.ToString() });
+            }
+        }
+
+        /// <summary>選擇常用問題選項，將資料顯示在輸入格內</summary>
+        /// <param name="selectQ"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult ShowFreqQInfo(FormCollection selectQ)
+        {
+            // parse question ID to int
+            int selectedID = int.Parse(selectQ[0]);
+
+            // Set default question type QT01
+            FormLayout freqQInfo = new FormLayout() { QuestionType = "QT01 "};
+
+            if (selectedID !=0)
+            {
+                // set DB data into frequent question model
+                FrenquenQuestion DBfreqQ = DALFunctions.GetFreQInfo(selectedID);
+
+                // Write data into object
+                freqQInfo.QuestionType = DBfreqQ.QuestionType;
+                freqQInfo.Body = DBfreqQ.Body;
+                freqQInfo.Answer = DBfreqQ.Answer;
+                freqQInfo.NeedAns = DBfreqQ.NeedAns;
+            }
+
+            return Content(JsonConvert.SerializeObject(freqQInfo), "application/json");
         }
 
         /// <summary>顯示新表單</summary>

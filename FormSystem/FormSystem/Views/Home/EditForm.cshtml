@@ -38,7 +38,7 @@
             $('#freqQListForm').submit(
                 $.ajax({
                     type: 'POST',
-                    url: '@Url.Action("SelectFreqQAndReturnDBData")',
+                    url: '@Url.Action("ShowFreqQInfo")',
                     data: formatData,
                     success: function (result) {
                         console.log(result);

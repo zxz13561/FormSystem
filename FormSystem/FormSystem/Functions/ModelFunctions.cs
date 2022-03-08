@@ -176,6 +176,8 @@ namespace FormSystem.Functions
             // Create Table HTML
             foreach (var data in list)
             {
+                string isNeed = data.NeedAns ? "是" : "否";
+
                 tableString += $@"
                     <tr>
                         <td>
@@ -185,8 +187,9 @@ namespace FormSystem.Functions
                         <td>{data.QuestionSort}</td>
                         <td>{data.Body}</td>
                         <td>{DALFunctions.GetQuestionTypeName(data.QuestionType)}</td>
-                        <td><a href=""Home/Index"">編輯</a></td>
-                    </tr>";
+                        <td>{isNeed}</td>
+                        <td><button type=""button"" class=""btn btn-secondary btn-sm"" onclick=""testFunc({i})"">編輯</button></td>
+                      </tr>";
                 i++;
             }
 

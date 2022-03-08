@@ -4,6 +4,20 @@
 }
 
 <script>
+    function testFunc(value) {
+        var LID = 'LayoutIndex = ' + value;
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("EditLayout")',
+            data: LID,
+            success: function (result) {
+                $('#inputDescribe').val(result['Body']);
+                $('#inputAns').val(result['Answer']);
+                $('#selectType').val(result['QuestionType']);
+                $('#checkNullable').attr('checked', result['NeedAns']);
+            }
+        })
+    };
     $(document).ready(function () {
         // create info data save function
         function SaveInfoPage() {
@@ -12,7 +26,7 @@
                     type: 'POST',
                     url: '@Url.Action("SaveInfoData")',
                     data: $('#InfoForm').serialize(),
-                    success: function (result) { console.log(result); } // just for checking save is success or not
+                    success: function (result) { }
                 })
             );
         };
@@ -27,10 +41,9 @@
             $('#freqQListForm').submit(
                 $.ajax({
                     type: 'POST',
-                    url: '@Url.Action("SelectFreqQAndReturnDBData")',
+                    url: '@Url.Action("ShowFreqQInfo")',
                     data: formatData,
                     success: function (result) {
-                        console.log(result);
                         $('#inputDescribe').val(result['Body']);
                         $('#inputAns').val(result['Answer']);
                         $('#selectType').val(result['QuestionType']);
@@ -40,7 +53,6 @@
             );
         });
     });
-
 </script>
 <!--Title-->
 <div class="headTitle">
