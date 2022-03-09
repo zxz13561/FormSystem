@@ -354,9 +354,9 @@ namespace FormSystem.Controllers
                 fLay.FormID = fid;
 
                 // Check is edit or new layout
-                if (Session["LIndex"] != null && int.TryParse(Session["LIndex"].ToString(), out int layoutIndex))
+                if (Session["EditLayoutIndex"] != null && int.TryParse(Session["EditLayoutIndex"].ToString(), out int LID))
                 {
-                    list[layoutIndex] = fLay;
+                    list[LID] = fLay;
                 }
                 else
                 {
@@ -434,7 +434,7 @@ namespace FormSystem.Controllers
                 };
 
                 // Set Edit layout index into session
-                Session["LIndex"] = LayoutIndex;
+                Session["EditLayoutIndex"] = LID;
 
                 return Content(JsonConvert.SerializeObject(LayoutInfo), "application/json");
             }
