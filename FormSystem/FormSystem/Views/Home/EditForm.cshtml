@@ -6,15 +6,35 @@
 }
 
 <script>
-    $(document).ready(function () {
-        $("#StartDate").val("@startDate")
-        $("#EndDate").val("@endDate")
-
+    // Set layout edit ajax function
+    function EditLayoutAjax(index) {
+        var LID = 'LayoutIndex = ' + index;
         $.ajax({
             type: 'POST',
-            url: '@Url.Action("ShowLayout")',
-            success: function (result) { $('#qTable').append(result) }
-        });
+            url: '@Url.Action("EditLayout")',
+            data: LID,
+            success: function (result) {
+                $('#inputDescribe').val(result['Body']);
+                $('#inputAns').val(result['Answer']);
+                $('#selectType').val(result['QuestionType']);
+                $('#checkNullable').attr('checked', result['NeedAns']);
+            }
+        })
+    };
+
+    $(document).ready(function () {
+        // Get page's type and bypass function
+        var setType = '@ViewData["EditType"].ToString()';
+        if (setType != 'New') {
+            $("#StartDate").val("@startDate")
+            $("#EndDate").val("@endDate")
+
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("ShowLayout")',
+                success: function (result) { $('#qTable').append(result) }
+            });
+        }
 
         // create info data save function
         function SaveInfoPage() {
@@ -23,7 +43,7 @@
                     type: 'POST',
                     url: '@Url.Action("SaveInfoData")',
                     data: $('#InfoForm').serialize(),
-                    success: function (result) { console.log(result); } // just for checking save is success or not
+                    success: function (result) { }
                 })
             );
         };
@@ -94,7 +114,7 @@
         <!--確認送出-->
         <hr />
         <div>
-            <a class="btn btn-outline-warning" id="saveFrom" href="/Home/UpdateFormToDB" onclick="return confirm('確認送出?');">送出</a>
+            <a class="btn btn-outline-warning" id="saveFrom" href="/Home/SaveFormToDB" onclick="return confirm('確認送出?');">送出</a>
         </div>
     </div>
 </div>

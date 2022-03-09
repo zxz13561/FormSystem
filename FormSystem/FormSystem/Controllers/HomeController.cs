@@ -27,7 +27,7 @@ namespace FormSystem.Controllers
 
         public ActionResult FormManager()
         {
-            var InfoList = new FormDBModel().FormInfoes.ToList();
+            var InfoList = new FormDBModel().FormInfoes.OrderByDescending(f => f.CreateDate).ToList();
             return View(InfoList);
         }
 
@@ -209,16 +209,16 @@ namespace FormSystem.Controllers
                     Guid newID = Guid.NewGuid();
 
                     // Set View Data
+                    ViewData["EditType"] = "New";
                     ViewData["InfoData"] = new FormInfo() { FormID = newID };
                     ViewData["LayoutData"] = new FormLayout() { FormID = newID };
 
                     // Reset Session
                     Session["FID"] = newID;
+                    Session["EditType"] = "New";
                     Session["FormInfo"] = null;
                     Session["LayoutList"] = null;
-                    Session["LIndex"] = null;
-
-                    return View("CreateNewForm");
+                    Session["EditLayoutIndex"] = null;
                 }
                 else
                 {
@@ -230,17 +230,19 @@ namespace FormSystem.Controllers
                     List<FormLayout> selectFIDLayout = DALFunctions.GetFormLayoutByFID(fid);
 
                     // Set View Data
+                    ViewData["EditType"] = fid;
                     ViewData["InfoData"] = selectFIDInfo;
                     ViewData["LayoutData"] = new FormLayout() { FormID = fid };
 
                     // Set Session
                     Session["FID"] = fid;
+                    Session["EditType"] = null;
                     Session["FormInfo"] = selectFIDInfo;
                     Session["LayoutList"] = selectFIDLayout;
-                    Session["LIndex"] = null;
-
-                    return View("EditForm");
+                    Session["EditLayoutIndex"] = null;
                 }
+
+                return View();
             }
             catch (Exception ex)
             {
@@ -356,6 +358,7 @@ namespace FormSystem.Controllers
                 // Check is edit or new layout
                 if (Session["EditLayoutIndex"] != null && int.TryParse(Session["EditLayoutIndex"].ToString(), out int LID))
                 {
+                    fLay.QuestionSort = LID + 1;
                     list[LID] = fLay;
                 }
                 else
@@ -367,6 +370,7 @@ namespace FormSystem.Controllers
 
                 // Save new list into session
                 Session["LayoutList"] = list;
+                Session["EditLayoutIndex"] = null;
 
                 // generate html code and return to page
                 return Content(ModelFunctions.LayoutListHTML(list));
@@ -501,37 +505,24 @@ namespace FormSystem.Controllers
             return Content(FormHtml);
         }
 
-        /// <summary>儲存表單資料</summary>
+        /// <summary>抓取session表單資料後寫入DB</summary>
         /// <returns></returns>
-        public ActionResult InsertFormToDB()
+        public ActionResult SaveFormToDB()
         {
             FormInfo fInfo = (Session["FormInfo"] != null) ? (FormInfo)Session["FormInfo"] : null;
             List<FormLayout> fLayout = (Session["LayoutList"] != null) ? (List<FormLayout>)Session["LayoutList"] : null;
 
             try
             {
-                DALFunctions.FormInsertDB(fInfo, fLayout);
+                // Chose DB method by edit type
+                if (Session["EditType"] == null || Session["EditType"].ToString() != "New")
+                    DALFunctions.FormUpdateDB(fInfo, fLayout);
+                else
+                    DALFunctions.FormInsertDB(fInfo, fLayout);
+
                 return RedirectToAction("FormManager", "Home");
             }
-            catch (Exception ex)
-            {
-                return RedirectToAction("ErrorPage", "Home", new { errMsg = ex.ToString() });
-            }
-        }
-
-        /// <summary>更新表單資料</summary>
-        /// <returns></returns>
-        public ActionResult UpdateFormToDB()
-        {
-            FormInfo fInfo = (Session["FormInfo"] != null) ? (FormInfo)Session["FormInfo"] : null;
-            List<FormLayout> fLayout = (Session["LayoutList"] != null) ? (List<FormLayout>)Session["LayoutList"] : null;
-
-            try
-            {
-                DALFunctions.FormUpdateDB(fInfo, fLayout);
-                return RedirectToAction("FormManager", "Home");
-            }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return RedirectToAction("ErrorPage", "Home", new { errMsg = "Update Error" });
             }

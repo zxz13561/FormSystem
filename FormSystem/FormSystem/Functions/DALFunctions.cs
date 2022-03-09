@@ -170,6 +170,7 @@ namespace FormSystem.Functions
                     var result =
                         from f in db.FormLayouts
                         where f.FormID == _fid
+                        orderby f.QuestionSort
                         select f;
 
                     foreach(var item in result.ToList())

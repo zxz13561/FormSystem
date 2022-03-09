@@ -64,7 +64,7 @@
                 <tr>
                     <td>@Html.CheckBox($"chkForm[{i}]", new { @value = this.Model[i].FormID })</td>
                     <th>@num</th>
-                    <td>@Html.ActionLink(this.Model[i].Name, "EditForm", "Home", new { @id = this.Model[i].FormID })</td>
+                    <td>@Html.ActionLink(this.Model[i].Name, "EditForm", "Home", new { @id = this.Model[i].FormID }, null)</td>
                     <td>@status</td>
                     <td>@this.Model[i].StartDate.ToString("yyyy-MM-dd")</td>
                     <td>@this.Model[i].EndDate.ToString("yyyy-MM-dd")</td>

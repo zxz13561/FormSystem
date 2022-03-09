@@ -15,7 +15,7 @@ namespace FormSystem.Functions
         public static string IndexListHTML(int _Qindex = 1, int _howManyInPage = 20)
         {
             string tableString = string.Empty;
-            var _allQList = new FormDBModel().FormInfoes.ToList();
+            var _allQList = new FormDBModel().FormInfoes.OrderByDescending(f => f.CreateDate).ToList();
 
             // Create Table HTML
             for (int i = _Qindex - 1; (i < _Qindex + _howManyInPage - 1) && (i < _allQList.Count); i++)
@@ -188,7 +188,7 @@ namespace FormSystem.Functions
                         <td>{data.Body}</td>
                         <td>{DALFunctions.GetQuestionTypeName(data.QuestionType)}</td>
                         <td>{isNeed}</td>
-                        <td><button type=""button"" class=""btn btn-secondary btn-sm"" onclick=""testFunc({i})"">編輯</button></td>
+                        <td><button type=""button"" class=""btn btn-secondary btn-sm"" onclick=""EditLayoutAjax({i})"">編輯</button></td>
                       </tr>";
                 i++;
             }
