@@ -205,6 +205,8 @@
     <Content Include="bootstrap-5.1.3\js\bootstrap.min.js.map" />
     <Content Include="App_Code\TypeHelper.cshtml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
+    <Content Include="Scripts\flot\jquery.flot.min.js" />
+    <Content Include="Scripts\flot\jquery.flot.pie.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
     <Content Include="Scripts\jquery-3.4.1.slim.js" />
@@ -237,6 +239,7 @@
     <Content Include="Views\Home\ErrorPage.cshtml" />
     <Content Include="Views\Home\SuccessPage.cshtml" />
     <Content Include="Views\Home\EditForm.cshtml" />
+    <Content Include="Views\Home\FrontFormStatistics.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

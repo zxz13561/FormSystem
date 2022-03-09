@@ -1,0 +1,35 @@
+﻿
+@{
+    ViewBag.Title = "FrontFormStatistics";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script language="javascript" type="text/javascript" src="~/Scripts/flot/jquery.flot.min.js"></script>
+<script language="javascript" type="text/javascript" src="~/Scripts/flot/jquery.flot.pie.js"></script>
+
+<style type="text/css">
+    #placeholder {
+        width: 550px;
+        height: 200px;
+    }
+</style>
+<script type="text/javascript">
+    $(function () {
+        var data = [];
+        var series = Math.floor(Math.random() * 10) + 1;
+
+        for (var i = 0; i < series; i++) {
+            data[i] = { label: "Series" + (i + 1), data: Math.floor(Math.random() * 100) + 1 }
+        }
+
+        $.plot('#placeholder', data, {
+            series: {
+                pie: {
+                    show: true
+                }
+            }
+        });
+    });
+</script>
+
+<h2>FrontFormStatistics</h2>
+<div id="placeholder" class="demo-placeholder"></div>

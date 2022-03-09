@@ -136,17 +136,28 @@ namespace FormSystem.Controllers
                     throw new Exception("FillFormInfo Null");
                 }
 
-                // Show Answers
+                // Get layout list from session
                 List<FormLayout> fLayout = (List<FormLayout>)Session["FillFormInfo"];
+
+                // Set answer list
                 List<ShowAnsModel> showAns = new List<ShowAnsModel>();
+
+                // Set new model contain answer for DB
                 FormData sessionAns = new FormData() { FormID = fillFid};
 
                 for (int i = 0; i < fLayout.Count; i++)
                 {
+                    // Record Layout order
                     sessionAns.QuestionSort += fLayout[i].QuestionType + ";";
-                    sessionAns.AnswerData += (ansList[i].Answer.Count() > 1) ? string.Join(",", ansList[i].Answer) : ansList[i].Answer[0];
+
+                    // Record user input Answer order
+                    sessionAns.AnswerData += (ansList[i].Answer.Count() > 1) ? string.Join(",", ansList[i].Answer) : ansList[i].Answer[0]; // Check is single answer or mutiple
                     sessionAns.AnswerData += ";";
+
+                    // Create a string filt out false answer
                     string ansStr = (ansList[i].Answer.Count() > 1) ? string.Join(",", ansList[i].Answer.Where((source, value) => source != "false").ToArray()) : ansList[i].Answer[0];
+
+                    // Create a object combine answer and layout, Add into list
                     showAns.Add(new ShowAnsModel() { QBody = fLayout[i].Body, QAns = ansStr });
                 }
 
@@ -635,5 +646,10 @@ namespace FormSystem.Controllers
             }
         }
         #endregion
+
+        public ActionResult FrontFormStatistics()
+        {
+            return View();
+        }
     }
 }

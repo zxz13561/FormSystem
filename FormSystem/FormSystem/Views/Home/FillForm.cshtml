@@ -18,7 +18,8 @@
 </div>
 <hr />
 <!--Body-->
-@using (Html.BeginForm("CheckAns", "Home")) { 
+@using (Html.BeginForm("CheckAns", "Home"))
+{
     if (this.Model != null)
     {
         for (int i = 0; i < this.Model.Count; i++)
@@ -27,84 +28,85 @@
             {
                 case "QT01":
                 case "QT01 ":
-                        <div class="mb-3 row">
-                            @Html.LabelFor(input => this.Model[i].Answer[0], this.Model[i].Body, new { @class = "col-sm-2 col-form-label" })
-                            <div class="col-sm-6">
-                                @Html.TextBoxFor(input => this.Model[i].Answer, new { @class = "form-control", @required = this.Model[i].NeedAns })
-                            </div>
+                    <div class="mb-3 row">
+                        @Html.LabelFor(input => this.Model[i].Answer[0], this.Model[i].Body, new { @class = "col-sm-2 col-form-label" })
+                        <div class="col-sm-6">
+                            @Html.TextBoxFor(input => this.Model[i].Answer, new { @class = "form-control", @required = this.Model[i].NeedAns })
                         </div>
+                    </div>
                     break;
 
                 case "QT02":
                 case "QT02 ":
-                        <div class="mb-3 row">
-                            @Html.LabelFor(input => this.Model[i].Answer[0], this.Model[i].Body, new { @class = "col-sm-2 col-form-label" })
-                            <div class="col-sm-6">
-                                @Html.TextBoxFor(input => this.Model[i].Answer, new { @class = "form-control", @required = this.Model[i].NeedAns, @type = "number" })
-                            </div>
+                    <div class="mb-3 row">
+                        @Html.LabelFor(input => this.Model[i].Answer[0], this.Model[i].Body, new { @class = "col-sm-2 col-form-label" })
+                        <div class="col-sm-6">
+                            @Html.TextBoxFor(input => this.Model[i].Answer, new { @class = "form-control", @required = this.Model[i].NeedAns, @type = "number" })
                         </div>
+                    </div>
                     break;
 
                 case "QT03":
                 case "QT03 ":
-                        <div class="mb-3 row">
-                            @Html.LabelFor(input => this.Model[i].Answer[0], this.Model[i].Body, new { @class = "col-sm-2 col-form-label" })
-                            <div class="col-sm-6">
-                                @Html.TextBoxFor(input => this.Model[i].Answer, new { @class = "form-control", @required = this.Model[i].NeedAns, @type = "email" })
-                            </div>
+                    <div class="mb-3 row">
+                        @Html.LabelFor(input => this.Model[i].Answer[0], this.Model[i].Body, new { @class = "col-sm-2 col-form-label" })
+                        <div class="col-sm-6">
+                            @Html.TextBoxFor(input => this.Model[i].Answer, new { @class = "form-control", @required = this.Model[i].NeedAns, @type = "email" })
                         </div>
+                    </div>
                     break;
 
                 case "QT04":
                 case "QT04 ":
-                        <div class="mb-3 row">
-                            @Html.LabelFor(input => this.Model[i].Answer[0], this.Model[i].Body, new { @class = "col-sm-2 col-form-label" })
-                            <div class="col-sm-6">
-                                @Html.TextBoxFor(input => this.Model[i].Answer, new { @class = "form-control", @required = this.Model[i].NeedAns, @type = "date" })
-                            </div>
+                    <div class="mb-3 row">
+                        @Html.LabelFor(input => this.Model[i].Answer[0], this.Model[i].Body, new { @class = "col-sm-2 col-form-label" })
+                        <div class="col-sm-6">
+                            @Html.TextBoxFor(input => this.Model[i].Answer, new { @class = "form-control", @required = this.Model[i].NeedAns, @type = "date" })
                         </div>
+                    </div>
                     break;
 
                 case "QT05":
                 case "QT05 ":
-                        <div class="mb-3 row">
-                            @Html.LabelFor(input => this.Model[i].Answer[0], this.Model[i].Body, new { @class = "col-sm-2 col-form-label" })
-                            @foreach (string ans in this.Model[i].Answer.Split(';'))
-                            {
-                                <div class="row">
-                                    <div class="col-1"></div>
-                                    <div class="form-check col-11">
-                                        @Html.RadioButtonFor(radio => this.Model[i].Answer[0], ans, new { @class = "form-check-input col-1" })
-                                        @Html.LabelFor(lable => this.Model[i].Answer, ans, new { @class = "form-check-label col-10" })
-                                    </div>
+                    <div class="mb-3 row">
+                        @Html.LabelFor(input => this.Model[i].Answer[0], this.Model[i].Body, new { @class = "col-sm-2 col-form-label" })
+                        @foreach (string ans in this.Model[i].Answer.Split(';'))
+                        {
+                            <div class="row">
+                                <div class="col-1"></div>
+                                <div class="form-check col-11">
+                                    @Html.RadioButtonFor(radio => this.Model[i].Answer[0], ans, new { @class = "form-check-input col-1" })
+                                    @Html.LabelFor(lable => this.Model[i].Answer, ans, new { @class = "form-check-label col-10" })
                                 </div>
-                            }
-                        </div>
+                            </div>
+                        }
+                    </div>
                     break;
 
                 case "QT06":
                 case "QT06 ":
-                        <div class="mb-3 row">
-                            @Html.LabelFor(input => this.Model[i].Answer, this.Model[i].Body, new { @class = "col-sm-2 col-form-label" })
-                            @for (int j = 0; j < this.Model[i].Answer.Split(';').Length; j++)
-                            {
-                                string ans = this.Model[i].Answer.Split(';')[j];
-                                    <div class="row">
-                                        <div class="col-1"></div>
-                                        <div class="form-check col-11">
-                                            @Html.CheckBox($"[{i}].Answer[{j}]", new { value = ans })
-                                            @Html.LabelFor(lable => this.Model[i].Answer, ans, new { @class = "form-check-label col-10" })
-                                        </div>
-                                    </div>
-                            }
-                            }
-                        </div>
-                        break;
+                    <div class="mb-3 row">
+                        @Html.LabelFor(input => this.Model[i].Answer, this.Model[i].Body, new { @class = "col-sm-2 col-form-label" })
+                        @for (int j = 0; j < this.Model[i].Answer.Split(';').Length; j++)
+                        {
+                            string ans = this.Model[i].Answer.Split(';')[j];
+                            <div class="row">
+                                <div class="col-1"></div>
+                                <div class="form-check col-11">
+                                    @Html.CheckBox($"[{i}].Answer[{j}]", new { value = ans })
+                                    @Html.LabelFor(lable => this.Model[i].Answer, ans, new { @class = "form-check-label col-10" })
+                                </div>
+                            </div>
+                        }
+                        }
+                    </div>
+                    break;
 
-                    default:
-                        break;
-                }
+                default:
+                    break;
             }
         }
+    }
     <button type="submit" class="btn btn-primary">確定</button>
+    <button type="reset" class="btn btn-danger">清除</button>
 }
