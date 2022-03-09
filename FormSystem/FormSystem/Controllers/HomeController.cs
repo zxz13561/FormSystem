@@ -104,8 +104,8 @@ namespace FormSystem.Controllers
 
                     ViewBag.FormTitle = formInfo.Name;
                     ViewBag.FormBody = formInfo.Body;
-                    ViewBag.FormStart = formInfo.StartDate.ToString("yyyy-MM-dd hh:mm:ss");
-                    ViewBag.FormEnd = formInfo.EndDate.ToString("yyyy-MM-dd hh:mm:ss");
+                    ViewBag.FormStart = formInfo.StartDate.ToString("yyyy-MM-dd");
+                    ViewBag.FormEnd = formInfo.EndDate.ToString("yyyy-MM-dd");
 
                     // Get Form layout and sent to view page
                     var formLayout = new FormDBModel().FormLayouts
@@ -490,7 +490,7 @@ namespace FormSystem.Controllers
                             <h1>{fInfo.Name}</h1>
                         </div>
                         <div class=""col-5"">
-                            <h6>開放時間 : {fInfo.StartDate} ~ {fInfo.EndDate}</h6>
+                            <h6>開放時間 : {fInfo.StartDate.ToString("yyyy-MM-dd")} ~ {fInfo.EndDate.ToString("yyyy-MM-dd")}</h6>
                         </div>
                     </div>
                     <p class=""lead"">{fInfo.Body}</p>

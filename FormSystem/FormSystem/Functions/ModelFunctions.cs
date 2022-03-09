@@ -28,9 +28,9 @@ namespace FormSystem.Functions
                         <th scope=""row"">{i + 1}</th>
                         <td><a href=""/Home/FillForm/{data.FormID}"">{data.Name}</a></td>
                         <td>{status}</td>
-                        <td>{data.StartDate}</td>
-                        <td>{data.EndDate}</td>
-                        <td><a href=""Home/Analysis?FormID={data.FormID}"">統計</a></td>
+                        <td>{data.StartDate.ToString("yyyy-MM-dd")}</td>
+                        <td>{data.EndDate.ToString("yyyy-MM-dd")}</td>
+                        <td><a href=""Home/Analysis?FormID={data.FormID}"">前往</a></td>
                     </tr>";
             }
 
