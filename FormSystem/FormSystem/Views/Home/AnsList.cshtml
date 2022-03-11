@@ -22,8 +22,9 @@
                 <th>@index </th>
                 <td>@this.Model[i].CreateDate</td>
                 <td>@this.Model[i].AnsHead</td>
-                <td>@Html.ActionLink("前往", "HistoryAns", "Home", new { id = this.Model[i].DataID }, null)</td>
+                <td>@Html.ActionLink("前往", "HistoryAns", "Home", new { fid = this.Model[i].FormID, dataID = this.Model[i].DataID }, null)</td>
             </tr>
         }
     </tbody>
 </table>
+<input type="button" class="btn btn-outline-secondary" name="redirect" value="回上頁" onclick="javascript:window.history.back(-1);return false;" />

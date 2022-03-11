@@ -299,7 +299,7 @@ namespace FormSystem.Functions
             }
         }
 
-        /// <summary>取得表單的答案清單</summary>
+        /// <summary>用FID取得表單的答案清單</summary>
         /// <param name="ID"></param>
         /// <returns></returns>
         public static List<FormData> GetFormAns(Guid FID)
@@ -334,6 +334,29 @@ namespace FormSystem.Functions
                 {
                     db.FormDatas.Add(data);
                     db.SaveChanges();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        /// <summary>用DataID從DB取得答案資料</summary>
+        /// <param name="dataID"></param>
+        /// <returns></returns>
+        public static FormData GetFormAnsInfo(int dataID)
+        {
+            try
+            {
+                using(FormDBModel db = new FormDBModel())
+                {
+                    var result =
+                        from d in db.FormDatas
+                        where d.DataID == dataID
+                        select d;
+                        
+                    return result.FirstOrDefault();
                 }
             }
             catch (Exception)

@@ -643,11 +643,7 @@ namespace FormSystem.Controllers
         }
         #endregion
 
-        public ActionResult FrontFormStatistics()
-        {
-            return View();
-        }
-
+        #region Form Answer Analysis
         /// <summary>表單的答案清單頁面</summary>
         /// <param name="fid"></param>
         /// <returns></returns>
@@ -660,13 +656,21 @@ namespace FormSystem.Controllers
 
                 List<AnsInfo> ansList = new List<AnsInfo>();
 
-                foreach(var ans in DALFunctions.GetFormAns(FID))
+                foreach (var ans in DALFunctions.GetFormAns(FID))
                 {
                     // choose first answer
                     string firstAns = ans.AnswerData.Split(';')[0];
 
                     // create new object and add to List
-                    ansList.Add(new AnsInfo { DataID = ans.DataID, AnsHead = firstAns, CreateDate = ans.CreateDate.ToString("yyyy-MM-dd HH:mm:ss")});
+                    ansList.Add(
+                        new AnsInfo
+                        {
+                            FormID = FID,
+                            DataID = ans.DataID,
+                            AnsHead = firstAns,
+                            CreateDate = ans.CreateDate.ToString("yyyy-MM-dd HH:mm:ss")
+                        }
+                    );
                 }
                 return View(ansList);
             }
@@ -674,6 +678,54 @@ namespace FormSystem.Controllers
             {
                 return RedirectToAction("ErrorPage", "Home", new { errMsg = ex.ToString() });
             }
+        }
+
+        /// <summary>顯示表單答案的詳細資料</summary>
+        /// <param name="fid"></param>
+        /// <param name="dataID"></param>
+        /// <returns></returns>
+        public ActionResult HistoryAns(string fid, string dataID)
+        {
+            try
+            {
+                // Check id is correct
+                if (!Guid.TryParse(fid, out Guid FID))
+                    throw new Exception("GUID Error");
+
+                if (!int.TryParse(dataID, out int _dataID))
+                    throw new Exception("Data ID Error");
+
+                // Set objects
+                List<ShowAnsModel> ansInfoList = new List<ShowAnsModel>();
+                List<FormLayout> layoutList = DALFunctions.GetFormLayoutByFID(FID);
+                FormData fData = DALFunctions.GetFormAnsInfo(_dataID);
+
+                // Re-format data
+                string[] ansArray = fData.AnswerData.Split(';');
+                string[] QtypeArray = fData.QuestionSort.Split(';');
+
+                // Putting it together
+                for (int i = 0; i < layoutList.Count(); i++)
+                {
+                    ansInfoList.Add(new ShowAnsModel()
+                    {
+                        QBody = layoutList[i].Body,
+                        QAns = ansArray[i]
+                    });
+                }
+
+                return View(ansInfoList);
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("ErrorPage", "Home", new { errMsg = ex.ToString() });
+            }
+        }
+        #endregion
+
+        public ActionResult FrontFormStatistics()
+        {
+            return View();
         }
     }
 }
