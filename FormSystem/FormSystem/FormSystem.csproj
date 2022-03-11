@@ -142,6 +142,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AnsInfo.cs" />
+    <Compile Include="Models\AnsObject.cs" />
     <Compile Include="Models\FormAnsModel.cs" />
     <Compile Include="Models\CreateFormModel.cs" />
     <Compile Include="Models\FrequenModel.cs" />

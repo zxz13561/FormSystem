@@ -5,13 +5,14 @@
 }
 
 <h2>回答清單</h2>
+<p>@Html.ActionLink("前往", "FrontFormStatistics", "Home", new { fid = this.Model[0].FormID }, null)</p>
 <table class="table table-striped table-hover">
     <thead>
         <tr>
             <th scope="col">#</th>
             <th scope="col">建立日期</th>
             <th scope="col">名稱</th>
-            <th scope="col">詳細資料</th>
+            <th scope="col">詳細資料</th>                    
         </tr>
     </thead>
     <tbody id="ListTBody">

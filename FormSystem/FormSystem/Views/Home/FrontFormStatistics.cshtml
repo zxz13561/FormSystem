@@ -7,32 +7,44 @@
 <script language="javascript" type="text/javascript" src="~/Scripts/flot/jquery.flot.pie.js"></script>
 
 <style type="text/css">
-    #placeholder {
+    div.demo-placeholder {
         width: 550px;
-        height: 200px;
+        height: 250px;
     }
 </style>
 <script type="text/javascript">
-    var data = [];
+    var data1 = [];
+    var data2 = [];
+    var re;
+
     $(function () {
-        var series = Math.floor(Math.random() * 10) + 1;
+        $.ajax({
+            type: 'Get',
+            url: '@Url.Action("PlotData")',
+            success: function (result) {
+                console.log(result);
+                re = result;
 
-        for (var i = 0; i < series; i++) {
-            data[i] = { label: "Series" + (i + 1), data: Math.floor(Math.random() * 100) + 1 }
-        }
+                $.plot('#placeholder1', result[0], {
+                    series: {
+                        pie: {
+                            show: true
+                        }
+                    }
+                });
 
-        console.log(data);
-        console.log(series);
-
-        $.plot('#placeholder', data, {
-            series: {
-                pie: {
-                    show: true
-                }
+                $.plot('#placeholder2', result[1], {
+                    series: {
+                        pie: {
+                            show: true
+                        }
+                    }
+                });
             }
         });
     });
 </script>
 
 <h2>FrontFormStatistics</h2>
-<div id="placeholder" class="demo-placeholder"></div>
+<div id="placeholder1" class="demo-placeholder"></div>
+<div id="placeholder2" class="demo-placeholder"></div>

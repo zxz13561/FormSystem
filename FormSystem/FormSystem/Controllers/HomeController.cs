@@ -723,9 +723,49 @@ namespace FormSystem.Controllers
         }
         #endregion
 
-        public ActionResult FrontFormStatistics()
+        public ActionResult FrontFormStatistics(string fid)
         {
+            Session["FID"] = fid;
             return View();
+        }
+
+        /// <summary>提供表單分析頁面中的圖表資料</summary>
+        /// <returns></returns>
+        [HttpGet]
+        public ActionResult PlotData()
+        {
+            try
+            {
+                // Check FormID from session
+                if (!Guid.TryParse(Session["FID"].ToString(), out Guid FID))
+                    throw new Exception("GUID Error");
+
+                // Set objects
+                List<AnsObject[]> outputList = new List<AnsObject[]>();
+                List<FormLayout> layoutList = DALFunctions.GetSpecficLayout(FID);
+
+                // Loop each item
+                foreach (var l in layoutList)
+                {
+                    string[] answers = l.Answer.Split(';');
+                    AnsObject[] tempObject = new AnsObject[answers.Count()];
+
+                    // Set data into temp array
+                    for (int i = 0; i < answers.Count(); i++)
+                    {
+                        tempObject[i] = new AnsObject() { label = answers[i], data = (i + 1) * 2 };
+                    }
+
+                    // Add array into output list
+                    outputList.Add(tempObject);
+                }
+
+                return Json(outputList, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("ErrorPage", "Home", new { errMsg = ex.ToString() });
+            }
         }
     }
 }

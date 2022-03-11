@@ -364,5 +364,30 @@ namespace FormSystem.Functions
                 throw;
             }
         }
+
+        /// <summary>從表單的問題列表只選取單選和複選</summary>
+        /// <param name="fid"></param>
+        /// <returns></returns>
+        public static List<FormLayout> GetSpecficLayout(Guid fid)
+        {
+            try
+            {
+                using(FormDBModel db = new FormDBModel())
+                {
+                    var result =
+                        from l in db.FormLayouts
+                        where l.FormID == fid
+                        where l.QuestionType == "QT05 " || l.QuestionType == "QT06 "
+                        orderby l.QuestionSort
+                        select l;
+
+                    return result.ToList();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }
