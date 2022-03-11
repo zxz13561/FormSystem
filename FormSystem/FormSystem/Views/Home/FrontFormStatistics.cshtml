@@ -13,13 +13,16 @@
     }
 </style>
 <script type="text/javascript">
+    var data = [];
     $(function () {
-        var data = [];
         var series = Math.floor(Math.random() * 10) + 1;
 
         for (var i = 0; i < series; i++) {
             data[i] = { label: "Series" + (i + 1), data: Math.floor(Math.random() * 100) + 1 }
         }
+
+        console.log(data);
+        console.log(series);
 
         $.plot('#placeholder', data, {
             series: {

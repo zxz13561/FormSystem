@@ -651,5 +651,33 @@ namespace FormSystem.Controllers
         {
             return View();
         }
+
+        /// <summary>表單的答案清單頁面</summary>
+        /// <param name="fid"></param>
+        /// <returns></returns>
+        public ActionResult AnsList(string fid)
+        {
+            try
+            {
+                if (!Guid.TryParse(fid, out Guid FID))
+                    throw new Exception("GUID Error");
+
+                List<AnsInfo> ansList = new List<AnsInfo>();
+
+                foreach(var ans in DALFunctions.GetFormAns(FID))
+                {
+                    // choose first answer
+                    string firstAns = ans.AnswerData.Split(';')[0];
+
+                    // create new object and add to List
+                    ansList.Add(new AnsInfo { DataID = ans.DataID, AnsHead = firstAns, CreateDate = ans.CreateDate.ToString("yyyy-MM-dd HH:mm:ss")});
+                }
+                return View(ansList);
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("ErrorPage", "Home", new { errMsg = ex.ToString() });
+            }
+        }
     }
 }

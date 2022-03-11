@@ -1,0 +1,29 @@
+﻿@model List<FormSystem.Models.AnsInfo>
+@{
+    ViewBag.Title = "AnsList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>回答清單</h2>
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">建立日期</th>
+            <th scope="col">名稱</th>
+            <th scope="col">詳細資料</th>
+        </tr>
+    </thead>
+    <tbody id="ListTBody">
+    @for (int i = 0; i < this.Model.Count(); i++)
+        {
+            int index = i + 1;
+            <tr>
+                <th>@index </th>
+                <td>@this.Model[i].CreateDate</td>
+                <td>@this.Model[i].AnsHead</td>
+                <td>@Html.ActionLink("前往", "HistoryAns", "Home", new { id = this.Model[i].DataID }, null)</td>
+            </tr>
+        }
+    </tbody>
+</table>

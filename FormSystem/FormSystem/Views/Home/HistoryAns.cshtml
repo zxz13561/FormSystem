@@ -1,0 +1,27 @@
+﻿@model List<FormSystem.Models.ShowAnsModel>
+@{
+    ViewBag.Title = "HistoryAns";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!--Title-->
+<div class="jumbotron">
+    <div class="row">
+        <div class="col-7">
+            <h1>詳細資料</h1>
+        </div>
+    </div>
+</div>
+<hr />
+@foreach (FormSystem.Models.ShowAnsModel _ans in this.Model)
+    {
+        <div class="mb-3 row">
+            <label class="col-sm-2 col-form-label">@_ans.QBody</label>
+            <div class="col-sm-6">
+                <label class="form-control">@_ans.QAns</label>
+            </div>
+        </div>
+    }
+<input type="button" class="btn btn-outline-secondary" name="redirect" value="回上頁" onclick="javascript:window.history.back(-1);return false;" />
+
+

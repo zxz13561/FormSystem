@@ -68,7 +68,7 @@
                     <td>@status</td>
                     <td>@this.Model[i].StartDate.ToString("yyyy-MM-dd")</td>
                     <td>@this.Model[i].EndDate.ToString("yyyy-MM-dd")</td>
-                    <td>@Html.ActionLink("前往", "DataAnalysis", "Home", new { id = this.Model[i].FormID }, null)</td>
+                    <td>@Html.ActionLink("前往", "AnsList", "Home", new { fid = this.Model[i].FormID }, null)</td>
                     <td>@Html.ActionLink("編輯表單", "EditForm", "Home", new { id = this.Model[i].FormID }, null)</td>
                 </tr>
             }

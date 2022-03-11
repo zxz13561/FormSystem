@@ -298,5 +298,30 @@ namespace FormSystem.Functions
                 throw ex;
             }
         }
+
+        /// <summary>取得表單的答案清單</summary>
+        /// <param name="ID"></param>
+        /// <returns></returns>
+        public static List<FormData> GetFormAns(Guid FID)
+        {
+            try
+            {
+                using (FormDBModel db = new FormDBModel())
+                {
+                    // get data from db
+                    var result =
+                        from data in db.FormDatas
+                        where data.FormID == FID
+                        orderby data.CreateDate descending
+                        select data;
+
+                    return result.ToList();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }

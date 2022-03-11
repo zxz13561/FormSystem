@@ -141,6 +141,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\AnsInfo.cs" />
     <Compile Include="Models\FormAnsModel.cs" />
     <Compile Include="Models\CreateFormModel.cs" />
     <Compile Include="Models\FrequenModel.cs" />
@@ -240,6 +241,8 @@
     <Content Include="Views\Home\SuccessPage.cshtml" />
     <Content Include="Views\Home\EditForm.cshtml" />
     <Content Include="Views\Home\FrontFormStatistics.cshtml" />
+    <Content Include="Views\Home\HistoryAns.cshtml" />
+    <Content Include="Views\Home\AnsList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
