@@ -179,18 +179,14 @@ namespace FormSystem.Controllers
             {
                 // Get data from Session
                 if (Session["FormData"] == null)
-                {
                     throw new Exception("Session Data is null");
-                }
 
+                // Get data from session
                 FormData fData =  (FormData)Session["FormData"];
                 fData.CreateDate = DateTime.Now;
 
-                using (FormDBModel db = new FormDBModel())
-                {
-                    db.FormDatas.Add(fData);
-                    db.SaveChanges();
-                }
+                // insert into DB
+                DALFunctions.AnsInsertDB(fData);
 
                 return View("SuccessPage");
             }

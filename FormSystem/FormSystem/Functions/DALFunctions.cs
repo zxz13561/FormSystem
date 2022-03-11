@@ -323,5 +323,23 @@ namespace FormSystem.Functions
                 throw;
             }
         }
+
+        /// <summary>將表單答案寫入DB</summary>
+        /// <param name="data"></param>
+        public static void AnsInsertDB(FormData data)
+        {
+            try
+            {
+                using (FormDBModel db = new FormDBModel())
+                {
+                    db.FormDatas.Add(data);
+                    db.SaveChanges();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }
