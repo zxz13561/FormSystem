@@ -5,25 +5,40 @@
 }
 
 <h2>回答清單</h2>
-<p>@Html.ActionLink("分析圖表", "FrontFormStatistics", "Home", new { fid = this.Model[0].FormID }, null)</p>
+@if (this.Model.Count() > 0)
+{
+    <p>@Html.ActionLink("分析圖表", "FrontFormStatistics", "Home", new { fid = this.Model[0].FormID }, null)</p>
+}
 <table class="table table-striped table-hover">
     <thead>
         <tr>
             <th scope="col">#</th>
             <th scope="col">建立日期</th>
             <th scope="col">名稱</th>
-            <th scope="col">詳細資料</th>                    
+            <th scope="col">詳細資料</th>
         </tr>
     </thead>
     <tbody id="ListTBody">
-    @for (int i = 0; i < this.Model.Count(); i++)
+        @if (this.Model.Count() > 0)
         {
-            int index = i + 1;
+            for (int i = 0; i < this.Model.Count(); i++)
+            {
+                int index = i + 1;
+                <tr>
+                    <th>@index </th>
+                    <td>@this.Model[i].CreateDate</td>
+                    <td>@this.Model[i].AnsHead</td>
+                    <td>@Html.ActionLink("前往", "HistoryAns", "Home", new { fid = this.Model[i].FormID, dataID = this.Model[i].DataID }, null)</td>
+                </tr>
+            }
+        }
+        else
+        {
             <tr>
-                <th>@index </th>
-                <td>@this.Model[i].CreateDate</td>
-                <td>@this.Model[i].AnsHead</td>
-                <td>@Html.ActionLink("前往", "HistoryAns", "Home", new { fid = this.Model[i].FormID, dataID = this.Model[i].DataID }, null)</td>
+                <th>-</th>
+                <td>-</td>
+                <td>表單尚無資料</td>
+                <td>-</td>
             </tr>
         }
     </tbody>
