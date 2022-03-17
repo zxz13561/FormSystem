@@ -742,22 +742,82 @@ namespace FormSystem.Controllers
 
                 // Set objects
                 List<AnsObject[]> outputList = new List<AnsObject[]>();
+                List<string[]> ansArrayList = new List<string[]>();
                 List<FormLayout> layoutList = DALFunctions.GetSpecficLayout(FID);
+                List<FormData> dbAnsList = DALFunctions.GetFormAns(FID);
+                int howManyQuestions = layoutList.Count();
+                bool[] isMultiple = new bool[howManyQuestions];
 
-                // Loop each item
-                foreach (var l in layoutList)
+                // Loop each item and set object list
+                for (int layIndex = 0; layIndex < howManyQuestions; layIndex++)
                 {
-                    string[] answers = l.Answer.Split(';');
-                    AnsObject[] tempObject = new AnsObject[answers.Count()];
+                    string[] ansOptions = layoutList[layIndex].Answer.Split(';');
+                    int howManyAns = ansOptions.Count();
+                    AnsObject[] tempObject = new AnsObject[howManyAns];
+
+                    // Check is multiple chose
+                    if(layoutList[layIndex].QuestionType == "QT06 " || layoutList[layIndex].QuestionType == "QT06")
+                        isMultiple[layIndex] = true;
 
                     // Set data into temp array
-                    for (int i = 0; i < answers.Count(); i++)
+                    for (int i = 0; i < howManyAns; i++)
                     {
-                        tempObject[i] = new AnsObject() { label = answers[i], data = (i + 1) * 2 };
+                        tempObject[i] = new AnsObject() { label = ansOptions[i], data = 0 };
                     }
 
                     // Add array into output list
                     outputList.Add(tempObject);
+                }
+
+                // Loop answer data to string array
+                foreach (var a in dbAnsList)
+                {
+                    string[] ansDataArray = a.AnswerData.Split(';');
+                    string[] newAnsArray = new string[howManyQuestions];
+
+                    // Only select data what we need
+                    for (int i = 0; i < howManyQuestions; i++)
+                        newAnsArray[i] = ansDataArray[layoutList[i].QuestionSort - 1];
+
+                    ansArrayList.Add(newAnsArray);
+                }
+
+                // Loop all questions
+                for(int Qindex = 0; Qindex < outputList.Count(); Qindex++)
+                {
+                    // Chose loop by question type
+                    if (isMultiple[Qindex])
+                    {
+                        // Loop all answers
+                        for (int Aindex = 0; Aindex < ansArrayList.Count(); Aindex++)
+                        {
+                            // Split multiple answear into array
+                            string[] ansArr = ansArrayList[Aindex][Qindex].Split(',');
+
+                            // Loop all select options
+                            for(int selsectIndex = 0; selsectIndex < ansArr.Count(); selsectIndex++)
+                            {
+                                // Check is chosed
+                                if (ansArr[selsectIndex] != "false")
+                                    outputList[Qindex][selsectIndex].data += 1;
+                            }                          
+                        }
+                    }
+                    else
+                    {
+                        // Loop all answers
+                        foreach(var ansArr in ansArrayList)
+                        {
+                            foreach (AnsObject ans in outputList[Qindex])
+                            {
+                                if (ansArr[0] == ans.label)
+                                {
+                                    ans.data += 1;
+                                    break; // break foreach loop
+                                }
+                            }
+                        }
+                    }                   
                 }
 
                 return Json(outputList, JsonRequestBehavior.AllowGet);
