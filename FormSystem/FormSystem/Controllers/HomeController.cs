@@ -654,6 +654,8 @@ namespace FormSystem.Controllers
                 if (!Guid.TryParse(fid, out Guid FID))
                     throw new Exception("GUID Error");
 
+                Session["FID"] = fid;
+
                 List<AnsInfo> ansList = new List<AnsInfo>();
 
                 foreach (var ans in DALFunctions.GetFormAns(FID))
@@ -721,13 +723,6 @@ namespace FormSystem.Controllers
                 return RedirectToAction("ErrorPage", "Home", new { errMsg = ex.ToString() });
             }
         }
-        #endregion
-
-        public ActionResult FrontFormStatistics(string fid)
-        {
-            Session["FID"] = fid;
-            return View();
-        }
 
         /// <summary>提供表單分析頁面中的圖表資料</summary>
         /// <returns></returns>
@@ -742,9 +737,13 @@ namespace FormSystem.Controllers
 
                 // Set objects
                 List<AnsObject[]> outputList = new List<AnsObject[]>();
-                List<string[]> ansArrayList = new List<string[]>();
+                List<string[]> ansArrayList = new List<string[]>();             
+
+                // Get data from DB
                 List<FormLayout> layoutList = DALFunctions.GetSpecficLayout(FID);
                 List<FormData> dbAnsList = DALFunctions.GetFormAns(FID);
+
+                // Set parameter
                 int howManyQuestions = layoutList.Count();
                 bool[] isMultiple = new bool[howManyQuestions];
 
@@ -756,7 +755,7 @@ namespace FormSystem.Controllers
                     AnsObject[] tempObject = new AnsObject[howManyAns];
 
                     // Check is multiple chose
-                    if(layoutList[layIndex].QuestionType == "QT06 " || layoutList[layIndex].QuestionType == "QT06")
+                    if (layoutList[layIndex].QuestionType == "QT06 " || layoutList[layIndex].QuestionType == "QT06")
                         isMultiple[layIndex] = true;
 
                     // Set data into temp array
@@ -783,7 +782,7 @@ namespace FormSystem.Controllers
                 }
 
                 // Loop all questions
-                for(int Qindex = 0; Qindex < outputList.Count(); Qindex++)
+                for (int Qindex = 0; Qindex < outputList.Count(); Qindex++)
                 {
                     // Chose loop by question type
                     if (isMultiple[Qindex])
@@ -795,18 +794,18 @@ namespace FormSystem.Controllers
                             string[] ansArr = ansArrayList[Aindex][Qindex].Split(',');
 
                             // Loop all select options
-                            for(int selsectIndex = 0; selsectIndex < ansArr.Count(); selsectIndex++)
+                            for (int selsectIndex = 0; selsectIndex < ansArr.Count(); selsectIndex++)
                             {
                                 // Check is chosed
                                 if (ansArr[selsectIndex] != "false")
                                     outputList[Qindex][selsectIndex].data += 1;
-                            }                          
+                            }
                         }
                     }
                     else
                     {
                         // Loop all answers
-                        foreach(var ansArr in ansArrayList)
+                        foreach (var ansArr in ansArrayList)
                         {
                             foreach (AnsObject ans in outputList[Qindex])
                             {
@@ -817,7 +816,7 @@ namespace FormSystem.Controllers
                                 }
                             }
                         }
-                    }                   
+                    }
                 }
 
                 return Json(outputList, JsonRequestBehavior.AllowGet);
@@ -827,5 +826,7 @@ namespace FormSystem.Controllers
                 return RedirectToAction("ErrorPage", "Home", new { errMsg = ex.ToString() });
             }
         }
+        #endregion
+
     }
 }

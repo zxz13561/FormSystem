@@ -241,7 +241,6 @@
     <Content Include="Views\Home\ErrorPage.cshtml" />
     <Content Include="Views\Home\SuccessPage.cshtml" />
     <Content Include="Views\Home\EditForm.cshtml" />
-    <Content Include="Views\Home\FrontFormStatistics.cshtml" />
     <Content Include="Views\Home\HistoryAns.cshtml" />
     <Content Include="Views\Home\AnsList.cshtml" />
   </ItemGroup>
