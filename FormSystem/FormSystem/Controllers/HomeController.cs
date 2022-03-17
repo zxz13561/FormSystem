@@ -736,7 +736,7 @@ namespace FormSystem.Controllers
                     throw new Exception("GUID Error");
 
                 // Set objects
-                List<AnsObject[]> outputList = new List<AnsObject[]>();
+                Dictionary<string, AnsObject[]> outputList = new Dictionary<string, AnsObject[]>();
                 List<string[]> ansArrayList = new List<string[]>();             
 
                 // Get data from DB
@@ -765,7 +765,7 @@ namespace FormSystem.Controllers
                     }
 
                     // Add array into output list
-                    outputList.Add(tempObject);
+                    outputList.Add(layoutList[layIndex].Body, tempObject);
                 }
 
                 // Loop answer data to string array
@@ -798,7 +798,7 @@ namespace FormSystem.Controllers
                             {
                                 // Check is chosed
                                 if (ansArr[selsectIndex] != "false")
-                                    outputList[Qindex][selsectIndex].data += 1;
+                                    outputList.ElementAt(Qindex).Value[selsectIndex].data += 1;
                             }
                         }
                     }
@@ -807,7 +807,7 @@ namespace FormSystem.Controllers
                         // Loop all answers
                         foreach (var ansArr in ansArrayList)
                         {
-                            foreach (AnsObject ans in outputList[Qindex])
+                            foreach (AnsObject ans in outputList.ElementAt(Qindex).Value)
                             {
                                 if (ansArr[0] == ans.label)
                                 {

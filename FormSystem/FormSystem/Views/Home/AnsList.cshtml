@@ -6,7 +6,7 @@
 <style type="text/css">
     div.Plot-placeholder {
         width: 550px;
-        height: 250px;
+        height: 450px;
     }
 </style>
 <script language="javascript" type="text/javascript" src="~/Scripts/flot/jquery.flot.min.js"></script>
@@ -21,25 +21,44 @@
                     type: 'Get',
                     url: '@Url.Action("PlotData")',
                     success: function (result) {
-                        var canvasHtml = ' ';
+                        var qBody = Object.keys(result);
+                        var canvasHtml = '<p> </p>';
 
                         // create canvas
-                        for (var i = 0; i < result.length; i++) {
+                        for (let i = 0; i < qBody.length; i++) {
                             var id = 'canvas' + i;
-                            canvasHtml += `<div id="${id}" class="Plot-placeholder"></div>`;
+                            canvasHtml += `
+                                <p>${qBody[i]}</p>
+                                <div id="${id}" class="Plot-placeholder"></div>`;
                         }
                         canvasHtml += '<hr />';
 
                         $('#nav-plot').append(canvasHtml);
 
                         // draw on canvas
-                        for (var i = 0; i < result.length; i++) {
+                        for (var i = 0; i < qBody.length; i++) {
                             var id = 'canvas' + i;
-                            $.plot(`#${id}`, result[i], {
+                            $.plot(`#${id}`, result[qBody[i]], {
                                 series: {
                                     pie: {
-                                        show: true
+                                        show: true,
+                                        radius: 3 / 4,
+                                        label: {
+                                            show: true,
+                                            radius: 3 / 4,
+                                            formatter: function (label, series) {
+                                                return '<div style="font-size:8pt;text-align:center;padding:2px;color:white;">' + label + '<br/>' + Math.round(series.percent) + '%</div>';
+                                            },
+                                            background: {
+                                                opacity: 0.5,
+                                                color: '#000'
+                                            }
+                                        }
                                     }
+                                },
+                                grid: {
+                                    hoverable: true,
+                                    clickable: true
                                 }
                             });
                         }
