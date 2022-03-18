@@ -1,0 +1,79 @@
+﻿
+@{
+    ViewBag.Title = "FrontAnalysis";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style type="text/css">
+    div.Plot-placeholder {
+        width: 550px;
+        height: 450px;
+    }
+</style>
+<script language="javascript" type="text/javascript" src="~/Scripts/flot/jquery.flot.min.js"></script>
+<script language="javascript" type="text/javascript" src="~/Scripts/flot/jquery.flot.pie.js"></script>
+<script type="text/javascript">
+    var isPlot = false;
+    $(function () {
+        console.log('@ViewData["notEmpty"]');
+        var canvasHtml = '<p> </p>';
+
+        if ('@ViewData["notEmpty"]' == 'True') {
+            $.ajax({
+                type: 'Get',
+                url: '@Url.Action("PlotData")',
+                success: function (result) {
+                    var qBody = Object.keys(result);
+
+                    // create canvas
+                    for (let i = 0; i < qBody.length; i++) {
+                        var id = 'canvas' + i;
+                        canvasHtml += `
+                            <p>${qBody[i]}</p>
+                            <div id="${id}" class="Plot-placeholder"></div>`;
+                    }
+
+                    $('#canvasDiv').append(canvasHtml);
+
+                    // draw on canvas
+                    for (var i = 0; i < qBody.length; i++) {
+                        var id = 'canvas' + i;
+                        $.plot(`#${id}`, result[qBody[i]], {
+                            series: {
+                                pie: {
+                                    show: true,
+                                    radius: 3 / 4,
+                                    label: {
+                                        show: true,
+                                        radius: 3 / 4,
+                                        formatter: function (label, series) {
+                                            return '<div style="font-size:8pt;text-align:center;padding:2px;color:white;">' + label + '<br/>' + Math.round(series.percent) + '%</div>';
+                                        },
+                                        background: {
+                                            opacity: 0.5,
+                                            color: '#000'
+                                        }
+                                    }
+                                }
+                            },
+                            grid: {
+                                hoverable: true,
+                                clickable: true
+                            }
+                        });
+                    }
+                }
+            });
+        } else {
+            canvasHtml += '<p>此表單尚無資料</p>';
+            $('#canvasDiv').append(canvasHtml);
+        }
+    });
+</script>
+
+<h1>觀看統計</h1>
+<hr />
+<div id="canvasDiv">
+    <!--圖表放這裡-->
+</div>
+<hr />
+<input type="button" class="btn btn-outline-secondary" name="redirect" value="回上頁" onclick="javascript:window.history.back(-1);return false;" />

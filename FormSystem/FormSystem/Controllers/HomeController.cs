@@ -47,6 +47,14 @@ namespace FormSystem.Controllers
             return View(new FrenquenQuestion()); ;
         }
 
+        public ActionResult FrontAnalysis(Guid FormID)
+        {
+            Session["FID"] = FormID;
+            int countData = DALFunctions.GetFormAns(FormID).Count();
+            ViewData["notEmpty"] = countData > 0 ? true : false;
+            return View();
+        }
+
         public ActionResult ErrorPage(string errMsg)
         {
             ViewBag.ErrMsg = errMsg;

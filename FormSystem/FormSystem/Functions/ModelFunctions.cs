@@ -30,7 +30,7 @@ namespace FormSystem.Functions
                         <td>{status}</td>
                         <td>{data.StartDate.ToString("yyyy-MM-dd")}</td>
                         <td>{data.EndDate.ToString("yyyy-MM-dd")}</td>
-                        <td><a href=""Home/Analysis?FormID={data.FormID}"">前往</a></td>
+                        <td><a href=""Home/FrontAnalysis?FormID={data.FormID}"">前往</a></td>
                     </tr>";
             }
 
