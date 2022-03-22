@@ -69,12 +69,17 @@ namespace FormSystem.Controllers
         [HttpGet]
         public ActionResult ShowQuestionsTable()
         {
+            // Count how many item in DB
+            int totalCount = new FormDBModel().FormInfoes.ToList().Count();
+            int itemsPerPage = 4;
+
             // send html code
             IndexPagerModel indexHTML = new IndexPagerModel()
             {
-                ShowFormsHTML =  ModelFunctions.IndexListHTML(),  // questions list
-                PagniationHTML = ModelFunctions.PaginationHTML(), // pagination list
-                MaxPage = ModelFunctions.MaxPageNum() // max page number
+                ShowFormsHTML = ModelFunctions.IndexListHTML(),  // questions list
+                PagniationHTML = ModelFunctions.PaginationHTML(totalCount, itemsPerPage), // pagination list
+                MaxPage = totalCount % itemsPerPage == 0 ? totalCount / itemsPerPage : totalCount / itemsPerPage + 1, // max page number
+                ItemsPerPage = itemsPerPage
             };
 
             return Json(indexHTML, JsonRequestBehavior.AllowGet);

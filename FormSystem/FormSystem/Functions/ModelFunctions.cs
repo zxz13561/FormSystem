@@ -22,7 +22,7 @@ namespace FormSystem.Functions
             {
                 var data = _allQList[i];
 
-                string status = data.StartDate > DateTime.Now && data.EndDate < DateTime.Now ? "投票中" : "關閉中";
+                string status = DateTime.Now > data.StartDate  && DateTime.Now < data.EndDate ? "投票中" : "關閉中";
                 tableString += $@"
                     <tr>
                         <th scope=""row"">{i + 1}</th>
@@ -37,14 +37,13 @@ namespace FormSystem.Functions
             return tableString;
         }
 
-        /// <summary>回傳首頁問題列表的分頁HTML code</summary>
+        /// <summary>回傳列表的分頁HTML code</summary>
         /// <param name="list"></param>
         /// <returns></returns>
-        public static string PaginationHTML(int _howManyInPage = 2)
+        public static string PaginationHTML(int _totalListCount, int _howManyInPage = 2)
         {
             string pagehtml = string.Empty;
-            int _allQListNum = new FormDBModel().FormInfoes.ToList().Count();
-            int _pageTail = _allQListNum % _howManyInPage == 0 ? _allQListNum / _howManyInPage : _allQListNum / _howManyInPage + 1;
+            int _pageTail = _totalListCount % _howManyInPage == 0 ? _totalListCount / _howManyInPage : _totalListCount / _howManyInPage + 1;
 
             for (int i = 0; i < _pageTail; i++)
             {
@@ -52,15 +51,6 @@ namespace FormSystem.Functions
             }
 
             return pagehtml;
-        }
-
-        /// <summary>回傳最大頁數</summary>
-        /// <param name="_howManyInPage"></param>
-        /// <returns></returns>
-        public static int MaxPageNum(int _howManyInPage = 2)
-        {
-            int _allQListNum = new FormDBModel().FormInfoes.ToList().Count();
-            return _allQListNum % _howManyInPage == 0 ? _allQListNum / _howManyInPage : _allQListNum / _howManyInPage + 1;
         }
 
         /// <summary>依照問題種類回傳HTML code</summary>

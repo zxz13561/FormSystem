@@ -6,12 +6,13 @@
 <script>
     var currentPage = 1;
     var maxPageNum = 0;
+    var itemPerPage = 10;
     var hideByPager = function (pager) {
         // Reset page
         $('.table tbody tr').hide();
 
         // hide rows
-        for (var i = pager * 2 - 1; i <= pager * 2; i++) {
+        for (var i = pager * itemPerPage - itemPerPage + 1; i <= pager * itemPerPage; i++) {
             $(`.table tbody tr:nth-child(${i})`).show(); 
         }
 
@@ -50,6 +51,7 @@
             success: function (result) {
                 // form table
                 $('#ListTBody').append(result['ShowFormsHTML']);
+                
                 // pagination
                 var pageHtml =
                     `<li class="page-item">
@@ -60,7 +62,9 @@
                         <a class="page-link" href="#" onclick="nextOrPrivous('next')">下一頁</a>
                     </li>`;
                 $("#paginationArea").append(pageHtml);
+
                 // set Page
+                itemPerPage = result['ItemsPerPage'];
                 hideByPager(1);
                 currentPage = 1;
                 maxPageNum = result['MaxPage'];

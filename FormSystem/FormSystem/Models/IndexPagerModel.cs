@@ -10,5 +10,6 @@ namespace FormSystem.Models
         public string ShowFormsHTML { get; set; }
         public string PagniationHTML { get; set; }
         public int MaxPage { get; set; }
+        public int ItemsPerPage { get; set; }
     }
 }
