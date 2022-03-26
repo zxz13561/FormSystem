@@ -207,7 +207,6 @@
     <Content Include="bootstrap-5.1.3\js\bootstrap.esm.min.js.map" />
     <Content Include="bootstrap-5.1.3\js\bootstrap.js.map" />
     <Content Include="bootstrap-5.1.3\js\bootstrap.min.js.map" />
-    <Content Include="App_Code\TypeHelper.cshtml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\flot\jquery.flot.min.js" />
     <Content Include="Scripts\flot\jquery.flot.pie.js" />

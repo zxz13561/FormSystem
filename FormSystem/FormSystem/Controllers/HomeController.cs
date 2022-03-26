@@ -55,7 +55,7 @@ namespace FormSystem.Controllers
             var encryptedTicket = FormsAuthentication.Encrypt(ticket); //把驗證的表單加密
             var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket);
             Response.Cookies.Add(cookie);
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("FormManager", "BackStage");
         }
 
         public ActionResult FrontAnalysis(Guid FormID)
