@@ -43,6 +43,54 @@
         if (type === 'pre') {hideByPager(currentPage - 1); }
         if (type === 'next') {hideByPager(currentPage + 1); }
     };
+    function searchForm() {
+        // get element
+        var searchName = document.getElementById("searchName");
+        var searchSDate = document.getElementById("searchStartDate");
+        var searchEDate = document.getElementById("searchEndDate");
+
+        var nameFilter = searchName.value.toUpperCase();
+        var table = document.getElementById("ListTBody");
+        var ul = document.getElementById("paginationArea");
+        var tr = table.getElementsByTagName("tr");
+
+        // hide pagination area
+        ul.style.display = 'none';
+
+        // loop each item and check argument
+        for (i = 0; i < tr.length; i++) {
+            // get need column
+            var name_td = tr[i].getElementsByTagName("td")[0];
+            var sDate_td = tr[i].getElementsByTagName("td")[2];
+            var eDate_td = tr[i].getElementsByTagName("td")[3];
+
+            // get column value or text
+            var txtValue = name_td.textContent || name_td.innerText;
+            var sDateValue = sDate_td.textContent || sDate_td.innerText;
+            var eDateValue = eDate_td.textContent || eDate_td.innerText;
+
+            // check argument is match or in range
+            var nameMatch = txtValue.toUpperCase().indexOf(nameFilter) > -1
+            var DateRange = sDateValue >= searchSDate.value && eDateValue <= searchEDate.value
+
+            // show result
+            if (nameMatch && DateRange) {
+                tr[i].style.display = "";                
+            } else {
+                tr[i].style.display = "none";
+            }        
+        }
+    }
+    function resetSearch() {
+        // reset all relate element
+        document.getElementById("paginationArea").style.display = "";
+        document.getElementById("searchName").value = "";
+        document.getElementById("searchStartDate").value = "";
+        document.getElementById("searchEndDate").value = "";
+
+        // set to last page when start search
+        hideByPager(currentPage);
+    }
     $(document).ready(function () {
         // Get All Questions List HTML
         $.ajax({
@@ -83,20 +131,21 @@
 <div class="container">
     <div class="row row-cols-3">
         <div class="col">
-            <input class="form-control me-2" type="search" placeholder="搜尋問卷標題" aria-label="Search">
+            <input class="form-control me-2" id="searchName" type="search" placeholder="搜尋問卷標題" aria-label="Search">
         </div>
         <div class="col"></div>
         <div class="col"></div>
         <div class="col">
             開始時間:
-            <input class="form-control me-2" type="date">
+            <input class="form-control me-2" id="searchStartDate" type="date">
         </div>
         <div class="col">
             結束時間:
-            <input class="form-control me-2" type="date" placeholder="結束時間" aria-label="Search">
+            <input class="form-control me-2" id="searchEndDate" type="date">
         </div>
         <div class="col">
-            <button class="btn btn-outline-success" type="submit">Search</button>
+            <button class="btn btn-outline-success" onclick="searchForm()">搜尋</button>
+            <button class="btn btn-outline-danger" onclick="resetSearch()">清除</button>
         </div>
     </div>
 </div>
