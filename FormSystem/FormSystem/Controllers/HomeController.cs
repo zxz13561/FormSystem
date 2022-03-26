@@ -106,6 +106,28 @@ namespace FormSystem.Controllers
 
             return Json(indexHTML, JsonRequestBehavior.AllowGet);
         }
+
+        /// <summary>常用問題分頁控制</summary>
+        /// <param name="fLay"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public ActionResult FreqQuestionPagination()
+        {
+            // Count how many item in DB
+            int totalCount = new FormDBModel().FrenquenQuestions.ToList().Count();
+            int itemsPerPage = 5;
+
+            // send html code
+            IndexPagerModel indexHTML = new IndexPagerModel()
+            {
+                ShowFormsHTML = null,  // questions list
+                PagniationHTML = ModelFunctions.PaginationHTML(totalCount, itemsPerPage), // pagination list
+                MaxPage = totalCount % itemsPerPage == 0 ? totalCount / itemsPerPage : totalCount / itemsPerPage + 1, // max page number
+                ItemsPerPage = itemsPerPage
+            };
+
+            return Json(indexHTML, JsonRequestBehavior.AllowGet);
+        }
         #endregion
 
         #region Show Form Layout and Receive Answer
