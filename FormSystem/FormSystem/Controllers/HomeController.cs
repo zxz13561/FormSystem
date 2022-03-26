@@ -883,6 +883,45 @@ namespace FormSystem.Controllers
                 return RedirectToAction("ErrorPage", "Home", new { errMsg = ex.ToString() });
             }
         }
+
+        [HttpGet]
+        public ActionResult ExportCSV()
+        {
+            try
+            {
+                // Check FormID from session
+                if (!Guid.TryParse(Session["FID"].ToString(), out Guid FID))
+                    throw new Exception("GUID Error");
+
+                // Get data from DB
+                List<FormLayout> layoutList = DALFunctions.GetFormLayoutByFID(FID);
+                List<FormData> dbAnsList = DALFunctions.GetFormAns(FID);
+
+                // Set return objects
+                List<string[]> exportArray = new List<string[]>();
+
+                // set columns name
+                string[] tempLayout = new string[layoutList.Count()];
+                for(int i = 0; i < layoutList.Count(); i++)
+                    tempLayout[i] = layoutList[i].Body;
+
+                // add layout string array
+                exportArray.Add(tempLayout);
+
+                // set ans into array
+                foreach(var dbAns in dbAnsList)
+                {
+                    string[] ansArr = dbAns.AnswerData.Split(';');
+                    exportArray.Add(ansArr);                           
+                }
+
+                return Json(exportArray, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("ErrorPage", "Home", new { errMsg = ex.ToString() });
+            }           
+        }
         #endregion
 
     }
