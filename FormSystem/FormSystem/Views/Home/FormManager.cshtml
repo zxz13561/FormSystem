@@ -5,6 +5,73 @@
     string[] chkForm = new string[this.Model.Count];
 }
 
+<!--Script-->
+<script>
+    var currentPage = 1;
+    var maxPageNum = 0;
+    var itemPerPage = 5;
+    var hideByPager = function (pager) {
+        // Reset page
+        $('.table tbody tr').hide();
+
+        // hide rows
+        for (var i = pager * itemPerPage - itemPerPage + 1; i <= pager * itemPerPage; i++) {
+            $(`.table tbody tr:nth-child(${i})`).show();
+        }
+
+        // set current Page
+        currentPage = pager;
+
+        // set pager active
+        $("li").toggleClass('active', false);
+        $(`li:nth-child(${pager + 1})`).toggleClass('active', true);
+
+        // set prvious button enable or disable
+        if (currentPage == 1) {
+            $('li:first').toggleClass('disabled', true);
+        }
+        else {
+            $('li:first').toggleClass('disabled', false);
+        }
+
+        // set next button enable or disable
+        if (currentPage == maxPageNum) {
+            $('li:last').toggleClass('disabled', true);
+        }
+        else {
+            $('li:last').toggleClass('disabled', false);
+        }
+    };
+    var nextOrPrivous = function (type) {
+        if (type === 'pre') {hideByPager(currentPage - 1); }
+        if (type === 'next') {hideByPager(currentPage + 1); }
+    };
+    $(document).ready(function () {
+        // Get All Questions List HTML
+        $.ajax({
+            type: 'Get',
+            url: '@Url.Action("FormManagerPagination")',
+            success: function (result) {
+                // pagination
+                var pageHtml =
+                    `<li class="page-item">
+                        <a class="page-link" href="#" onclick="nextOrPrivous('pre')">上一頁</a>
+                    </li>
+                    ${result['PagniationHTML']}
+                    <li class="page-item">
+                        <a class="page-link" href="#" onclick="nextOrPrivous('next')">下一頁</a>
+                    </li>`;
+                $("#paginationArea").append(pageHtml);
+
+                // set Page
+                itemPerPage = result['ItemsPerPage'];
+                hideByPager(1);
+                currentPage = 1;
+                maxPageNum = result['MaxPage'];
+            }
+        });
+    });
+</script>
 <!--Title-->
 <div class="jumbotron">
     <h1>後台 - 問卷管理</h1>
@@ -73,6 +140,13 @@
         </tbody>
     </table>
 }
+<!--Pagination-->
+<nav aria-label="Index Page navigation">
+    <ul class="pagination" id="paginationArea">
+        <!--Put pagination here-->
+    </ul>
+</nav>
+
 <script type="text/javascript">
     $("#FormList").on("submit", function () {
         return confirm("確認刪除選擇的表單嗎?");

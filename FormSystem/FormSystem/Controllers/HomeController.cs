@@ -63,20 +63,42 @@ namespace FormSystem.Controllers
         #endregion
 
         #region Index Ajax Controllers
-        /// <summary>首頁問題列表</summary>
+        /// <summary>首頁分頁控制</summary>
         /// <param name="fLay"></param>
         /// <returns></returns>
         [HttpGet]
-        public ActionResult ShowQuestionsTable()
+        public ActionResult IndexPagination()
         {
             // Count how many item in DB
             int totalCount = new FormDBModel().FormInfoes.ToList().Count();
-            int itemsPerPage = 4;
+            int itemsPerPage = 5;
 
             // send html code
             IndexPagerModel indexHTML = new IndexPagerModel()
             {
                 ShowFormsHTML = ModelFunctions.IndexListHTML(),  // questions list
+                PagniationHTML = ModelFunctions.PaginationHTML(totalCount, itemsPerPage), // pagination list
+                MaxPage = totalCount % itemsPerPage == 0 ? totalCount / itemsPerPage : totalCount / itemsPerPage + 1, // max page number
+                ItemsPerPage = itemsPerPage
+            };
+
+            return Json(indexHTML, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>表單管理分頁控制</summary>
+        /// <param name="fLay"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public ActionResult FormManagerPagination()
+        {
+            // Count how many item in DB
+            int totalCount = new FormDBModel().FormInfoes.ToList().Count();
+            int itemsPerPage = 5;
+
+            // send html code
+            IndexPagerModel indexHTML = new IndexPagerModel()
+            {
+                ShowFormsHTML = null,  // questions list
                 PagniationHTML = ModelFunctions.PaginationHTML(totalCount, itemsPerPage), // pagination list
                 MaxPage = totalCount % itemsPerPage == 0 ? totalCount / itemsPerPage : totalCount / itemsPerPage + 1, // max page number
                 ItemsPerPage = itemsPerPage

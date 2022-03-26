@@ -52,7 +52,7 @@ namespace FormSystem.Functions
 
                 return frquenM;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }

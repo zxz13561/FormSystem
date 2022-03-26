@@ -6,7 +6,7 @@
 <script>
     var currentPage = 1;
     var maxPageNum = 0;
-    var itemPerPage = 10;
+    var itemPerPage = 5;
     var hideByPager = function (pager) {
         // Reset page
         $('.table tbody tr').hide();
@@ -47,7 +47,7 @@
         // Get All Questions List HTML
         $.ajax({
             type: 'Get',
-            url: '@Url.Action("ShowQuestionsTable")',
+            url: '@Url.Action("IndexPagination")',
             success: function (result) {
                 // form table
                 $('#ListTBody').append(result['ShowFormsHTML']);
