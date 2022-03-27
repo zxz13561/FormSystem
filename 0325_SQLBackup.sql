@@ -13,7 +13,7 @@ EXECUTE (N'CREATE DATABASE FormSystemDB
   ON PRIMARY (NAME = N''FormSystemDB'', FILENAME = N''' + @device_directory + N'FormSystemDB.mdf'')
   LOG ON (NAME = N''FormSystemDB_log'',  FILENAME = N''' + @device_directory + N'FormSystemDB_log.ldf'')')
 GO
-
+/**************************************************************************************/
 ALTER DATABASE [FormSystemDB] SET COMPATIBILITY_LEVEL = 150
 GO
 
