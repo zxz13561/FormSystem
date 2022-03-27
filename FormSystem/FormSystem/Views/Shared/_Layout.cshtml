@@ -19,10 +19,18 @@
             </button>
             <div class="collapse navbar-collapse" id="navbars">
                 <div class="navbar-nav">
-                    <a class="nav-link">@Html.ActionLink("首頁", "Index", "Home")</a>
-                    <a class="nav-link">@Html.ActionLink("管理員登入", "Login", "Home")</a>
-                    <a class="nav-link">@Html.ActionLink("問卷管理", "FormManager", "BackStage")</a>
-                    <a class="nav-link">@Html.ActionLink("常用問題管理", "FrequentlyQuestions", "BackStage")</a>
+                    @Html.ActionLink("首頁", "Index", "Home", new { }, new { @class = "nav-link" })
+                    @if (!User.Identity.IsAuthenticated)
+                    {
+                        @Html.ActionLink("管理員登入", "Login", "Home", new { }, new { @class = "nav-link" })
+                    }
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        @Html.ActionLink("問卷管理", "FormManager", "BackStage", new { }, new { @class = "nav-link" })
+                        @Html.ActionLink("常用問題管理", "FrequentlyQuestions", "BackStage", new { }, new { @class = "nav-link" })
+                        @Html.ActionLink("登出", "Logout", "BackStage", new { }, new { @class = "nav-link" })
+                        
+                    }
                 </div>
             </div>
         </div>

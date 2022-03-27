@@ -7,6 +7,7 @@ using FormSystem.DBModel;
 using FormSystem.Models;
 using FormSystem.Functions;
 using Newtonsoft.Json;
+using System.Web.Security;
 
 namespace FormSystem.Controllers
 {
@@ -74,6 +75,14 @@ namespace FormSystem.Controllers
             {
                 return RedirectToAction("ErrorPage", "Home", new { errMsg = ex.ToString() });
             }
+        }
+
+        /// <summary>登出</summary>
+        /// <returns></returns>
+        public ActionResult Logout()
+        {
+            FormsAuthentication.SignOut();
+            return RedirectToAction("Index", "Home");
         }
         #endregion
 
