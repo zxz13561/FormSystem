@@ -14,13 +14,18 @@ namespace FormSystem.Controllers
     public class HomeController : Controller
     {
         #region Show Page Controllers
+        /// <summary>首頁</summary>
+        /// <returns></returns>
         public ActionResult Index()
         {
             return View();
         }
 
+        /// <summary>登入頁</summary>
+        /// <returns></returns>
         public ActionResult Login()
         {
+            ViewBag.Message = "請輸入管理員帳號密碼";
             return View();
         }
 
@@ -32,7 +37,7 @@ namespace FormSystem.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Login(LoginModel model)
         {
-            ViewBag.Message = "請輸入管理員帳號密碼";
+            ViewBag.Message = "帳號密碼有誤，請重新輸入";
 
             if (!ModelState.IsValid)
             {
@@ -44,20 +49,24 @@ namespace FormSystem.Controllers
 
             var ticket = new FormsAuthenticationTicket(
                 version: 1,
-                name: "Admin", //可以放使用者Id
-                issueDate: DateTime.UtcNow,//現在UTC時間
+                name: "Admin",                                                 //可以放使用者Id
+                issueDate: DateTime.UtcNow,                          //現在UTC時間
                 expiration: DateTime.UtcNow.AddMinutes(30),//Cookie有效時間=現在時間往後+30分鐘
-                isPersistent: true,// 是否要記住我 true or false
-                userData: "Admin", //可以放使用者角色名稱
+                isPersistent: true,                                              // 是否要記住我 true or false
+                userData: "Admin",                                           //可以放使用者角色名稱
                 cookiePath: FormsAuthentication.FormsCookiePath
             );
 
             var encryptedTicket = FormsAuthentication.Encrypt(ticket); //把驗證的表單加密
             var cookie = new HttpCookie(FormsAuthentication.FormsCookieName, encryptedTicket);
             Response.Cookies.Add(cookie);
+
             return RedirectToAction("FormManager", "BackStage");
         }
 
+        /// <summary>前台分析頁</summary>
+        /// <param name="FormID"></param>
+        /// <returns></returns>
         public ActionResult FrontAnalysis(Guid FormID)
         {
             Session["FID"] = FormID;
@@ -66,6 +75,9 @@ namespace FormSystem.Controllers
             return View();
         }
 
+        /// <summary>錯誤頁</summary>
+        /// <param name="errMsg"></param>
+        /// <returns></returns>
         public ActionResult ErrorPage(string errMsg)
         {
             ViewBag.ErrMsg = errMsg;
@@ -222,44 +234,6 @@ namespace FormSystem.Controllers
         #endregion
 
         #region Form Answer Analysis
-        /// <summary>表單的答案清單頁面</summary>
-        /// <param name="fid"></param>
-        /// <returns></returns>
-        public ActionResult AnsList(string fid)
-        {
-            try
-            {
-                if (!Guid.TryParse(fid, out Guid FID))
-                    throw new Exception("GUID Error");
-
-                Session["FID"] = fid;
-
-                List<AnsInfo> ansList = new List<AnsInfo>();
-
-                foreach (var ans in DALFunctions.GetFormAns(FID))
-                {
-                    // choose first answer
-                    string firstAns = ans.AnswerData.Split(';')[0];
-
-                    // create new object and add to List
-                    ansList.Add(
-                        new AnsInfo
-                        {
-                            FormID = FID,
-                            DataID = ans.DataID,
-                            AnsHead = firstAns,
-                            CreateDate = ans.CreateDate.ToString("yyyy-MM-dd HH:mm:ss")
-                        }
-                    );
-                }
-                return View(ansList);
-            }
-            catch (Exception ex)
-            {
-                return RedirectToAction("ErrorPage", "Home", new { errMsg = ex.ToString() });
-            }
-        }
-
         /// <summary>顯示表單答案的詳細資料</summary>
         /// <param name="fid"></param>
         /// <param name="dataID"></param>
@@ -405,6 +379,8 @@ namespace FormSystem.Controllers
             }
         }
 
+        /// <summary>從DB獲得表單資料後整理回傳前端</summary>
+        /// <returns></returns>
         [HttpGet]
         public ActionResult ExportCSV()
         {

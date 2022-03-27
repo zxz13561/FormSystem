@@ -14,6 +14,8 @@ namespace FormSystem.Controllers
     public class BackStageController : Controller
     {
         #region Show Page
+        /// <summary>表單管理頁</summary>
+        /// <returns></returns>
         public ActionResult FormManager()
         {
             var InfoList = new FormDBModel().FormInfoes.OrderByDescending(f => f.CreateDate).ToList();
@@ -34,6 +36,44 @@ namespace FormSystem.Controllers
             ViewBag.FrequenList = DALFunctions.FrequentlyQuestionsList();
 
             return View(new FrenquenQuestion()); ;
+        }
+
+        /// <summary>表單的答案清單頁面</summary>
+        /// <param name="fid"></param>
+        /// <returns></returns>
+        public ActionResult AnsList(string fid)
+        {
+            try
+            {
+                if (!Guid.TryParse(fid, out Guid FID))
+                    throw new Exception("GUID Error");
+
+                Session["FID"] = fid;
+
+                List<AnsInfo> ansList = new List<AnsInfo>();
+
+                foreach (var ans in DALFunctions.GetFormAns(FID))
+                {
+                    // choose first answer
+                    string firstAns = ans.AnswerData.Split(';')[0];
+
+                    // create new object and add to List
+                    ansList.Add(
+                        new AnsInfo
+                        {
+                            FormID = FID,
+                            DataID = ans.DataID,
+                            AnsHead = firstAns,
+                            CreateDate = ans.CreateDate.ToString("yyyy-MM-dd HH:mm:ss")
+                        }
+                    );
+                }
+                return View(ansList);
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("ErrorPage", "Home", new { errMsg = ex.ToString() });
+            }
         }
         #endregion
 

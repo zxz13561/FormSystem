@@ -151,11 +151,11 @@
 <hr />
 <!--Function List-->
 <div class="row">
-    @Html.ActionLink("新增表單", "EditForm", "Home", new { @id = "NewForm" }, new { @class = "btn btn-secondary" })
+    @Html.ActionLink("新增表單", "EditForm", "BackStage", new { @id = "NewForm" }, new { @class = "btn btn-secondary" })
 </div>
 <hr />
 <!--Form List-->
-@using (Html.BeginForm("DeleteForm", "Home", FormMethod.Post, new { @id = "FormList" }))
+@using (Html.BeginForm("DeleteForm", "BackStage", FormMethod.Post, new { @id = "FormList" }))
 {
     <div>
         <input class="btn btn-outline-danger" type="submit" value="刪除所選" onclick="return confirm('確認刪除?');">
@@ -180,11 +180,11 @@
                 <tr>
                     <td>@Html.CheckBox($"chkForm[{i}]", new { @value = this.Model[i].FormID })</td>
                     <th>@num</th>
-                    <td>@Html.ActionLink(this.Model[i].Name, "EditForm", "Home", new { @id = this.Model[i].FormID }, null)</td>
+                    <td>@Html.ActionLink(this.Model[i].Name, "EditForm", "BackStage", new { @id = this.Model[i].FormID }, null)</td>
                     <td>@status</td>
                     <td>@this.Model[i].StartDate.ToString("yyyy-MM-dd")</td>
                     <td>@this.Model[i].EndDate.ToString("yyyy-MM-dd")</td>
-                    <td>@Html.ActionLink("前往", "AnsList", "Home", new { fid = this.Model[i].FormID, formName = this.Model[i].Name }, null)</td>
+                    <td>@Html.ActionLink("前往", "AnsList", "BackStage", new { fid = this.Model[i].FormID, formName = this.Model[i].Name }, null)</td>
                 </tr>
             }
         </tbody>

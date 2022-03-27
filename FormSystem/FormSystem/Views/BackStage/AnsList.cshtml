@@ -52,7 +52,7 @@
         if (!isPlot) {
             $.ajax({
                 type: 'Get',
-                url: '@Url.Action("PlotData")',
+                url: '@Url.Action("../Home/PlotData")',
                 success: function (result) {
                     var qBody = Object.keys(result);
                     var canvasHtml = '<p> </p>';
