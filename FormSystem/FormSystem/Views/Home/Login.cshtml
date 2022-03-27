@@ -1,24 +1,28 @@
-﻿
+﻿@model FormSystem.Models.LoginModel
 @{
-    ViewBag.Title = "Login";    
+    ViewBag.Title = "登入";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h2>管理員登入</h2>
-<p>@ViewBag.Message;</p>
+<p>@ViewBag.Message</p>
 
-<div class="container d-grid gap-2">
-    <div class="col-4">
-        <input class="form-control me-2" type="text" placeholder="輸入帳號" aria-label="text">
-    </div>
-    <div class="col-4">
-        <input class="form-control me-2" type="text" placeholder="輸入密碼" aria-label="text">
-    </div>
-    <div class="col-4"></div>
-    <div class="col-8">
-        <button class="btn btn-outline-success" type="submit">登入</button>
-        <button class="btn btn-outline-success" type="submit">忘記密碼</button>
-    </div>
-</div>
+@using (Html.BeginForm())
+    {
+        <div class="container d-grid gap-2">
+            @Html.AntiForgeryToken()
+            <div class="form-group col-4">
+                @Html.TextBoxFor(login => login.UserName, new { @class = "form-control me-2", placeholder = "輸入帳號" })
+            </div>
+            <div class="form-group col-4">
+                @Html.PasswordFor(login => login.Password, new { @class = "form-control me-2", placeholder = "輸入密碼" })
+            </div>
+            <div class="col-4"></div>
+            <div class="col-8">
+                <button class="btn btn-outline-success" type="submit">登入</button>
+                <button class="btn btn-outline-danger" type="reset">清除</button>
+            </div>
+        </div>
+    }
 
 

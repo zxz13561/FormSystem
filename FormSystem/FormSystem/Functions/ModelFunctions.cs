@@ -23,10 +23,11 @@ namespace FormSystem.Functions
                 var data = _allQList[i];
 
                 string status = DateTime.Now > data.StartDate  && DateTime.Now < data.EndDate ? "投票中" : "關閉中";
+                string formLink = status == "投票中" ? $@"<a href=""/Home/FillForm/{data.FormID}"">{data.Name}</a>" : $"{data.Name}";
                 tableString += $@"
                     <tr>
                         <th scope=""row"">{i + 1}</th>
-                        <td><a href=""/Home/FillForm/{data.FormID}"">{data.Name}</a></td>
+                        <td>{formLink}</td>
                         <td>{status}</td>
                         <td>{data.StartDate.ToString("yyyy-MM-dd")}</td>
                         <td>{data.EndDate.ToString("yyyy-MM-dd")}</td>

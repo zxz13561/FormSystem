@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "EditForm";
+    ViewBag.Title = "編輯表單";
     Layout = "~/Views/Shared/_Layout.cshtml";
     string startDate = ((FormSystem.DBModel.FormInfo)ViewData["InfoData"]).StartDate.ToString("yyyy-MM-dd");
     string endDate = ((FormSystem.DBModel.FormInfo)ViewData["InfoData"]).EndDate.ToString("yyyy-MM-dd");
@@ -99,10 +99,7 @@
         <div class="mb-3 row">
             <label for="selectType" class="col-sm-1 col-form-label" style="text-align:right">種類:</label>
             <div class="col-sm-3">
-                @using (Html.BeginForm("freqQList", "Home", new { @id = "freqQListForm" }))
-                {
-                    @Html.DropDownList("frequenQ", (IEnumerable<SelectListItem>)ViewBag.FrequenQList, new { @class = "form-select", @id = "freqQselect" })
-                }
+                @Html.DropDownList("frequenQ", (IEnumerable<SelectListItem>)ViewBag.FrequenQList, new { @class = "form-select", @id = "freqQselect" })
             </div>
         </div>
         @{Html.RenderPartial("../PartialView/_NewLayout", ViewData["LayoutData"]);}
@@ -114,7 +111,7 @@
         <!--確認送出-->
         <hr />
         <div>
-            <a class="btn btn-outline-warning" id="saveFrom" href="/Home/SaveFormToDB" onclick="return confirm('確認送出?');">送出</a>
+            <a class="btn btn-outline-warning" id="saveFrom" href="/BackStage/SaveFormToDB" onclick="return confirm('確認送出?');">送出</a>
         </div>
     </div>
 </div>
