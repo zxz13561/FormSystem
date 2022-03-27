@@ -99,10 +99,7 @@
         <div class="mb-3 row">
             <label for="selectType" class="col-sm-1 col-form-label" style="text-align:right">種類:</label>
             <div class="col-sm-3">
-                @using (Html.BeginForm("freqQList", "Home", new { @id = "freqQListForm" }))
-                {
-                    @Html.DropDownList("frequenQ", (IEnumerable<SelectListItem>)ViewBag.FrequenQList, new { @class = "form-select", @id = "freqQselect" })
-                }
+                @Html.DropDownList("frequenQ", (IEnumerable<SelectListItem>)ViewBag.FrequenQList, new { @class = "form-select", @id = "freqQselect" })
             </div>
         </div>
         @{Html.RenderPartial("../PartialView/_NewLayout", ViewData["LayoutData"]);}
