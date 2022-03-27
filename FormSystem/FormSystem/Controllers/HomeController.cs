@@ -41,7 +41,7 @@ namespace FormSystem.Controllers
 
             if (!ModelState.IsValid)
             {
-                return View(model);
+                return View();
             }
 
             if (model.UserName != "admin" || model.Password != "12345")
