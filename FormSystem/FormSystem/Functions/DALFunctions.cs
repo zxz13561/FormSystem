@@ -389,5 +389,53 @@ namespace FormSystem.Functions
                 throw;
             }
         }
+
+        /// <summary>刪除選擇的表單</summary>
+        /// <param name="selectedForm"></param>
+        public static void DeleteForms(string[] selectedForm)
+        {
+            try
+            {
+                using (FormDBModel db = new FormDBModel())
+                {
+                    foreach (string _fid in selectedForm)
+                    {
+                        if (_fid != "false")
+                        {
+                            // Check FID is correct
+                            if (!Guid.TryParse(_fid, out Guid _FormID))
+                                throw new Exception("FID Error");
+
+                            // Delete Children Data First
+                            var deleteData =
+                            $@"
+                                DELETE FROM [dbo].[FormData]
+                                WHERE [FormID] = '{_FormID}'
+                            ";
+                            db.Database.ExecuteSqlCommand(deleteData);
+
+                            var deleteLayout =
+                            $@"
+                                DELETE FROM [dbo].[FormLayout]
+                                WHERE [FormID] = '{_FormID}'
+                            ";
+                            db.Database.ExecuteSqlCommand(deleteLayout);
+
+                            // Delete Parent Data in the end
+                            var deleteInfo =
+                            $@"
+                                DELETE FROM [dbo].[FormInfo]
+                                WHERE [FormID] = '{_FormID}'
+                            ";
+                            db.Database.ExecuteSqlCommand(deleteInfo);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

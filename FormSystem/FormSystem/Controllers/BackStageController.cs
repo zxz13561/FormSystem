@@ -190,41 +190,7 @@ namespace FormSystem.Controllers
         {
             try
             {
-                using (FormDBModel db = new FormDBModel())
-                {
-                    foreach (string _fid in chkForm)
-                    {
-                        if (_fid != "false")
-                        {
-                            // Check FID is correct
-                            if (!Guid.TryParse(_fid, out Guid _FormID))
-                                throw new Exception("FID Error");
-
-                            // Delete Children Data First
-                            var deleteData =
-                            $@"
-                                DELETE FROM [dbo].[FormData]
-                                WHERE [FormID] = '{_FormID}'
-                            ";
-                            db.Database.ExecuteSqlCommand(deleteData);
-
-                            var deleteLayout =
-                            $@"
-                                DELETE FROM [dbo].[FormLayout]
-                                WHERE [FormID] = '{_FormID}'
-                            ";
-                            db.Database.ExecuteSqlCommand(deleteLayout);
-
-                            // Delete Parent Data in the end
-                            var deleteInfo =
-                            $@"
-                                DELETE FROM [dbo].[FormInfo]
-                                WHERE [FormID] = '{_FormID}'
-                            ";
-                            db.Database.ExecuteSqlCommand(deleteInfo);
-                        }
-                    }
-                }
+                DALFunctions.DeleteForms(chkForm);
                 return RedirectToAction("FormManager");
             }
             catch (Exception ex)
@@ -454,7 +420,7 @@ namespace FormSystem.Controllers
                 else
                     DALFunctions.FormInsertDB(fInfo, fLayout);
 
-                return RedirectToAction("FormManager", "Home");
+                return RedirectToAction("FormManager", "BackStage");
             }
             catch (Exception)
             {
