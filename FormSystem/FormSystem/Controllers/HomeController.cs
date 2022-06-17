@@ -26,7 +26,7 @@ namespace FormSystem.Controllers
         public ActionResult Login()
         {
             ViewBag.Message = "請輸入管理員帳號密碼";
-            return View();
+            return View(new LoginModel());
         }
 
         /// <summary>登入驗證</summary>
